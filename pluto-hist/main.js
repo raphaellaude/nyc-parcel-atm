@@ -23,33 +23,52 @@ var map = new maplibregl.Map({
           "fill-color": [
             "match",
             ["get", "landUse2"],
-            "01",
+            "01", // 1 & 2 Family Buildings
             "#feffa8",
-            "02",
+            "02", // Multi-Family Walk-Up Buildings
             "#fcb841",
-            "03",
-            "#b26e00",
-            "04",
+            "03", // Multi-Family Elevator Buildings
+            "#c98e0e",
+            "04", // Mixed Residential & Commercial Buildings
             "#ff8341",
-            "05",
-            "#fc2a29",
-            "06",
-            "#e362fa",
-            "07",
+            "05", // Commercial & Office Buildings
+            "#cc3e3d",
+            "06", // Industrial & Manufacturing
+            "#c26dd1",
+            "07", // Transportation & Utility
             "#dfbeeb",
-            "08",
-            "#43a3d5",
-            "09",
-            "#78d271",
-            "10",
+            "08", // Public Facilities & Institutions
+            "#519dc4",
+            "09", // Open Space & Outdoor Recreation
+            "#699466",
+            "10", // Parking Facilities
             "#bab8b6",
-            "11",
+            "11", // Vacant Land
             "#555555",
-            "#e7e7e7",
+            "#e7e7e7", // Other
           ],
         },
         minzoom: 2,
         maxzoom: 16,
+      },
+      {
+        id: "pluto02b-line",
+        source: "bk_pluto_02b",
+        "source-layer": "pluto02b",
+        type: "line",
+        paint: {
+          "line-color": "#a9a9a9",
+          "line-width": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            11,
+            0.25,
+            16,
+            0.5,
+          ],
+          "line-opacity": ["interpolate", ["linear"], ["zoom"], 11, 0, 16, 1],
+        },
       },
     ],
   },

@@ -13,6 +13,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  --bg: #fff;
 }
 
 a {
@@ -45,6 +46,7 @@ h1 {
   top: 0;
   z-index: 1;
   color: #131313;
+  background-color: var(--bg);
 }
 
 .year {
@@ -54,7 +56,7 @@ h1 {
 #map {
   width: 100vw;
   height: 100vh;
-  background-color: #f5f5f5;
+  background-color: var(--bg);
 }
 
 #app {
