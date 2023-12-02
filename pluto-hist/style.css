@@ -49,6 +49,17 @@ h1 {
   background-color: var(--bg);
 }
 
+.subtitle {
+  font-size: 1em;
+  font-weight: 300;
+  line-height: 1.1;
+  position: fixed;
+  top: 20px;
+  z-index: 1;
+  color: #131313;
+  background-color: var(--bg);
+}
+
 .year {
   right: 0px;
 }

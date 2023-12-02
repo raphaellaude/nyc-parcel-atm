@@ -10,7 +10,7 @@ var map = new maplibregl.Map({
     sources: {
       bk_pluto_02b: {
         type: "vector",
-        url: "pmtiles://https://pluto-hist.s3.amazonaws.com/data/bk_pluto_02b2.pmtiles",
+        url: "pmtiles://https://pluto-hist.s3.amazonaws.com/data/bk_pluto_02b.pmtiles",
       },
     },
     layers: [
