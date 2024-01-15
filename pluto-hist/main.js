@@ -72,8 +72,21 @@ var map = new maplibregl.Map({
       },
     ],
   },
-  center: [-73.948615, 40.6535], // starting position [lng, lat]
-  zoom: 11, // starting zoom
-  maxZoom: 16,
-  minZoom: 6,
+  center: [-73.948615, 40.6535],
+  zoom: 13,
+  maxZoom: 15.9,
+  minZoom: 13,
+});
+
+function getZoom(map) {
+  let zoom = map.getZoom();
+  document.getElementById("zoom").innerHTML = zoom.toFixed(1);
+}
+
+map.on("load", function () {
+  getZoom(map);
+});
+
+map.on("zoom", function () {
+  getZoom(map);
 });

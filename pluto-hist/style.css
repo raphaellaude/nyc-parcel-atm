@@ -64,6 +64,15 @@ h1 {
   right: 0px;
 }
 
+#zoom {
+  left: 0px;
+  font-size: 0.75em;
+  position: fixed;
+  z-index: 1;
+  background-color: var(--bg);
+  top: 39px;
+}
+
 #map {
   width: 100vw;
   height: 100vh;
