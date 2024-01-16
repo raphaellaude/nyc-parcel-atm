@@ -15,7 +15,7 @@ fi
 DEST=$2
 
 if [ ! -d "$DEST" ]; then
-    mkdir $DEST
+    mkdir "$DEST"
 fi
 
 PATTERN=".*mappluto\.shp"
@@ -35,7 +35,7 @@ union_shapefiles() {
 
     for file in "$@"; do
         echo "Appending $file to $filename"
-        ogr2ogr -f 'ESRI Shapefile' -append "$temp_outfile" "$file" -nln $filename
+        ogr2ogr -f 'ESRI Shapefile' -append "$temp_outfile" "$file" -nln "$filename"
     done
 
     echo "Converting $filename to parquet"

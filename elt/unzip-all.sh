@@ -9,14 +9,13 @@ if [ ! -d "$DIR" ]; then
 fi
 
 if [ ! -d "$DEST" ]; then
-    mkdir $DEST
+    mkdir "$DEST"
 fi
 
-for file in $DIR/*.zip; do
+for file in "$DIR"/*.zip; do
     filename=$(basename -- "$file")
-    # extension="${filename##*.}"
     filename="${filename%.*}"
     echo "Unzipping $filename"
-    mkdir $DEST/${filename%}
-    unzip $file -d $DEST/${filename%}
+    mkdir "$DEST/${filename%}"
+    unzip "$file" -d "$DEST/${filename%}"
 done
