@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "eda"
+version = "0.1.0"
+description = ""
+authors = ["Raphael Paul Laude <raphlaude@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pandas = "^2.1.4"
+geopandas = "^0.14.2"
+matplotlib = "^3.8.2"
+pyarrow = "^14.0.2"
+
+[tool.poetry.group.dev.dependencies]
+jupyter = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

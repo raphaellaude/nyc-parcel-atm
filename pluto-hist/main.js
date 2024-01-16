@@ -90,3 +90,36 @@ map.on("load", function () {
 map.on("zoom", function () {
   getZoom(map);
 });
+
+// map.on("mousemove", (e) => {
+//   const features = map.queryRenderedFeatures(e.point);
+//   if (features.length > 0) {
+//     console.log(features);
+//   }
+// });
+
+document.onkeydown = function (e) {
+  switch (e.key) {
+    case "p":
+      window.print();
+      break;
+    case "a":
+      // TODO: Implement
+      break;
+    case "s":
+      // TODO: Implement
+      break;
+    case "q":
+      // TODO: Implement
+      break;
+    case "w":
+      // TODO: Implement
+      break;
+    case "i":
+      map.zoomIn();
+      break;
+    case "o":
+      map.zoomOut();
+      break;
+  }
+};
