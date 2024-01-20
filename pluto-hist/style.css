@@ -64,7 +64,7 @@ h1 {
   padding: var(--box-padding);
 }
 
-.year {
+#year {
   right: 0px;
   padding: var(--box-padding);
 }

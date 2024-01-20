@@ -9,8 +9,6 @@ let years = Object.keys(data).sort();
 let currentYearIndex = 0;
 
 let year = years[currentYearIndex];
-document.getElementById("year").innerHTML = year;
-// let layer = data[year];
 
 let MaxYear = years[years.length - 1];
 let step = 5;
@@ -31,6 +29,11 @@ var map = new maplibregl.Map({
 function getZoom(map) {
   let zoom = map.getZoom();
   document.getElementById("zoom").innerHTML = zoom.toFixed(1);
+}
+
+function setYear(year) {
+  year = `20${year}`;
+  document.getElementById("year").innerHTML = year;
 }
 
 map.on("load", function () {
@@ -127,12 +130,16 @@ document.onkeydown = function (e) {
       if (currentYearIndex >= step) {
         let curYear = years[currentYearIndex];
         let prevLayerData = data[curYear];
+
         currentYearIndex -= step;
         year = years[currentYearIndex];
+
+        setYear(year);
+
         let layerData = data[year];
-        document.getElementById("year").innerHTML = year;
         map.setLayoutProperty(layerData.id, "visibility", "visible");
         map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
+
         setTimeout(() => {
           map.setLayoutProperty(prevLayerData.id, "visibility", "none");
           map.setLayoutProperty(
@@ -147,12 +154,16 @@ document.onkeydown = function (e) {
       if (currentYearIndex + step < MaxYear) {
         let curYear = years[currentYearIndex];
         let prevLayerData = data[curYear];
+
         currentYearIndex += step;
         year = years[currentYearIndex];
+
+        setYear(year);
+
         let layerData = data[year];
-        document.getElementById("year").innerHTML = year;
         map.setLayoutProperty(layerData.id, "visibility", "visible");
         map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
+
         setTimeout(() => {
           map.setLayoutProperty(prevLayerData.id, "visibility", "none");
           map.setLayoutProperty(
@@ -164,10 +175,10 @@ document.onkeydown = function (e) {
       }
       break;
     case "q":
-      // TODO: Implement
+      // TODO: Implement change layer
       break;
     case "w":
-      // TODO: Implement
+      // TODO: Implement change layer
       break;
     case "i":
       map.zoomIn();
