@@ -13,7 +13,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-  --bg: #fff;
+  --bg: #131313;
+  --text-color: #fff;
+  --box-padding: 0.25em;
 }
 
 a {
@@ -45,8 +47,9 @@ h1 {
   position: fixed;
   top: 0;
   z-index: 1;
-  color: #131313;
+  color: var(--text-color);
   background-color: var(--bg);
+  padding: var(--box-padding);
 }
 
 .subtitle {
@@ -54,14 +57,16 @@ h1 {
   font-weight: 300;
   line-height: 1.1;
   position: fixed;
-  top: 20px;
+  top: calc(20px + var(--box-padding) * 2);
   z-index: 1;
-  color: #131313;
+  color: var(--text-color);
   background-color: var(--bg);
+  padding: var(--box-padding);
 }
 
 .year {
   right: 0px;
+  padding: var(--box-padding);
 }
 
 #zoom {
@@ -70,13 +75,47 @@ h1 {
   position: fixed;
   z-index: 1;
   background-color: var(--bg);
-  top: 39px;
+  color: var(--text-color);
+  top: calc(40px + var(--box-padding) * 4);
+  padding: var(--box-padding);
+}
+
+#legend {
+  z-index: 1;
+  position: fixed;
+  bottom: 0.67em;
+  left: 0px;
+  background-color: var(--bg);
+  color: var(--text-color);
+  padding: var(--box-padding);
+}
+
+#legend h3 {
+  font-size: 1em;
+  font-weight: 500;
+  margin: 0 0 0.5em 0;
+  padding: 0;
+}
+
+#legend .legend-item {
+  display: flex;
+  align-items: center;
+}
+
+#legend .legend-color {
+  width: 18px;
+  height: 12px;
+}
+
+#legend .legend-text {
+  margin-left: 0.5em;
+  font-size: 12px;
 }
 
 #map {
   width: 100vw;
   height: 100vh;
-  background-color: var(--bg);
+  background-color: #fff;
 }
 
 #app {

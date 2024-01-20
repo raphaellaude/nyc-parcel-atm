@@ -12,6 +12,9 @@ let year = years[currentYearIndex];
 document.getElementById("year").innerHTML = year;
 // let layer = data[year];
 
+let MaxYear = years[years.length - 1];
+let step = 5;
+
 var map = new maplibregl.Map({
   container: "map",
   style: {
@@ -121,10 +124,10 @@ document.onkeydown = function (e) {
       window.print();
       break;
     case "a":
-      if (currentYearIndex > 0) {
+      if (currentYearIndex >= step) {
         let curYear = years[currentYearIndex];
         let prevLayerData = data[curYear];
-        currentYearIndex -= 5;
+        currentYearIndex -= step;
         year = years[currentYearIndex];
         let layerData = data[year];
         document.getElementById("year").innerHTML = year;
@@ -141,10 +144,10 @@ document.onkeydown = function (e) {
       }
       break;
     case "s":
-      if (currentYearIndex < years.length - 1) {
+      if (currentYearIndex + step < MaxYear) {
         let curYear = years[currentYearIndex];
         let prevLayerData = data[curYear];
-        currentYearIndex += 5;
+        currentYearIndex += step;
         year = years[currentYearIndex];
         let layerData = data[year];
         document.getElementById("year").innerHTML = year;
