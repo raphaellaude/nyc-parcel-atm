@@ -1,28 +1,37 @@
 import "./style.css";
 import * as pmtiles from "pmtiles";
+import data from "./data.json";
+
 let protocol = new pmtiles.Protocol();
 maplibregl.addProtocol("pmtiles", protocol.tile);
+
+let years = ["02", "03", "04", "05"];
+let currentYearIndex = 0;
+
+let year = years[currentYearIndex];
+document.getElementById("year").innerHTML = year;
+let layer = data[year];
 
 var map = new maplibregl.Map({
   container: "map",
   style: {
     version: 8,
     sources: {
-      bk_pluto_02b: {
+      pluto: {
         type: "vector",
-        url: "pmtiles://https://pluto-hist.s3.amazonaws.com/data/bk_pluto_02b.pmtiles",
+        url: layer.url,
       },
     },
     layers: [
       {
-        id: "pluto02b",
-        source: "bk_pluto_02b",
-        "source-layer": "pluto02b",
+        id: layer.id,
+        source: "pluto",
+        "source-layer": layer.id,
         type: "fill",
         paint: {
           "fill-color": [
             "match",
-            ["get", "landUse2"],
+            ["get", layer.columns[0].id],
             "01", // 1 & 2 Family Buildings
             "#feffa8",
             "02", // Multi-Family Walk-Up Buildings
@@ -52,9 +61,9 @@ var map = new maplibregl.Map({
         maxzoom: 16,
       },
       {
-        id: "pluto02b-line",
-        source: "bk_pluto_02b",
-        "source-layer": "pluto02b",
+        id: `${layer.id}-line`,
+        source: "pluto",
+        "source-layer": layer.id,
         type: "line",
         paint: {
           "line-color": "#a9a9a9",
@@ -104,10 +113,16 @@ document.onkeydown = function (e) {
       window.print();
       break;
     case "a":
-      // TODO: Implement
+      currentYearIndex -= 1;
+      year = years[currentYearIndex];
+      document.getElementById("year").innerHTML = year;
+      layer = data[year];
       break;
     case "s":
-      // TODO: Implement
+      currentYearIndex += 1;
+      year = years[currentYearIndex];
+      document.getElementById("year").innerHTML = year;
+      layer = data[year];
       break;
     case "q":
       // TODO: Implement

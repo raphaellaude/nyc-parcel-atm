@@ -22,24 +22,27 @@ PATTERN=".*mappluto\.shp"
 
 union_shapefiles() {
     local filename="$1"
-    temp_outfile="$DEST/$filename.shp"
-    outfile="$DEST/$filename.parquet"
     shift
     local first="$1"
     shift
 
+    temp_outfile="$DEST/$filename.shp"
+    outfile="$DEST/$filename"
+
     echo "Unioning $first to $filename"
-    ogr2ogr -f 'ESRI Shapefile' "$temp_outfile" "$first"
+    ogr2ogr -t_srs EPSG:4326 -f 'ESRI Shapefile' "$temp_outfile" "$first" -makevalid
 
     ogrinfo "$temp_outfile" | grep -E '1:'
 
     for file in "$@"; do
         echo "Appending $file to $filename"
-        ogr2ogr -f 'ESRI Shapefile' -append "$temp_outfile" "$file" -nln "$filename"
+        ogr2ogr -t_srs EPSG:4326 -f 'ESRI Shapefile' -append "$temp_outfile" "$file" -nln "$filename" -makevalid
     done
 
-    echo "Converting $filename to parquet"
-    ogr2ogr -t_srs EPSG:4326 -f 'Parquet' "$outfile" "$temp_outfile"
+    echo "Converting $filename"
+
+    ogr2ogr -f 'GeoJSON' "$outfile".geojson "$temp_outfile"
+    ogr2ogr -f 'Parquet' "$outfile".parquet "$temp_outfile"
 
     for shp_end in shp shx dbf prj; do
         rm "$DEST/$filename.$shp_end"
@@ -51,9 +54,6 @@ for subdir in "$DIR"/*; do
         filename=$(basename -- "$subdir")
         filename="${filename%.*}"
         echo "Searching $filename"
-
-        # Old way, which doesn't account for spaces in the file path
-        # map_files=($(find "$subdir" -type f -regex ".*/$PATTERN" -print))
 
         map_files=()
 

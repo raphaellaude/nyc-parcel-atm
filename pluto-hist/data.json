@@ -1,0 +1,24 @@
+{
+  "02": {
+    "year": 2002,
+    "id": "mappluto_02b_test",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/pluto-02.pmtiles",
+    "columns": [
+      {
+        "name": "Land Use",
+        "id": "landUse2"
+      }
+    ]
+  },
+  "03": {
+    "year": 2003,
+    "id": "pluto03",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/pluto-03.pmtiles",
+    "columns": [
+      {
+        "name": "Land Use",
+        "id": "LANDUSE"
+      }
+    ]
+  }
+}
