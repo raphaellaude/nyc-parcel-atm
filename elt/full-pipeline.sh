@@ -12,3 +12,6 @@ echo "Unioning shapefiles to parquet"
 
 echo "Removing shapefiles"
 rm -rf "$PROJECT_DIR/raw_data/shapefiles/"
+
+echo "Setting S3 CORS config"
+aws s3api put-bucket-cors --bucket pluto-hist --cors-configuration file:///Users/raphaellaude/Documents/GitHub/pluto-hist/cors.json

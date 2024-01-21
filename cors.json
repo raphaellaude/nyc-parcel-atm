@@ -1,7 +1,11 @@
 {
   "CORSRules": [
     {
-      "AllowedOrigins": ["https://maps.protomaps.com", "http://localhost:5173"],
+      "AllowedOrigins": [
+        "http://localhost:5173",
+        "http://nycparcels.org",
+        "https://nycparcels.org"
+      ],
       "AllowedMethods": ["GET", "HEAD"],
       "AllowedHeaders": ["*"],
       "ExposeHeaders": ["ETag"],
@@ -9,4 +13,3 @@
     }
   ]
 }
-
