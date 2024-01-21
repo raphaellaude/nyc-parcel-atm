@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "pluto-hist-backend"
+version = "0.1.0"
+description = ""
+authors = ["Raphael Paul Laude <raphlaude@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11.7"
+django = "^5.0.1"
+psycopg2 = "^2.9.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
