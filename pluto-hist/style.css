@@ -14,6 +14,10 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
   --bg: #131313;
+  --dark-grey: #292a34;
+  --medium-grey: #68697c;
+  --light-grey: #c8c9ce;
+  --very-light-grey: #f8f8f8;
   --text-color: #fff;
   --box-padding: 0.25em;
 }
@@ -90,6 +94,21 @@ h1 {
   padding: var(--box-padding);
 }
 
+.legend-item {
+  display: flex;
+  align-items: center;
+}
+
+.legend-color {
+  width: 18px;
+  height: 12px;
+}
+
+.legend-text {
+  margin-left: 0.5em;
+  font-size: 12px;
+}
+
 #legend h3 {
   font-size: 1em;
   font-weight: 500;
@@ -97,19 +116,25 @@ h1 {
   padding: 0;
 }
 
-#legend .legend-item {
-  display: flex;
-  align-items: center;
+#controls {
+  z-index: 1;
+  position: fixed;
+  bottom: 0.67em;
+  right: 0px;
+  background-color: var(--bg);
+  color: var(--text-color);
+  padding: var(--box-padding);
 }
 
-#legend .legend-color {
-  width: 18px;
-  height: 12px;
+.control-key {
+  color: var(--medium-grey);
+  margin: 0;
 }
 
-#legend .legend-text {
-  margin-left: 0.5em;
-  font-size: 12px;
+#legend p,
+#controls p {
+  margin-block-start: 0;
+  margin-block-end: 0;
 }
 
 #map {
