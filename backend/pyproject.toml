@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.11.7"
 django = "^5.0.1"
 psycopg2 = "^2.9.9"
+django-cors-headers = "^4.3.1"
 
 
 [build-system]

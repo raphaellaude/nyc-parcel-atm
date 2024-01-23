@@ -12,7 +12,9 @@
         "http://pluto-hist-*-raphaellaude.vercel.app",
         "https://pluto-hist-*-raphaellaude.vercel.app",
         "http://www.pluto-hist-*-raphaellaude.vercel.app",
-        "https://www.pluto-hist-*-raphaellaude.vercel.app"
+        "https://www.pluto-hist-*-raphaellaude.vercel.app",
+        "http://pluto-hist.fly.dev",
+        "https://pluto-hist.fly.dev"
       ],
       "AllowedMethods": ["GET", "HEAD"],
       "AllowedHeaders": ["*"],
