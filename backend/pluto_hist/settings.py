@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,9 +32,11 @@ CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://localhost:8080",
     "http://127.0.0.1:5173",
     "http://nycparcels.org",
     "https://nycparcels.org",
+    "https://pluto-hist.fly.dev",
 ]
 
 # Application definition
@@ -88,10 +91,11 @@ WSGI_APPLICATION = 'pluto_hist.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        "OPTIONS": {
-            "service": "plutohist",
-            "passfile": ".my_pgpass",
-        },
+        'NAME': os.environ.get('DB_NAME', 'plutohist'),
+        'USER': os.environ.get('DB_USER', 'raphael'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'postgrespw123'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': '5432',
     }
 }
 

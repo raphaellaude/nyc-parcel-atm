@@ -8,8 +8,11 @@ services:
       - ./app/:/usr/src/app/
     ports:
       - 8000:8000
-    env_file:
-      - ./.env.dev
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=plutohist
+      - DB_HOST=db
     depends_on:
       - db
   db:
@@ -17,8 +20,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=raphael
-      - POSTGRES_PASSWORD=postgrespw123
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=plutohist
 
 volumes:
