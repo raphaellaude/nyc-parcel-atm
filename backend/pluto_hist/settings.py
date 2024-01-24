@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import dj_database_url
 import os
 from pathlib import Path
 
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-km*&!6@eu3je75b15bm4lk+uy!l61!4hs7s3%8_plax_jp-9fh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "nycparcels.org", ]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "nycparcels.org", "pluto-hist.fly.dev"]
 
 CORS_ALLOW_ALL_ORIGINS = False
 
@@ -88,16 +89,24 @@ WSGI_APPLICATION = 'pluto_hist.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DEV = os.environ.get("DEV", False)
+
+# if DEV:
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.environ.get('DB_NAME', 'plutohist'),
-        'USER': os.environ.get('DB_USER', 'raphael'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'postgrespw123'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': '5432',
-    }
+    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'), conn_max_age=600),
 }
+# else:
+#     DATABASES = {
+#         'default': {
+#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
+#         'NAME': 'plutohist',
+#         'USER': 'raphael',
+#         'PASSWORD': 'postgrespw123',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#         }
+#     }
+
 
 
 # Password validation

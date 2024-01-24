@@ -3,7 +3,7 @@ version: "3.8"
 services:
   web:
     build: ./
-    command: python manage.py runserver 0.0.0.0:8000
+    command: poetry run python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./app/:/usr/src/app/
     ports:
@@ -11,18 +11,6 @@ services:
     environment:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=plutohist
-      - DB_HOST=db
-    depends_on:
-      - db
-  db:
-    image: postgis/postgis:14-3.2
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=plutohist
-
-volumes:
-  postgres_data:
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DATABASE_URL=${DATABASE_URL}
