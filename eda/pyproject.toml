@@ -11,6 +11,8 @@ pandas = "^2.1.4"
 geopandas = "^0.14.2"
 matplotlib = "^3.8.2"
 pyarrow = "^14.0.2"
+sqlalchemy = "^2.0.25"
+psycopg2 = "^2.9.9"
 
 [tool.poetry.group.dev.dependencies]
 jupyter = "^1.0.0"
