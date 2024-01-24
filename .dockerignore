@@ -1,0 +1,34 @@
+# flyctl launch added from .gitignore
+**/.ipynb_checkpoints
+
+# flyctl launch added from backend/.gitignore
+backend/**/.env
+backend/**/__pycache__
+backend/**/.my_pgpass
+
+# flyctl launch added from pluto-hist/.gitignore
+# Logs
+pluto-hist/**/logs
+pluto-hist/**/*.log
+pluto-hist/**/npm-debug.log*
+pluto-hist/**/yarn-debug.log*
+pluto-hist/**/yarn-error.log*
+pluto-hist/**/pnpm-debug.log*
+pluto-hist/**/lerna-debug.log*
+
+pluto-hist/**/node_modules
+pluto-hist/**/dist
+pluto-hist/**/dist-ssr
+pluto-hist/**/*.local
+
+# Editor directories and files
+pluto-hist/**/.vscode/*
+!pluto-hist/**/.vscode/extensions.json
+pluto-hist/**/.idea
+pluto-hist/**/.DS_Store
+pluto-hist/**/*.suo
+pluto-hist/**/*.ntvs*
+pluto-hist/**/*.njsproj
+pluto-hist/**/*.sln
+pluto-hist/**/*.sw?
+fly.toml
