@@ -121,58 +121,47 @@ map.on("zoom", function () {
 //   }
 // });
 
+function advanceYear(step) {
+  if (currentYearIndex + step < MaxYear && currentYearIndex + step >= 0) {
+    let curYear = years[currentYearIndex];
+    let prevLayerData = data[curYear];
+
+    currentYearIndex += step;
+    year = years[currentYearIndex];
+
+    setYear(year);
+
+    let layerData = data[year];
+    map.setLayoutProperty(layerData.id, "visibility", "visible");
+    map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
+
+    setTimeout(() => {
+      map.setLayoutProperty(prevLayerData.id, "visibility", "none");
+      map.setLayoutProperty(`${prevLayerData.id}-line`, "visibility", "none");
+    }, 750);
+  }
+}
+
 document.onkeydown = function (e) {
+  console.log(e.key);
   switch (e.key) {
     case "p":
       window.print();
       break;
+    case "F13":
+      window.print();
+      break;
     case "a":
-      if (currentYearIndex >= step) {
-        let curYear = years[currentYearIndex];
-        let prevLayerData = data[curYear];
-
-        currentYearIndex -= step;
-        year = years[currentYearIndex];
-
-        setYear(year);
-
-        let layerData = data[year];
-        map.setLayoutProperty(layerData.id, "visibility", "visible");
-        map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
-
-        setTimeout(() => {
-          map.setLayoutProperty(prevLayerData.id, "visibility", "none");
-          map.setLayoutProperty(
-            `${prevLayerData.id}-line`,
-            "visibility",
-            "none"
-          );
-        }, 750); // if at larger zoom levels, wait longer
-      }
+      advanceYear(-step);
       break;
     case "s":
-      if (currentYearIndex + step < MaxYear) {
-        let curYear = years[currentYearIndex];
-        let prevLayerData = data[curYear];
-
-        currentYearIndex += step;
-        year = years[currentYearIndex];
-
-        setYear(year);
-
-        let layerData = data[year];
-        map.setLayoutProperty(layerData.id, "visibility", "visible");
-        map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
-
-        setTimeout(() => {
-          map.setLayoutProperty(prevLayerData.id, "visibility", "none");
-          map.setLayoutProperty(
-            `${prevLayerData.id}-line`,
-            "visibility",
-            "none"
-          );
-        }, 750); // if at larger zoom levels, wait longer
-      }
+      advanceYear(step);
+      break;
+    case "PageDown":
+      advanceYear(-step);
+      break;
+    case "PageUp":
+      advanceYear(step);
       break;
     case "q":
       // TODO: Implement change layer
