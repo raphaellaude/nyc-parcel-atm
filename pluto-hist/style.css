@@ -13,13 +13,14 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-  --bg: #131313;
+  --bg: #fff;
   --dark-grey: #292a34;
   --medium-grey: #68697c;
   --light-grey: #c8c9ce;
   --very-light-grey: #f8f8f8;
-  --text-color: #fff;
+  --text-color: #000;
   --box-padding: 0.25em;
+  --sidebar-width: 320px;
 }
 
 a {
@@ -34,7 +35,8 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  align-items: center;
+  justify-content: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -44,13 +46,20 @@ h1 {
   line-height: 1.1;
 }
 
+.sidebar {
+  height: 100vh;
+  width: var(--sidebar-width);
+  background-color: var(--bg);
+  color: var(--text-color);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 var(--box-padding);
+}
+
 .title {
   font-size: 1.2em;
   font-weight: 400;
   line-height: 1.1;
-  position: fixed;
-  top: 0;
-  z-index: 1;
   color: var(--text-color);
   background-color: var(--bg);
   padding: var(--box-padding);
@@ -60,24 +69,21 @@ h1 {
   font-size: 1em;
   font-weight: 300;
   line-height: 1.1;
-  position: fixed;
-  top: calc(20px + var(--box-padding) * 2);
-  z-index: 1;
   color: var(--text-color);
   background-color: var(--bg);
   padding: var(--box-padding);
 }
 
 #year {
+  position: fixed;
+  top: 0.67em;
+  z-index: 1;
   right: 0px;
   padding: var(--box-padding);
 }
 
 #zoom {
-  left: 0px;
   font-size: 0.75em;
-  position: fixed;
-  z-index: 1;
   background-color: var(--bg);
   color: var(--text-color);
   top: calc(40px + var(--box-padding) * 4);
@@ -85,10 +91,6 @@ h1 {
 }
 
 #legend {
-  z-index: 1;
-  position: fixed;
-  bottom: 0.67em;
-  left: 0px;
   background-color: var(--bg);
   color: var(--text-color);
   padding: var(--box-padding);
@@ -116,6 +118,19 @@ h1 {
   padding: 0;
 }
 
+#data {
+  font-size: 0.75em;
+  text-align: left;
+  max-width: calc(var(--sidebar-width) - 2 * var(--box-padding));
+}
+
+#data td {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 0.25em;
+}
+
 #controls {
   z-index: 1;
   position: fixed;
@@ -138,9 +153,22 @@ h1 {
 }
 
 #map {
-  width: 100vw;
+  width: calc(100vw - var(--sidebar-width));
   height: 100vh;
   background-color: #fff;
+}
+
+.marker {
+  position: absolute;
+  top: 50%;
+  left: calc(50% + var(--sidebar-width) / 2);
+  width: 10px;
+  height: 10px;
+  /* background-color: #000; */
+  border: 1px solid #000;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
 #app {

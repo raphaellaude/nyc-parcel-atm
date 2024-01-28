@@ -28,8 +28,9 @@ def single_year_pluto(_request, year, lon, lat):
     result = cursor.execute(sql, (lon, lat,))
     result = cursor.fetchall()
 
+    if len(result) == 0:
+        return HttpResponse(status=204)
+
     cols = [d[0] for d in cursor.description]
-
     html = render_template("html/record_table.html.jinja", record=zip(cols, result[0]))
-
     return HttpResponse(html)
