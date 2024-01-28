@@ -1,0 +1,15 @@
+<h2>Record Details</h2>
+<table>
+    <tr>
+        <th>Column</th>
+        <th>Value</th>
+    </tr>
+    {% for col_name, value in record %}
+    <tr>
+        <td>{{ col_name }}</td>
+        <td
+            style="max-width: 100px; text-overflow: ellipsis; overflow: hidden; color: {{ 'grey' if value is none else black }}">
+            {{ value }}</td>
+    </tr>
+    {% endfor %}
+</table>
