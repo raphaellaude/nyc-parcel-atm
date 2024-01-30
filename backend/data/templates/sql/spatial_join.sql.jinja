@@ -1,14 +1,15 @@
 {# templates/sql/spatial_join.sql.jinja #}
-
 SELECT
     *
 FROM
-    {{table}}
+    {{ table }}
 WHERE
-    ST_Intersects(
-        {{table}}.geom,
-        (SELECT ST_SetSRID(
-            ST_MakePoint(%s, %s),
-            4326) AS geom
-        ))
-LIMIT 1;
+    st_intersects(
+        {{ table }}.geom,
+        (
+            SELECT
+                st_setsrid(st_makepoint(% s,% s), 4326) AS geom
+        )
+    )
+LIMIT
+    1;

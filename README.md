@@ -31,6 +31,9 @@ _Parcel ATM_ is an art project and website conceived for [Data through Design 20
 - [ ] (Optional) Variable styling by web-era
 - [x] Do a little reasearch into old mapping interfaces e.g. MapQuest
 - [ ] Implement inital UI w/ oldschool mapping UI elements, e.g.
+
+![Mapquest 2010 mapping controls](mapquest-2010-map-controls.png)
+
 - [ ] Custom vintage looking icons and logo
 - [ ] Crosshair as grainy icon / info pin
 - [ ] Variable layer change by zoom level (more time for bigger zoom levels)
