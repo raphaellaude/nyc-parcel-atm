@@ -27,8 +27,11 @@
     <title>Test App</title>
   </head>
   <body>
-    <div class="sidebar">
-      <h1 class="title">Parcel ATM</h1>
+    <div class="sidebar mapquest">
+      <div style="display: flex; align-items: center">
+        <img src="atm-logo.png" style="width: 32px; height: 32px" />
+        <h1 class="title">Parcel ATM</h1>
+      </div>
       <h2 class="subtitle">Exploring PLUTO's 21 year history</h2>
       <p id="zoom"></p>
       <div id="legend">
@@ -86,8 +89,8 @@
       </div>
       <div id="data"></div>
     </div>
-    <h3 class="title" id="year">2002</h3>
-    <div id="controls">
+    <h3 class="title mapquest" id="year">2002</h3>
+    <div id="controls" class="mapquest">
       <div class="legend-item">
         <div class="control-key legend-text">(a)</div>
         <p class="legend-text">Go back 5 years</p>
