@@ -136,7 +136,7 @@ h1 {
 #controls {
   z-index: 1;
   position: fixed;
-  bottom: 0.67em;
+  bottom: calc(0.67em * 3);
   right: 0px;
   background-color: var(--bg);
   color: var(--text-color);
