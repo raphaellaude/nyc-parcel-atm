@@ -36,6 +36,23 @@ function setYear(year) {
   document.getElementById("year").innerHTML = year;
 }
 
+async function queryFeatures(year, lat, lng) {
+  const response = await fetch(
+    `https://pluto-hist.fly.dev/api/single_year_pluto/${year}/${lat}/${lng}`
+  );
+  if (response.ok) {
+    if (response.status === 204) {
+      document.getElementById("data").innerHTML = "No data";
+      return;
+    }
+    const data = await response.text();
+    document.getElementById("data").innerHTML = data;
+  } else {
+    const data = await response.text();
+    document.getElementById("data").innerHTML = "Uh oh!" + " " + data;
+  }
+}
+
 map.on("load", function () {
   years.forEach((y, index) => {
     let isVisible = index === currentYearIndex ? "visible" : "none";
@@ -107,11 +124,15 @@ map.on("load", function () {
 
   getZoom(map);
 
-  console.log(map.getStyle().layers);
-});
+  // console.log(map.getStyle().layers);)
 
-map.on("zoom", function () {
-  getZoom(map);
+  map.on("zoom", function () {
+    getZoom(map);
+  });
+
+  map.on("click", (e) => {
+    queryFeatures(year, e.lngLat.lat, e.lngLat.lng);
+  });
 });
 
 // map.on("mousemove", (e) => {
@@ -164,7 +185,10 @@ document.onkeydown = function (e) {
       advanceYear(step);
       break;
     case "q":
-      // TODO: Implement change layer
+      if (map !== undefined) {
+        const { lng, lat } = map.getCenter();
+        queryFeatures(year, lat, lng);
+      }
       break;
     case "w":
       // TODO: Implement change layer

@@ -4,6 +4,10 @@
 
 `poetry install`
 
-## Running django admin commands
+## Running django admin commands locally
 
-`PGSERVICEFILE=.pg_service.conf PGPASSFILE=.my_pgpass poetry run python manage.py [command]`
+`DATABASE_URL=postgis://$user:$password@$hostname:$port/$dbname poetry run python manage.py [command]`
+
+## Deploying to fly.io
+
+`fly deploy`
