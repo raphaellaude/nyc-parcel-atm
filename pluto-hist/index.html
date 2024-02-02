@@ -10,12 +10,6 @@
       href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css"
       rel="stylesheet"
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
     <script>
       window.va =
         window.va ||
@@ -30,10 +24,10 @@
     <div class="sidebar mapquest">
       <div style="display: flex; align-items: center">
         <img src="atm-logo.png" style="width: 32px; height: 32px" />
-        <h1 class="title">Parcel ATM</h1>
+        <h1 class="title">NYC Parcel ATM</h1>
       </div>
       <h2 class="subtitle">Exploring PLUTO's 21 year history</h2>
-      <p id="zoom"></p>
+      <p id="zoom" class="no-print"></p>
       <div id="legend">
         <!-- <h3>Land use</h3> -->
         <div class="legend-item">
@@ -89,8 +83,8 @@
       </div>
       <div id="data"></div>
     </div>
-    <h3 class="title mapquest" id="year">2002</h3>
-    <div id="controls" class="mapquest">
+    <h3 class="title mapquest no-print" id="year">2002</h3>
+    <div id="controls" class="mapquest no-print">
       <div class="legend-item">
         <div class="control-key legend-text">(a)</div>
         <p class="legend-text">Go back 5 years</p>
@@ -112,8 +106,8 @@
         <p class="legend-text">Print receipt</p>
       </div>
     </div>
-    <div id="map"></div>
-    <div id="centerMarker" class="marker"></div>
+    <div id="map" class="no-print"></div>
+    <div id="centerMarker" class="marker no-print"></div>
     <script type="module" src="main.js"></script>
   </body>
 </html>

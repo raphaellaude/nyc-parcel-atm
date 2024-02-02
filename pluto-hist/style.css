@@ -172,3 +172,18 @@ h1 {
   transform: translate(-50%, -50%);
   z-index: 1;
 }
+
+@media print {
+  .no-print {
+    display: none;
+  }
+  .mapquest {
+    all: unset;
+  }
+}
+
+@media screen {
+  .only-print {
+    display: none;
+  }
+}
