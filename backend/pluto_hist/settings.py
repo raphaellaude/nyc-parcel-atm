@@ -38,6 +38,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://nycparcels.org",
     "https://nycparcels.org",
+    "https://www.nycparcels.org",
+    "http://www.nycparcels.org",
     "https://pluto-hist.fly.dev",
 ]
 
