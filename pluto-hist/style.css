@@ -31,9 +31,9 @@ a:hover {
 
 body {
   margin: 0;
-  /* display: flex;
+  display: flex;
   align-items: center;
-  justify-content: center; */
+  justify-content: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -51,16 +51,24 @@ h1 {
 }
 
 .sidebar {
-  position: fixed;
-  height: calc(100vh - 2 * calc(var(--box-padding) + 0.67em) - 2px);
-  margin: calc(var(--box-padding) + 0.67em) var(--box-padding);
-  z-index: 1;
+  /* position: fixed; */
+  /* height: calc(100vh - 2 * calc(var(--box-padding) + 0.67em) - 2px); */
+  height: 100vh;
+  /* margin: calc(var(--box-padding) + 0.67em) var(--box-padding); */
+  z-index: 2;
   width: var(--sidebar-width);
   background-color: var(--bg);
   color: var(--text-color);
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0 var(--box-padding);
+  border-radius: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
 }
 
 .title {
@@ -156,9 +164,15 @@ h1 {
 }
 
 #map {
-  width: 100vw;
+  width: calc(100vw - var(--sidebar-width));
   height: 100vh;
   background-color: #fff;
+}
+
+@media screen and (max-width: 768px) {
+  #map {
+    width: 100vw;
+  }
 }
 
 .marker {
