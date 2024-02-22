@@ -163,6 +163,17 @@ function advanceYear(step) {
   }
 }
 
+const prevYearButton = document.getElementById("prev-year");
+const nextYearButton = document.getElementById("next-year");
+
+prevYearButton.onclick = () => {
+  advanceYear(-step);
+};
+
+nextYearButton.onclick = () => {
+  advanceYear(step);
+};
+
 document.onkeydown = function (e) {
   console.log(e.key);
   switch (e.key) {
