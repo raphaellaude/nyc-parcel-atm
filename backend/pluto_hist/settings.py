@@ -34,9 +34,12 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8080",
+    "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://nycparcels.org",
     "https://nycparcels.org",
+    "https://www.nycparcels.org",
+    "http://www.nycparcels.org",
     "https://pluto-hist.fly.dev",
 ]
 
@@ -89,24 +92,9 @@ WSGI_APPLICATION = 'pluto_hist.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DEV = os.environ.get("DEV", False)
-
-# if DEV:
 DATABASES = {
     'default': dj_database_url.parse(os.environ.get('DATABASE_URL'), conn_max_age=600),
 }
-# else:
-#     DATABASES = {
-#         'default': {
-#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-#         'NAME': 'plutohist',
-#         'USER': 'raphael',
-#         'PASSWORD': 'postgrespw123',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#         }
-#     }
-
 
 
 # Password validation

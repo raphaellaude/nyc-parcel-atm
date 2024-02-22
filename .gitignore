@@ -4,3 +4,4 @@ credentials
 .ruff_cache
 __pycache__
 .DS_Store
+.vscode
