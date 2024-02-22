@@ -5,3 +5,4 @@ credentials
 __pycache__
 .DS_Store
 .vscode
+cors.json
