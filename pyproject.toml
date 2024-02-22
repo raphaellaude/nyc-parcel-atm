@@ -1,21 +1,16 @@
 [tool.poetry]
-name = "eda"
+name = "pluto-hist"
 version = "0.1.0"
 description = ""
 authors = ["Raphael Paul Laude <raphlaude@gmail.com>"]
+license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-pandas = "^2.1.4"
-geopandas = "^0.14.2"
-matplotlib = "^3.8.2"
-pyarrow = "^14.0.2"
-sqlalchemy = "^2.0.25"
-psycopg2 = "^2.9.9"
 
 [tool.poetry.group.dev.dependencies]
-jupyter = "^1.0.0"
+ruff = "^0.2.2"
 
 [build-system]
 requires = ["poetry-core"]
