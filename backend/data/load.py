@@ -1,6 +1,28 @@
-from pathlib import Path
 from django.contrib.gis.utils import LayerMapping
-from .models import *
+from .models import (
+    PLUTO02,
+    PLUTO03,
+    PLUTO04,
+    PLUTO05,
+    PLUTO06,
+    PLUTO07,
+    PLUTO08,
+    PLUTO09,
+    PLUTO10,
+    PLUTO11,
+    PLUTO12,
+    PLUTO13,
+    PLUTO14,
+    PLUTO15,
+    PLUTO16,
+    PLUTO17,
+    PLUTO18,
+    PLUTO19,
+    PLUTO20,
+    PLUTO21,
+    PLUTO22,
+    PLUTO23,
+)
 
 
 # Auto-generated `LayerMapping` dictionaries
@@ -1957,7 +1979,7 @@ nyc_mappluto_23v2_arc_shp = "/Users/raphaellaude/Documents/Projects/dxd/processe
 
 
 data = [
-    # (mappluto_02b, mappluto_02b_mapping, PLUTO02),
+    (mappluto_02b, mappluto_02b_mapping, PLUTO02),
     (mappluto_03c, mappluto_03c_mapping, PLUTO03),
     (mappluto_04c, mappluto_04c_mapping, PLUTO04),
     (mappluto_05d, mappluto_05d_mapping, PLUTO05),
