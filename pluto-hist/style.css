@@ -55,14 +55,14 @@ h1 {
 
 .sidebar {
   /* position: fixed; */
-  height: calc(100vh - 2 * calc(var(--box-padding) + 0.67em) - 2px);
+  height: calc(100vh - 2 * calc(var(--box-padding)));
   /* margin: calc(var(--box-padding) + 0.67em) var(--box-padding); */
   z-index: 1;
-  width: var(--sidebar-width);
+  width: var(--sidebar-width) - 1px;
   background-color: var(--bg);
   color: var(--text-color);
-  /* overflow-y: auto;
-  overflow-x: hidden; */
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 0 var(--box-padding);
   border-radius: 0;
 }
@@ -149,6 +149,7 @@ h1 {
   color: var(--text-color);
   padding: var(--box-padding);
   margin: var(--box-padding);
+  border: 1px solid #000;
 }
 
 .control-key {
@@ -166,6 +167,7 @@ h1 {
   width: calc(100vw - var(--sidebar-width));
   height: 100vh;
   background-color: #fff;
+  border-left: #000 1px solid;
 }
 
 .marker {
@@ -204,7 +206,9 @@ h1 {
 
   #map {
     width: 100vw;
-    height: 50vh;
+    height: calc(50vh - 1px);
+    border-left: none;
+    border-bottom: #000 1px solid;
   }
 
   #controls {
