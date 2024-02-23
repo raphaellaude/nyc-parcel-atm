@@ -1,0 +1,10 @@
+{# templates/sql/spatial_join.sql.jinja #}
+SELECT
+    *
+FROM
+    read_parquet('{{table}}')
+WHERE
+    ST_Intersects(
+        ST_GeomFromWKB(geometry),
+        ST_Point({{lon}}, {{lat}}))
+LIMIT 1;
