@@ -20,3 +20,7 @@ primary_region = 'ewr'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+
+[mounts]
+  source="pluto_data"
+  destination="/data"
