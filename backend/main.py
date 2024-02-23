@@ -3,17 +3,16 @@ Parcel ATM API
 """
 
 import re
-import duckdb
 
+import duckdb
+from constants import LAT_REGEX, LON_REGEX, PLUTO_YEARS, YEARS_REGEX
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
-
-from constants import PLUTO_YEARS, LAT_REGEX, LON_REGEX, YEARS_REGEX
 from jinja import render_template
 
 app = FastAPI()
 
-conn = duckdb.connect(database=':memory:', read_only=False)
+conn = duckdb.connect(database=":memory:", read_only=False)
 conn.execute("INSTALL spatial; LOAD spatial;")
 
 
@@ -28,7 +27,7 @@ def read_root():
 @app.get("/items/{year}/{lat}/{lon}")
 def single_year_pluto(year: str, lat: str, lon: str):
     """
-    Single year pluto view. 
+    Single year pluto view.
     """
     if not re.match(LON_REGEX, lon):
         raise HTTPException(detail="Invalid longitude", status_code=400)
