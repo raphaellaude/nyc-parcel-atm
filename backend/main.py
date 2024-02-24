@@ -13,6 +13,7 @@ from jinja import render_template
 
 app = FastAPI()
 
+# TODO: Origins should not include localhost in prod
 origins = [
     "http://localhost:3000",
     "http://localhost:8080",

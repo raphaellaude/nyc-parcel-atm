@@ -11,4 +11,7 @@ RUN pip install poetry --no-cache-dir
 RUN poetry config virtualenvs.create false
 RUN poetry install --only main --no-root --no-interaction
 
+RUN apt-get update && \
+    apt-get install -y openssh-client
+
 CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
