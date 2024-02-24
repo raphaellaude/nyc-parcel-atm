@@ -1,3 +1,4 @@
+# flyctl launch added from .venv/.gitignore
+# created by virtualenv automatically
+.venv/**/*
 fly.toml
-.git/
-*.sqlite3

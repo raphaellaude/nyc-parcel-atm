@@ -6,3 +6,5 @@ __pycache__
 .DS_Store
 .vscode
 cors.json
+pyrightconfig.json
+.credentials

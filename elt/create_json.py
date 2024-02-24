@@ -1,6 +1,6 @@
+import json
 import os
 import re
-import json
 import subprocess
 
 TILES_DIR = "/Users/raphaellaude/Documents/Projects/dxd/processed_data/tiles/"
@@ -15,9 +15,9 @@ def get_landuse(year):
 
 
 def get_layer_id(tiles):
-    command = f"ogrinfo {TILES_DIR}/{tiles} | grep \"1:\""
+    command = f'ogrinfo {TILES_DIR}/{tiles} | grep "1:"'
     result = subprocess.run(command, shell=True, text=True, capture_output=True)
-    
+
     if result.returncode != 0:
         print("Error executing command:", result.stderr)
         raise Exception("Error executing command:", result.stderr)
@@ -47,12 +47,13 @@ def create_json():
                         "name": "Land use",
                         "id": get_landuse(year),
                     }
-                ]
+                ],
             }
     return json
 
+
 if __name__ == "__main__":
     data = create_json()
-    
+
     with open("data.json", "w") as f:
         f.write(json.dumps(data))

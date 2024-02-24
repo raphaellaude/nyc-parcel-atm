@@ -38,7 +38,7 @@ function setYear(year) {
 
 async function queryFeatures(year, lat, lng) {
   const response = await fetch(
-    `https://pluto-hist.fly.dev/api/single_year_pluto/${year}/${lat}/${lng}`
+    `https://pluto-hist-backend-v2.fly.dev/single_year_point_lookup/${year}/${lat}/${lng}`,
   );
   if (response.ok) {
     if (response.status === 204) {
