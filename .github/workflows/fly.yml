@@ -12,6 +12,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: cd backend # added my me, everything else from https://fly.io/docs/app-guides/continuous-deployment-with-github-actions/
+      - run: ls -la
       - run: flyctl deploy -a pluto-hist-backend-v2 --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
