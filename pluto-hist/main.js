@@ -11,7 +11,8 @@ let currentYearIndex = 0;
 let year = years[currentYearIndex];
 
 let MaxYear = years[years.length - 1];
-let step = 5;
+console.log(`MaxYear: ${MaxYear}`);
+let step = 1;
 
 var map = new maplibregl.Map({
   container: "map",
@@ -40,10 +41,55 @@ function setYear(year) {
   document.getElementById("year").innerHTML = year;
 }
 
+class Spinner {
+  constructor() {
+    this.elementId = "spinner";
+    this.activeSpinners = 0;
+    this.spinnerInterval = null;
+  }
+
+  start() {
+    if (this.activeSpinners === 0) {
+      let spinnerChars = [
+        ".&nbsp;&nbsp;",
+        "..&nbsp;",
+        "...",
+        "&nbsp;..",
+        "&nbsp;&nbsp;.",
+        "&nbsp;&nbsp;&nbsp;",
+      ];
+      let index = 0;
+      this.spinnerInterval = setInterval(() => {
+        document.getElementById(this.elementId).innerHTML = spinnerChars[index];
+        index = (index + 1) % spinnerChars.length;
+      }, 100);
+    }
+    this.activeSpinners++;
+  }
+
+  stop() {
+    this.activeSpinners--;
+    if (this.activeSpinners === 0) {
+      clearInterval(this.spinnerInterval);
+      document.getElementById(this.elementId).innerHTML =
+        "&nbsp;&#10003;&nbsp;"; // Clear the spinner
+    }
+  }
+}
+
+let spinner = new Spinner();
+
 async function queryFeatures(year, lat, lng) {
+  spinner.start();
+  document.getElementById("data").innerHTML = "Loading...";
+
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/single_year_point_lookup/${year}/${lat}/${lng}`,
-  );
+  ).then((response) => {
+    spinner.stop();
+    return response;
+  });
+
   if (response.ok) {
     if (response.status === 204) {
       document.getElementById("data").innerHTML = "No data";
@@ -58,8 +104,16 @@ async function queryFeatures(year, lat, lng) {
 }
 
 async function wakeServer() {
+  spinner.start();
+
   console.log(import.meta.env.VITE_API_URL);
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/healthcheck`);
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/healthcheck`,
+  ).then((response) => {
+    spinner.stop();
+    return response;
+  });
+
   if (response.ok) {
     const data = await response.text();
     console.log(data);
@@ -161,7 +215,7 @@ map.on("load", function () {
 // });
 
 function advanceYear(step) {
-  if (currentYearIndex + step < MaxYear && currentYearIndex + step >= 0) {
+  if (currentYearIndex + step < MaxYear - 1 && currentYearIndex + step >= 0) {
     let curYear = years[currentYearIndex];
     let prevLayerData = data[curYear];
 

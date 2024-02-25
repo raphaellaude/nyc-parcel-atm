@@ -1,223 +1,240 @@
 :root {
-  /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
-  font-family: "IBM Plex Mono", Inter, system-ui, Avenir, Helvetica, Arial,
-    sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-  --bg: #fff;
-  --dark-grey: #292a34;
-  --medium-grey: #68697c;
-  --light-grey: #c8c9ce;
-  --very-light-grey: #f8f8f8;
-  --text-color: #272750;
-  --box-padding: 0.75em;
-  --sidebar-width: 320px;
-  --mapquest-gradient: linear-gradient(to top, #f0f0e1, #ffffff);
-  --shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
-    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+    font-family: "IBM Plex Mono", Inter, system-ui, Avenir, Helvetica, Arial,
+        sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    --bg: #fff;
+    --dark-grey: #292a34;
+    --medium-grey: #68697c;
+    --light-grey: #c8c9ce;
+    --very-light-grey: #f8f8f8;
+    --text-color: #272750;
+    --box-padding: 0.75em;
+    --sidebar-width: 320px;
+    --mapquest-gradient: linear-gradient(to top, #f0f0e1, #ffffff);
+    --shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+        rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+    color: #535bf2;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 320px;
-  min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 320px;
+    min-height: 100vh;
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+    font-size: 3.2em;
+    line-height: 1.1;
 }
 
 .mapquest {
-  border-radius: 0.5rem;
-  /* border: 1px solid #d7d7c4; */
-  /* background: var(--mapquest-gradient); */
-  background: #fff;
-  /* box-shadow: var(--shadow); */
+    border-radius: 0.5rem;
+    /* border: 1px solid #d7d7c4; */
+    /* background: var(--mapquest-gradient); */
+    background: #fff;
+    /* box-shadow: var(--shadow); */
 }
 
 .sidebar {
-  /* position: fixed; */
-  height: calc(100vh - 2 * calc(var(--box-padding)));
-  /* margin: calc(var(--box-padding) + 0.67em) var(--box-padding); */
-  z-index: 1;
-  width: var(--sidebar-width) - 1px;
-  background-color: var(--bg);
-  color: var(--text-color);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 0 var(--box-padding);
-  border-radius: 0;
+    /* position: fixed; */
+    height: calc(100vh - 2 * calc(var(--box-padding)));
+    /* margin: calc(var(--box-padding) + 0.67em) var(--box-padding); */
+    z-index: 1;
+    width: var(--sidebar-width) - 1px;
+    background-color: var(--bg);
+    color: var(--text-color);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 var(--box-padding);
+    border-radius: 0;
 }
 
 .title {
-  font-size: 1.2em;
-  font-weight: 600;
-  line-height: 1.1;
-  color: var(--text-color);
+    font-size: 1.2em;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--text-color);
 }
 
 .subtitle {
-  font-size: 1em;
-  font-weight: 500;
-  line-height: 1.1;
-  color: var(--text-color);
-  margin-top: 0;
+    font-size: 1em;
+    font-weight: 500;
+    line-height: 1.1;
+    color: var(--text-color);
+    margin-top: 0;
 }
 
 #year {
-  /* position: fixed; */
-  /* top: 0.67em; */
-  /* z-index: 1; */
-  /* right: 0px; */
-  /* padding: var(--box-padding);
+    /* position: fixed; */
+    /* top: 0.67em; */
+    /* z-index: 1; */
+    /* right: 0px; */
+    /* padding: var(--box-padding);
   margin: var(--box-padding); */
-  font-size: 1rem;
-  font-weight: 500;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 #zoom {
-  font-size: 0.75em;
-  color: var(--text-color);
-  top: calc(40px + var(--box-padding) * 4);
+    font-size: 0.75em;
+    color: var(--text-color);
+    top: calc(40px + var(--box-padding) * 4);
 }
 
 #legend {
-  color: var(--text-color);
-  margin-bottom: 1em;
+    color: var(--text-color);
+    margin-bottom: 1em;
 }
 
 .legend-item {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .legend-color {
-  width: 18px;
-  height: 12px;
-  box-shadow: var(--shadow);
+    width: 18px;
+    height: 12px;
+    box-shadow: var(--shadow);
 }
 
 .legend-text {
-  margin-left: 0.5em;
-  font-size: 12px;
+    margin-left: 0.5em;
+    font-size: 12px;
 }
 
 #legend h3 {
-  font-size: 1em;
-  font-weight: 500;
-  margin: 0 0 0.5em 0;
-  padding: 0;
+    font-size: 1em;
+    font-weight: 500;
+    margin: 0 0 0.5em 0;
+    padding: 0;
 }
 
 #data {
-  font-size: 0.75em;
-  text-align: left;
-  max-width: calc(var(--sidebar-width) - 2 * var(--box-padding));
+    font-size: 0.75em;
+    text-align: left;
+    max-width: calc(var(--sidebar-width) - 2 * var(--box-padding));
 }
 
 #data td {
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding-right: 0.25em;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 0.25em;
 }
 
 #controls {
-  z-index: 1;
-  position: fixed;
-  bottom: calc(0.67em * 3);
-  right: 0px;
-  background-color: var(--bg);
-  color: var(--text-color);
-  padding: var(--box-padding);
-  margin: var(--box-padding);
-  border: 1px solid #000;
+    z-index: 1;
+    position: fixed;
+    bottom: calc(0.67em * 3);
+    right: 0px;
+    background-color: var(--bg);
+    color: var(--text-color);
+    padding: var(--box-padding);
+    margin: var(--box-padding);
+    border: 1px solid #000;
+}
+
+#spinner {
+    z-index: 1;
+    position: fixed;
+    top: 0.67em;
+    right: 0px;
+    padding: var(--box-padding);
+    margin: var(--box-padding);
+    background-color: var(--bg);
+    color: var(--text-color);
+    border: 1px solid #000;
+    border-radius: 0.5rem;
+    font-size: 0.75em;
+    line-height: 1;
+    width: 28px;
+    text-align: center;
 }
 
 .control-key {
-  color: var(--medium-grey);
-  margin: 0;
+    color: var(--medium-grey);
+    margin: 0;
 }
 
 #legend p,
 #controls p {
-  margin-block-start: 0;
-  margin-block-end: 0;
+    margin-block-start: 0;
+    margin-block-end: 0;
 }
 
 #map {
-  width: calc(100vw - var(--sidebar-width));
-  height: 100vh;
-  background-color: #fff;
-  border-left: #000 1px solid;
+    width: calc(100vw - var(--sidebar-width));
+    height: 100vh;
+    background-color: #fff;
+    border-left: #000 1px solid;
 }
 
 .marker {
-  display: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 10px;
-  height: 10px;
-  border: 1px solid #000;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
 }
 
 @media print {
-  .no-print {
-    display: none;
-  }
-  .mapquest {
-    all: unset;
-  }
+    .no-print {
+        display: none;
+    }
+    .mapquest {
+        all: unset;
+    }
 }
 
 @media screen and (max-width: 768px) {
-  /* flip view so sidebar is on bottom and map is on top */
+    /* flip view so sidebar is on bottom and map is on top */
 
-  body {
-    flex-direction: column-reverse;
-  }
+    body {
+        flex-direction: column-reverse;
+    }
 
-  .sidebar {
-    width: calc(100% - 2 * calc(var(--box-padding)));
-    height: 50vh;
-  }
+    .sidebar {
+        width: calc(100% - 2 * calc(var(--box-padding)));
+        height: 50vh;
+    }
 
-  #map {
-    width: 100vw;
-    height: calc(50vh - 1px);
-    border-left: none;
-    border-bottom: #000 1px solid;
-  }
+    #map {
+        width: 100vw;
+        height: calc(50vh - 1px);
+        border-left: none;
+        border-bottom: #000 1px solid;
+    }
 
-  #controls {
-    display: none;
-  }
+    #controls {
+        display: none;
+    }
 }
 
 @media screen {
-  .only-print {
-    display: none;
-  }
+    .only-print {
+        display: none;
+    }
 }
