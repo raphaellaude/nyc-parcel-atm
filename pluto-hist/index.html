@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
         <script src="/htmx.min.js"></script>
+        <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
         <link
             href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css"
             rel="stylesheet"
@@ -36,6 +37,16 @@
                 <h1 class="title">NYC Parcel ATM</h1>
             </div>
             <h2 class="subtitle">Exploring PLUTO's 22 year history</h2>
+            <button
+                id="about"
+                hx-get="/about.html"
+                hx-target="#about-modal"
+                class="uk-button uk-button-primary"
+                _="on htmx:afterOnLoad wait 10ms then add .uk-open to #modal"
+            >
+                About this project
+            </button>
+            <div id="about-modal"></div>
             <div style="display: flex; align-items: center; gap: 8px">
                 <button id="prev-year">&larr;</button>
                 <h3 class="title mapquest no-print" id="year">2002</h3>
