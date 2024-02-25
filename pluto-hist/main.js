@@ -38,7 +38,7 @@ function setYear(year) {
 
 async function queryFeatures(year, lat, lng) {
   const response = await fetch(
-    `https://pluto-hist-backend-v2.fly.dev/single_year_point_lookup/${year}/${lat}/${lng}`,
+    `${import.meta.env.VITE_API_URL}/single_year_point_lookup/${year}/${lat}/${lng}`,
   );
   if (response.ok) {
     if (response.status === 204) {
@@ -53,7 +53,21 @@ async function queryFeatures(year, lat, lng) {
   }
 }
 
+async function wakeServer() {
+  console.log(import.meta.env.VITE_API_URL);
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/healthcheck`);
+  if (response.ok) {
+    const data = await response.text();
+    console.log(data);
+  } else {
+    const data = await response.text();
+    console.log("Uh oh!" + " " + data);
+  }
+}
+
 map.on("load", function () {
+  wakeServer();
+
   years.forEach((y, index) => {
     let isVisible = index === currentYearIndex ? "visible" : "none";
     let layerData = data[y];
