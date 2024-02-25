@@ -82,6 +82,33 @@ h1 {
     margin-top: 0;
 }
 
+#modal {
+    position: absolute;
+    width: 250px;
+    top: 1rem;
+    left: calc(var(--sidebar-width) + 3rem);
+    background-color: var(--bg);
+    color: var(--text-color);
+    padding: var(--box-padding);
+    border: 1px solid #000;
+    border-radius: 0.5rem;
+    z-index: 1000;
+    max-height: calc(100% - 4rem);
+    overflow-y: scroll;
+
+    h3 {
+        font-size: 1em;
+        font-weight: 500;
+        margin: 0 0 0.5em 0;
+        padding: 0;
+    }
+
+    p {
+        font-size: 0.75em;
+        margin: 0 0 1rem 0;
+    }
+}
+
 #year {
     /* position: fixed; */
     /* top: 0.67em; */
@@ -227,6 +254,10 @@ h1 {
         height: calc(50vh - 1px);
         border-left: none;
         border-bottom: #000 1px solid;
+    }
+
+    #modal {
+        left: 1rem;
     }
 
     #centerMarker {
