@@ -41,6 +41,20 @@ function setYear(year) {
   document.getElementById("year").innerHTML = year;
 }
 
+function addAttributeToId(elementId, attributeName, attributeValue) {
+  var element = document.getElementById(elementId);
+  if (element) {
+    element.style[attributeName] = attributeValue;
+  }
+}
+
+if (import.meta.env.VITE_KIOSK === "true") {
+  console.log("Running in kiosk mode");
+  document.body.classList.add("kiosk");
+  addAttributeToId("controls", "visibility", "visible");
+  addAttributeToId("centerMarker", "visibility", "visible");
+}
+
 class Spinner {
   constructor() {
     this.elementId = "spinner";
@@ -106,7 +120,7 @@ async function queryFeatures(year, lat, lng) {
 async function wakeServer() {
   spinner.start();
 
-  console.log(import.meta.env.VITE_API_URL);
+  console.log(`Fetching from API at: ${import.meta.env.VITE_API_URL}`);
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/healthcheck`,
   ).then((response) => {

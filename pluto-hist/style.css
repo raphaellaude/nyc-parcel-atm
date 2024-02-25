@@ -141,6 +141,7 @@ h1 {
 }
 
 #controls {
+    visibility: hidden;
     z-index: 1;
     position: fixed;
     bottom: calc(0.67em * 3);
@@ -187,11 +188,11 @@ h1 {
     border-left: #000 1px solid;
 }
 
-.marker {
-    display: none;
+#centerMarker {
+    visibility: hidden;
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: calc(50% - 2px);
+    left: calc(50vw + var(--sidebar-width) / 2 + 16px);
     width: 10px;
     height: 10px;
     border: 1px solid #000;
@@ -226,6 +227,11 @@ h1 {
         height: calc(50vh - 1px);
         border-left: none;
         border-bottom: #000 1px solid;
+    }
+
+    #centerMarker {
+        left: 50%;
+        top: 25%;
     }
 
     #controls {
