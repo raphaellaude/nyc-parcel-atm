@@ -24,6 +24,10 @@ var map = new maplibregl.Map({
   zoom: 13,
   maxZoom: 15.9,
   minZoom: 13,
+  maxBounds: [
+    [-74.28851, 40.48159],
+    [-73.69342, 40.9241],
+  ],
 });
 
 function getZoom(map) {
