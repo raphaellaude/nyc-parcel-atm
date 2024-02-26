@@ -53,9 +53,11 @@ if (import.meta.env.VITE_KIOSK === "true") {
   document.body.classList.add("kiosk");
   addAttributeToId("controls", "visibility", "visible");
   addAttributeToId("centerMarker", "visibility", "visible");
+  addAttributeToId("about", "display", "none");
+  addAttributeToId("prev-year", "display", "none");
+  addAttributeToId("next-year", "display", "none");
 }
 // hide for now while not working on vercel
-addAttributeToId("about", "display", "none");
 
 class Spinner {
   constructor() {
@@ -97,6 +99,10 @@ let spinner = new Spinner();
 
 async function queryFeatures(year, lat, lng) {
   spinner.start();
+
+  // should use queryRenderedFeatures to figure out if there's a feature at the point
+  // before making the API call
+
   document.getElementById("data").innerHTML = "Loading...";
 
   const response = await fetch(
