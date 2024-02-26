@@ -53,9 +53,11 @@ if (import.meta.env.VITE_KIOSK === "true") {
   document.body.classList.add("kiosk");
   addAttributeToId("controls", "visibility", "visible");
   addAttributeToId("centerMarker", "visibility", "visible");
+  addAttributeToId("about", "display", "none");
+  addAttributeToId("prev-year", "display", "none");
+  addAttributeToId("next-year", "display", "none");
 }
 // hide for now while not working on vercel
-// addAttributeToId("about", "display", "none");
 
 class Spinner {
   constructor() {
