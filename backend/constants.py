@@ -7,7 +7,7 @@ load_dotenv()
 BASE_PATH = os.getenv("BASE_PATH")
 
 PLUTO_YEARS = {
-    "02": os.path.join(BASE_PATH, "mappluto_02b.parquet"),
+    "02": os.path.join(BASE_PATH, "mappluto_02b.fgb"),
     "03": os.path.join(BASE_PATH, "mappluto_03c.parquet"),
     "04": os.path.join(BASE_PATH, "mappluto_04c.parquet"),
     "05": os.path.join(BASE_PATH, "mappluto_05d.parquet"),
