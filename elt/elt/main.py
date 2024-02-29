@@ -34,12 +34,11 @@ def harmonize_pluto_columns() -> DataFrame:
     """
     Harmonize PLUTO columns across years.
     """
-    col_availibility = column_availibility()
+    tables = [get_pluto_key(year, "shp") for year in YEARS]
+    col_availibility = column_availibility(tables)
     match_df = column_similarity(col_availibility)
 
-    print(
-        "Column matches with >80 similarity, which don't exist in the same year's data: "
-    )
+    print("Column matches with >80 similarity, which don't exist in the same year's data: ")
     print(match_df)
 
     return match_df
