@@ -1,0 +1,4 @@
+{# elt/templates/rename_columns.jinja #}
+{% for col1, col2 in rename_columns.items() %}
+    ALTER TABLE {{table}} RENAME {{col1}} TO {{col2}};
+{% endfor %}
