@@ -72,7 +72,7 @@ def single_year_pluto(year: str, lat: str, lon: str):
         return HTTPException(detail="Invalid year", status_code=400)
 
     sql = render_template(
-        "spatial_join_2.sql.jinja", table=PLUTO_YEARS[year], lat=lat, lon=lon
+        "spatial_join.sql.jinja", table=PLUTO_YEARS[year], lat=lat, lon=lon
     )
     cursor = conn.execute(sql)
 
