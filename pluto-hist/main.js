@@ -101,16 +101,19 @@ async function queryFeatures(year, lat, lng) {
   spinner.start();
 
   // should use queryRenderedFeatures to figure out if there's a feature at the point
-  // before making the API call
-
-  // document.getElementById("data").innerHTML = "Loading...";
+  // before making the API call;
 
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/single_year_point_lookup/${year}/${lat}/${lng}`,
-  ).then((response) => {
-    spinner.stop();
-    return response;
-  });
+  )
+    .then((response) => {
+      spinner.stop();
+      return response;
+    })
+    .catch((error) => {
+      spinner.stop();
+      console.error("Error:", error);
+    });
 
   if (response.ok) {
     if (response.status === 204) {
@@ -129,12 +132,15 @@ async function wakeServer() {
   spinner.start();
 
   console.log(`Fetching from API at: ${import.meta.env.VITE_API_URL}`);
-  const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/healthcheck`,
-  ).then((response) => {
-    spinner.stop();
-    return response;
-  });
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/healthcheck`)
+    .then((response) => {
+      spinner.stop();
+      return response;
+    })
+    .catch((error) => {
+      spinner.stop();
+      console.error("Error:", error);
+    });
 
   if (response.ok) {
     const data = await response.text();

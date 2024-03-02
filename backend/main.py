@@ -43,10 +43,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DB_PATH = os.getenv("DB_PATH", "data/pluto_hist.db")
+DB_PATH = os.getenv("DB_PATH")
 
-conn = duckdb.connect(database=DB_PATH, read_only=True)
-conn.execute("INSTALL spatial; LOAD spatial;")
+if DB_PATH is not None:
+    conn = duckdb.connect(database=DB_PATH, read_only=True)
+    conn.execute("INSTALL spatial; LOAD spatial;")
 
 WGStoAlbersNYLI = Transformer.from_crs("EPSG:4326", "EPSG:2263")
 
