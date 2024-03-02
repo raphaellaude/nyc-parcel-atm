@@ -8,3 +8,4 @@ __pycache__
 cors.json
 pyrightconfig.json
 .credentials
+.vercel
