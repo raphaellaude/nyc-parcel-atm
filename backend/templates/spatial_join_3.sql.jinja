@@ -1,0 +1,10 @@
+{# templates/sql/spatial_join.3.sql.jinja #}
+SELECT
+    *
+FROM
+    pluto{{year}}_shp
+WHERE
+    ST_Intersects(
+        geom,
+        ST_Point({{lon}}, {{lat}}))
+LIMIT 1;
