@@ -86,7 +86,10 @@ def single_year_pluto(year: str, lat: str, lon: str):
 
     column_names = [desc[0] for desc in cursor.description]
 
-    first_record = cursor.fetchone()
+    try:
+        first_record = cursor.fetchone()
+    except Exception as e:
+        return HTTPException(detail=str(e), status_code=500)
 
     if first_record is None:
         return HTMLResponse("<p>No parcel found</p>")
