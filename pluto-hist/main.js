@@ -103,7 +103,7 @@ async function queryFeatures(year, lat, lng) {
   // should use queryRenderedFeatures to figure out if there's a feature at the point
   // before making the API call
 
-  document.getElementById("data").innerHTML = "Loading...";
+  // document.getElementById("data").innerHTML = "Loading...";
 
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/single_year_point_lookup/${year}/${lat}/${lng}`,

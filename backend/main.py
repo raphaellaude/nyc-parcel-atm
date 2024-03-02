@@ -11,6 +11,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from jinja import render_template
+from pyproj import Transformer
 
 app = FastAPI()
 
@@ -47,6 +48,8 @@ DB_PATH = os.getenv("DB_PATH", "data/pluto_hist.db")
 conn = duckdb.connect(database=DB_PATH, read_only=True)
 conn.execute("INSTALL spatial; LOAD spatial;")
 
+WGStoAlbersNYLI = Transformer.from_crs("EPSG:4326", "EPSG:2263")
+
 
 @app.get("/")
 def read_root():
@@ -72,9 +75,9 @@ def single_year_pluto(year: str, lat: str, lon: str):
     if not re.match(YEARS_REGEX, year):
         return HTTPException(detail="Invalid year", status_code=400)
 
-    sql = render_template(
-        "spatial_join_3.sql.jinja", year=year, lat=lat, lon=lon
-    )
+    x, y = WGStoAlbersNYLI.transform(float(lat), float(lon))
+
+    sql = render_template("spatial_join_3.sql.jinja", year=year, lat=y, lon=x)
     cursor = conn.execute(sql)
 
     if cursor.description is None:

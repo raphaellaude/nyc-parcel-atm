@@ -31,6 +31,10 @@ a:hover {
     color: #535bf2;
 }
 
+html {
+    scrollbar-gutter: stable;
+}
+
 body {
     margin: 0;
     display: flex;
@@ -245,7 +249,7 @@ h1 {
     }
 
     .sidebar {
-        width: calc(100% - 2 * calc(var(--box-padding)));
+        width: calc(100vw - 2 * calc(var(--box-padding)));
         height: 50vh;
     }
 
