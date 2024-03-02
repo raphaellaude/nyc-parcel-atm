@@ -42,8 +42,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+DB_PATH = os.getenv("DB_PATH", "data/pluto_hist.db")
 
-conn = duckdb.connect(database=":memory:", read_only=False)
+conn = duckdb.connect(database=DB_PATH, read_only=True)
 conn.execute("INSTALL spatial; LOAD spatial;")
 
 
@@ -72,7 +73,7 @@ def single_year_pluto(year: str, lat: str, lon: str):
         return HTTPException(detail="Invalid year", status_code=400)
 
     sql = render_template(
-        "spatial_join.sql.jinja", table=PLUTO_YEARS[year], lat=lat, lon=lon
+        "spatial_join_3.sql.jinja", year=year, lat=lat, lon=lon
     )
     cursor = conn.execute(sql)
 
@@ -87,6 +88,6 @@ def single_year_pluto(year: str, lat: str, lon: str):
         return HTMLResponse("<p>No parcel found</p>")
 
     record = dict(zip(column_names, first_record))
-    # del record["geometry"]
+    del record["geom"]
 
     return HTMLResponse(render_template("record_table.html.jinja", record=record))
