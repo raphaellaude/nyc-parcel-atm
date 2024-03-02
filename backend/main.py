@@ -6,7 +6,7 @@ import os
 import re
 import duckdb
 from dotenv import load_dotenv
-from constants import LAT_REGEX, LON_REGEX, PLUTO_YEARS, YEARS_REGEX
+from constants import LAT_REGEX, LON_REGEX, YEARS_REGEX
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
