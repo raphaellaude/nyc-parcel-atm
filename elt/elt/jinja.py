@@ -1,7 +1,7 @@
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 env = Environment(
-    loader=FileSystemLoader("./templates"), autoescape=select_autoescape()
+    loader=FileSystemLoader("./elt/templates"), autoescape=select_autoescape()
 )
 
 

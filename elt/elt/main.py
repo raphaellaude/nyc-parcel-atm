@@ -1,11 +1,13 @@
 import os
 import glob
+import duckdb
 from pandas import DataFrame
 from pathlib import Path
 
 from .assets import download_zipfiles, unzip_zipfiles, get_pluto_key
-from .database import create_table, column_availibility, column_similarity
+from .database import create_table, column_availibility, column_similarity, CONN
 from .constants import ASSETS_DIR, YEARS
+from .jinja import render_template
 
 
 def download_and_unzip() -> None:
@@ -42,3 +44,19 @@ def harmonize_pluto_columns() -> DataFrame:
     print(match_df)
 
     return match_df
+
+
+def rename_columns() -> None:
+    """
+    Rename columns in the database based on harmonized columns.
+    """
+    for year in YEARS:
+        alias = get_pluto_key(year, "shp")
+        to_rename_sql = render_template("columns_to_rename.jinja", table=alias)
+        cursor = CONN.execute(to_rename_sql)
+        to_rename = cursor.fetchall()
+
+        rename_sql = render_template("rename_columns.jinja", table=alias, rename_columns=to_rename)
+        CONN.execute(rename_sql)
+
+        print(f"Renamed columns for {alias}.")

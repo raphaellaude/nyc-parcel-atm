@@ -4,6 +4,7 @@ from elt.main import (
     download_and_unzip as _download_and_unzip,
     populate_duckdb_database as _populate_duckdb_database,
     harmonize_pluto_columns as _harmonize_pluto_columns,
+    rename_columns as _rename_columns,
 )
 from elt.constants import DB_PATH
 
@@ -67,8 +68,10 @@ def harmonize_pluto_columns() -> None:
     print(f'con.query("{sql}")')
     print(con.query(sql))
 
-    # saving this for later
-    # con.query("select column_name from (describe pluto02_shp) inner join column_matches on lower(column_name) = col1")
+
+@cli.command("rename-columns", help="Rename columns based on column matches.")
+def rename_columns():
+    _rename_columns()
 
 
 if __name__ == "__main__":
