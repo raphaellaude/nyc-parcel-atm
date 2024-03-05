@@ -94,7 +94,11 @@ def single_year_pluto(year: str, lat: str, lon: str):
         return HTTPException(detail="Year not found", status_code=404)
 
     sql = render_template("spatial_join_2.sql.jinja", table=table, lat=y, lon=x)
-    cursor = conn.execute(sql)
+
+    try:
+        cursor = conn.execute(sql)
+    except duckdb.SerializationException as e:
+        return HTMLResponse("<p style=\"color=grey\">No parcel found</p>")
 
     if cursor.description is None:
         return HTTPException(detail="No cursor description", status_code=404)
