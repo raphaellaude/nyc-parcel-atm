@@ -11,6 +11,8 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
+    "@sentry/node": "^7.104.0",
+    "@sentry/profiling-node": "^7.104.0",
     "pmtiles": "3.0.0-alpha.2"
   }
 }
