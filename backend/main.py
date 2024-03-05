@@ -23,6 +23,10 @@ origins = [
     "https://www.nycparcels.org",
     "http://www.nycparcels.org",
     "https://pluto-hist.fly.dev",
+    "http://parcels.nyc",
+    "http://www.parcels.nyc",
+    "https://parcels.nyc",
+    "https://www.parcels.nyc",
 ]
 
 ENV = os.getenv("ENV", "dev")
