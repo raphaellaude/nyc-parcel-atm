@@ -6,7 +6,7 @@ import os
 import re
 import duckdb
 from dotenv import load_dotenv
-from constants import LAT_REGEX, LON_REGEX, YEARS_REGEX
+from constants import LAT_REGEX, LON_REGEX, YEARS_REGEX, BASE_PATH, MIN_YEAR, MAX_YEAR
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,6 +23,10 @@ origins = [
     "https://www.nycparcels.org",
     "http://www.nycparcels.org",
     "https://pluto-hist.fly.dev",
+    "http://parcels.nyc",
+    "http://www.parcels.nyc",
+    "https://parcels.nyc",
+    "https://www.parcels.nyc",
 ]
 
 ENV = os.getenv("ENV", "dev")
@@ -52,6 +56,12 @@ if DB_PATH is not None:
 WGStoAlbersNYLI = Transformer.from_crs("EPSG:4326", "EPSG:2263")
 
 
+pluto_years = {
+    str(x).zfill(2): os.path.join(BASE_PATH, f"fgbs/pluto{str(x).zfill(2)}.fgb")
+    for x in range(MIN_YEAR, MAX_YEAR + 1)
+}
+
+
 @app.get("/")
 def read_root():
     return {"Hello!": "This is the Parcel ATM API."}
@@ -78,7 +88,12 @@ def single_year_pluto(year: str, lat: str, lon: str):
 
     x, y = WGStoAlbersNYLI.transform(float(lat), float(lon))
 
-    sql = render_template("spatial_join_3.sql.jinja", year=year, lat=y, lon=x)
+    table = pluto_years.get(year)
+
+    if table is None:
+        return HTTPException(detail="Year not found", status_code=404)
+
+    sql = render_template("spatial_join_2.sql.jinja", table=table, lat=y, lon=x)
     cursor = conn.execute(sql)
 
     if cursor.description is None:
@@ -95,6 +110,7 @@ def single_year_pluto(year: str, lat: str, lon: str):
         return HTMLResponse("<p>No parcel found</p>")
 
     record = dict(zip(column_names, first_record))
-    del record["geom"]
+    if "geom" in record:
+        del record["geom"]
 
     return HTMLResponse(render_template("record_table.html.jinja", record=record))
