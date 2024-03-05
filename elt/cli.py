@@ -5,6 +5,7 @@ from elt.main import (
     populate_duckdb_database as _populate_duckdb_database,
     harmonize_pluto_columns as _harmonize_pluto_columns,
     rename_columns as _rename_columns,
+    export_fgbs as _export_fgbs,
 )
 from elt.constants import DB_PATH
 
@@ -72,6 +73,11 @@ def harmonize_pluto_columns() -> None:
 @cli.command("rename-columns", help="Rename columns based on column matches.")
 def rename_columns():
     _rename_columns()
+
+
+@cli.command("export-fgbs", help="Export FGBs for each PLUTO year.")
+def export_fgbs():
+    _export_fgbs()
 
 
 if __name__ == "__main__":

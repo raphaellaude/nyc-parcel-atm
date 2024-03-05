@@ -60,3 +60,14 @@ def rename_columns() -> None:
         CONN.execute(rename_sql)
 
         print(f"Renamed columns for {alias}.")
+
+
+def export_fgbs():
+    out_path = os.path.join(ASSETS_DIR, "fgbs")
+    if not os.path.exists(out_path):
+        os.makedirs(out_path, exist_ok=True)
+
+    for year in YEARS:
+        alias = get_pluto_key(year, "shp")
+        fgb_sql = render_template("export_fgb.jinja", table=alias, out_path=out_path)
+        CONN.execute(fgb_sql)
