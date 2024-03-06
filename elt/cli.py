@@ -6,6 +6,8 @@ from elt.main import (
     harmonize_pluto_columns as _harmonize_pluto_columns,
     rename_columns as _rename_columns,
     export_fgbs as _export_fgbs,
+    export_geojsons_for_tippecannoe as _export_geojsons_for_tippecannoe,
+    create_tilesets as _create_tilesets,
 )
 from elt.constants import DB_PATH
 
@@ -78,6 +80,16 @@ def rename_columns():
 @cli.command("export-fgbs", help="Export FGBs for each PLUTO year.")
 def export_fgbs():
     _export_fgbs()
+
+
+@cli.command("export-geojsons-for-tippecannoe", help="Export GeoJSON for tippecannoe.")
+def export_geojsons_for_tippecannoe():
+    _export_geojsons_for_tippecannoe()
+
+
+@cli.command("create-tilesets", help="Create tilesets for each PLUTO year.")
+def create_tilesets():
+    _create_tilesets()
 
 
 if __name__ == "__main__":
