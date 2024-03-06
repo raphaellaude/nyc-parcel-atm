@@ -13,6 +13,8 @@ matplotlib = "^3.8.2"
 pyarrow = "^14.0.2"
 sqlalchemy = "^2.0.25"
 psycopg2 = "^2.9.9"
+empiricaldist = "^0.7.2"
+scipy = "^1.12.0"
 
 [tool.poetry.group.dev.dependencies]
 jupyter = "^1.0.0"
