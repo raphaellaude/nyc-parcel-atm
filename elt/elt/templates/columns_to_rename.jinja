@@ -1,0 +1,24 @@
+
+{# elt/templates/columns_to_rename.jinja #}
+WITH matches AS (
+    SELECT
+        column_name, rename_to
+    FROM (
+        DESCRIBE {{table}}
+    ) INNER JOIN
+        column_matches ON lower(column_name) = col1)
+SELECT
+    *
+FROM
+    matches
+UNION ALL
+SELECT
+    b.column_name,
+    lower(b.column_name) AS to_rename
+FROM (
+    describe {{table}}
+) b
+WHERE
+    b.column_name NOT IN (
+        SELECT column_name FROM matches
+    );

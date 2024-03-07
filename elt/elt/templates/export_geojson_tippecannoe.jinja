@@ -1,0 +1,25 @@
+{# elt/templates/export_fgb_tippecannoe.jinja #}
+COPY (
+    SELECT
+        CAST(landuse AS INTEGER) AS landuse,
+        case
+            when zonedist1 like 'PARK%' then 'PARK'
+            when zonedist1 is null then 'NZS'
+            else regexp_extract(zonedist1, '^[A-Za-z]+[0-9]*', 0)
+        end as zonedist_simple,
+        assessland,
+        assesstot,
+        numfloors,
+        yearbuilt,
+        unitsres,
+        substring(bldgclass, 1, 1) as bldgclass_simple,
+        yearalter1,
+        builtfar,
+        geom as geometry
+    FROM {{table}} WHERE geom IS NOT NULL
+) TO '{{out_path}}/{{table}}.geojson'
+WITH (
+    FORMAT GDAL,
+    DRIVER 'GeoJSON',
+    SRS 'EPSG:2263'
+);

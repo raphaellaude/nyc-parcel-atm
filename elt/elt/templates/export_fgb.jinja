@@ -1,0 +1,10 @@
+{# elt/templates/export_fgb.jinja #}
+COPY (
+    SELECT * FROM {{table}} WHERE geom IS NOT NULL
+) TO '{{out_path}}/{{table}}.fgb'
+WITH (
+    FORMAT GDAL,
+    DRIVER 'FlatGeobuf',
+    LAYER_CREATION_OPTIONS 'SPATIAL_INDEX=YES',
+    SRS 'EPSG:2263'
+);
