@@ -1,9 +1,12 @@
 import "./style.css";
 import * as pmtiles from "pmtiles";
 import data from "./data.json";
+import choropleth from "./choropleth.json";
 
 let protocol = new pmtiles.Protocol();
 maplibregl.addProtocol("pmtiles", protocol.tile);
+
+// Years vars
 
 let years = Object.keys(data).sort();
 let currentYearIndex = 0;
@@ -11,8 +14,11 @@ let currentYearIndex = 0;
 let year = years[currentYearIndex];
 
 let MaxYear = years[years.length - 1];
-console.log(`MaxYear: ${MaxYear}`);
 let step = 1;
+
+// PLUTO choropleth vars
+
+let activeLayer = "assesstot";
 
 var map = new maplibregl.Map({
   container: "map",
@@ -163,47 +169,29 @@ map.on("load", function () {
       url: layerData.url,
     });
 
-    map.addLayer({
-      id: layerData.id,
-      source: `pluto-${y}`,
-      "source-layer": layerData.id,
-      type: "fill",
-      layout: {
-        visibility: isVisible,
-      },
-      paint: {
-        "fill-color": [
-          "match",
-          ["get", layerData.columns[0].id],
-          1, // 1 & 2 Family Buildings
-          "#feffa8",
-          2, // Multi-Family Walk-Up Buildings
-          "#fcb841",
-          3, // Multi-Family Elevator Buildings
-          "#c98e0e",
-          4, // Mixed Residential & Commercial Buildings
-          "#ff8341",
-          5, // Commercial & Office Buildings
-          "#cc3e3d",
-          6, // Industrial & Manufacturing
-          "#c26dd1",
-          7, // Transportation & Utility
-          "#dfbeeb",
-          8, // Public Facilities & Institutions
-          "#519dc4",
-          9, // Open Space & Outdoor Recreation
-          "#699466",
-          10, // Parking Facilities
-          "#bab8b6",
-          11, // Vacant Land
-          "#555555",
-          "#e7e7e7", // Other
-        ],
-      },
-      minzoom: 2,
-      maxzoom: 16,
+    Object.keys(choropleth).forEach((k) => {
+      let fillColor = choropleth[k].fillColor;
+      let choroplethIsVisible =
+        index === currentYearIndex && activeLayer === k ? "visible" : "none";
+
+      // Choropleth
+      map.addLayer({
+        id: `${layerData.id}-${k}`,
+        source: `pluto-${y}`,
+        "source-layer": layerData.id,
+        type: "fill",
+        layout: {
+          visibility: choroplethIsVisible,
+        },
+        paint: {
+          "fill-color": fillColor,
+        },
+        minzoom: 2,
+        maxzoom: 16,
+      });
     });
 
+    // Line
     map.addLayer({
       id: `${layerData.id}-line`,
       source: `pluto-${y}`,
@@ -223,8 +211,6 @@ map.on("load", function () {
   });
 
   getZoom(map);
-
-  // console.log(map.getStyle().layers);)
 
   map.on("zoom", function () {
     getZoom(map);
@@ -253,15 +239,17 @@ function advanceYear(step) {
     setYear(year);
 
     let layerData = data[year];
-    map.setLayoutProperty(layerData.id, "visibility", "visible");
+    let choroId = `${layerData.id}-${activeLayer}`;
+    let prevChoroId = `${prevLayerData.id}-${activeLayer}`;
+
+    map.setLayoutProperty(choroId, "visibility", "visible");
     map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
 
     let scalar = (1.59 - map.getZoom() / 10) * 5 + 1;
-    let timeout = 350 * scalar;
-    console.log(timeout, scalar);
+    let timeout = 500 * scalar;
 
     setTimeout(() => {
-      map.setLayoutProperty(prevLayerData.id, "visibility", "none");
+      map.setLayoutProperty(prevChoroId, "visibility", "none");
       map.setLayoutProperty(`${prevLayerData.id}-line`, "visibility", "none");
     }, timeout);
   }
@@ -279,7 +267,6 @@ nextYearButton.onclick = () => {
 };
 
 document.onkeydown = function (e) {
-  console.log(e.key);
   switch (e.key) {
     case "p":
       window.print();
