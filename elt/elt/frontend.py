@@ -3,15 +3,7 @@ import os
 import re
 import subprocess
 
-TILES_DIR = "/Users/raphaellaude/Documents/Projects/dxd/processed_data/tiles/"
-
-
-def get_landuse(year):
-    if year == "02":
-        return "landUse2"
-    elif year in ("03", "04"):
-        return "LANDUSE"
-    return "LandUse"
+TILES_DIR = "/Users/raphaellaude/Documents/Projects/dxd/v2/assets/tilesets"
 
 
 def get_layer_id(tiles):
@@ -41,19 +33,49 @@ def create_json():
             json[year] = {
                 "year": int("20" + year),
                 "id": layer_id,
-                "url": f"pmtiles://https://pluto-hist.s3.amazonaws.com/data/{tiles}",
+                "url": f"pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/{tiles}",
                 "columns": [
                     {
                         "name": "Land use",
-                        "id": get_landuse(year),
-                    }
+                        "id": "landuse",
+                    },
+                    {
+                        "name": "Simplified zoning district",
+                        "id": "zonedist1",
+                    },
+                    {
+                        "name": "Assessed land value",
+                        "id": "assessland",
+                    },
+                    {
+                        "name": "Assessed total value",
+                        "id": "assesstot",
+
+                    },
+                    {
+                        "name": "Number of floors",
+                        "id": "numfloors",
+                    },
+                    {
+                        "name": "Year built",
+                        "id": "yearbuilt",
+                    },
+                    {
+                        "name": "Residential units",
+                        "id": "unitsres",
+                    },
+                    {
+                        "name": "Building class",
+                        "id": "bldgclass",
+                    },
+                    {
+                        "name": "Year altered",
+                        "id": "yearalter1",
+                    },
+                    {
+                        "name": "Built FAR",
+                        "id": "builtfar",
+                    },
                 ],
             }
     return json
-
-
-if __name__ == "__main__":
-    data = create_json()
-
-    with open("data.json", "w") as f:
-        f.write(json.dumps(data))

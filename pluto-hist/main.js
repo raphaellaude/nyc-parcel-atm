@@ -175,27 +175,27 @@ map.on("load", function () {
         "fill-color": [
           "match",
           ["get", layerData.columns[0].id],
-          "01", // 1 & 2 Family Buildings
+          1, // 1 & 2 Family Buildings
           "#feffa8",
-          "02", // Multi-Family Walk-Up Buildings
+          2, // Multi-Family Walk-Up Buildings
           "#fcb841",
-          "03", // Multi-Family Elevator Buildings
+          3, // Multi-Family Elevator Buildings
           "#c98e0e",
-          "04", // Mixed Residential & Commercial Buildings
+          4, // Mixed Residential & Commercial Buildings
           "#ff8341",
-          "05", // Commercial & Office Buildings
+          5, // Commercial & Office Buildings
           "#cc3e3d",
-          "06", // Industrial & Manufacturing
+          6, // Industrial & Manufacturing
           "#c26dd1",
-          "07", // Transportation & Utility
+          7, // Transportation & Utility
           "#dfbeeb",
-          "08", // Public Facilities & Institutions
+          8, // Public Facilities & Institutions
           "#519dc4",
-          "09", // Open Space & Outdoor Recreation
+          9, // Open Space & Outdoor Recreation
           "#699466",
-          "10", // Parking Facilities
+          10, // Parking Facilities
           "#bab8b6",
-          "11", // Vacant Land
+          11, // Vacant Land
           "#555555",
           "#e7e7e7", // Other
         ],
@@ -256,10 +256,14 @@ function advanceYear(step) {
     map.setLayoutProperty(layerData.id, "visibility", "visible");
     map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
 
+    let scalar = (1.59 - map.getZoom() / 10) * 5 + 1;
+    let timeout = 350 * scalar;
+    console.log(timeout, scalar);
+
     setTimeout(() => {
       map.setLayoutProperty(prevLayerData.id, "visibility", "none");
       map.setLayoutProperty(`${prevLayerData.id}-line`, "visibility", "none");
-    }, 750);
+    }, timeout);
   }
 }
 

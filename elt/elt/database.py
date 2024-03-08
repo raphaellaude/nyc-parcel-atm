@@ -1,5 +1,6 @@
 import os
 import duckdb
+import functools
 import pandas as pd
 from thefuzz import fuzz
 from itertools import combinations
@@ -10,11 +11,20 @@ from .constants import DB_PATH, YEARS
 from .jinja import render_template
 
 
-CONN = duckdb.connect(DB_PATH)
-CONN.execute("INSTALL spatial; LOAD spatial;")
+def with_conn(func):
+    @functools.wraps(func)
+    def wrapper_decorator(*args, **kwargs):
+        conn = duckdb.connect(DB_PATH)
+        conn.execute("INSTALL spatial; LOAD spatial;")
+
+        value = func(*args, **kwargs, conn=conn)
+
+        return value
+    return wrapper_decorator
 
 
-def create_table(alias: str, shp_files: Sequence[Union[Path, str]]):
+@with_conn
+def create_table(alias: str, shp_files: Sequence[Union[Path, str]], conn):
     """ """
     print(f"Creating table {alias} from {shp_files}")
 
@@ -23,20 +33,24 @@ def create_table(alias: str, shp_files: Sequence[Union[Path, str]]):
 
     first_file = shp_files[0]
 
-    CONN.execute(f"CREATE TABLE {alias} AS SELECT * FROM ST_Read('{first_file}')")
+    conn.execute(f"CREATE TABLE {alias} AS SELECT * FROM ST_Read('{first_file}')")
 
     for shp_file in shp_files[1:]:
-        CONN.execute(f"INSERT INTO {alias} SELECT * FROM ST_Read('{shp_file}')")
+        conn.execute(f"INSERT INTO {alias} SELECT * FROM ST_Read('{shp_file}')")
 
 
-def column_availibility(tables) -> pd.DataFrame:
+@with_conn
+def column_availibility(tables, conn) -> pd.DataFrame:
     """
     Get the column availibility for each year.
     """
+    conn = duckdb.connect(DB_PATH)
+    conn.execute("INSTALL spatial; LOAD spatial;")
+
     dfs: list[pd.DataFrame] = []
 
     for layer in tables:
-        result = CONN.execute(
+        result = conn.execute(
             f"select distinct lower(column_name) as name from (describe {layer})"
         ).fetchdf()
         result.set_index("name", inplace=True)
