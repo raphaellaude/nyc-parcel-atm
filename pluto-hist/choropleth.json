@@ -1,5 +1,6 @@
 {
   "landuse": {
+    "title": "Land Use",
     "fillColor": [
       "match",
       ["get", "landuse"],
@@ -26,9 +27,24 @@
       11,
       "#555555",
       "#e7e7e7"
+    ],
+    "legend": [
+      "1 & 2 Family Buildings",
+      "Multi-Family Walk-Up Buildings",
+      "Multi-Family Elevator Buildings",
+      "Mixed Residential & Commercial Buildings",
+      "Commercial & Office Buildings",
+      "Industrial & Manufacturing",
+      "Transportation & Utility",
+      "Public Facilities & Institutions",
+      "Open Space & Outdoor Recreation",
+      "Parking Facilities",
+      "Vacant Land",
+      "Other"
     ]
   },
   "assesstot": {
+    "title": "Total Assessed Value",
     "fillColor": [
       "interpolate",
       ["linear"],

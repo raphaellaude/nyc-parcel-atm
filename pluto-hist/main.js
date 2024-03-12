@@ -18,7 +18,9 @@ let step = 1;
 
 // PLUTO choropleth vars
 
-let activeLayer = "assesstot";
+let choroplethLayers = Object.keys(choropleth);
+console.log(choroplethLayers);
+let activeLayer = "landuse";
 
 var map = new maplibregl.Map({
   container: "map",
@@ -53,6 +55,46 @@ function addAttributeToId(elementId, attributeName, attributeValue) {
     element.style[attributeName] = attributeValue;
   }
 }
+
+function renderLegend(title, colors, labels) {
+  var legend = document.getElementById("legend");
+  let legendHTML = `<h3>${title}</h3>`;
+  for (var i = 0; i < colors.length; i++) {
+    legendHTML += `
+    <div class="legend-item">
+      <div class="legend-color" style="background-color:${colors[i]}"></div>
+      <p class="legend-text">${labels[i]}</p>
+    </div>`;
+  }
+  legend.innerHTML = legendHTML;
+}
+
+function getLegend(choroplethLayer) {
+  let choroplethFill = choropleth[choroplethLayer].fillColor;
+
+  if (choroplethFill == undefined) {
+    console.log("No fill color for choropleth layer: " + choroplethLayer);
+    return;
+  }
+
+  let colors = choroplethFill.slice(2).filter((c) => typeof c === "string");
+  let values;
+
+  if (choroplethFill[0] === "match") {
+    values = choropleth[choroplethLayer].legend;
+  } else if (choroplethFill[0] === "interpolate") {
+    values = choroplethFill.slice(2).filter((c) => typeof c === "number");
+  }
+
+  if (colors.length != values.length) {
+    console.error("Number of colors and values in legend do not match");
+    return;
+  }
+
+  renderLegend(choropleth[choroplethLayer].title, colors, values);
+}
+
+getLegend(activeLayer);
 
 if (import.meta.env.VITE_KIOSK === "true") {
   console.log("Running in kiosk mode");
@@ -169,7 +211,7 @@ map.on("load", function () {
       url: layerData.url,
     });
 
-    Object.keys(choropleth).forEach((k) => {
+    choroplethLayers.forEach((k) => {
       let fillColor = choropleth[k].fillColor;
       let choroplethIsVisible =
         index === currentYearIndex && activeLayer === k ? "visible" : "none";
