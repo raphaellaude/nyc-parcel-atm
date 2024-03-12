@@ -1,9 +1,12 @@
 import "./style.css";
 import * as pmtiles from "pmtiles";
 import data from "./data.json";
+import choropleth from "./choropleth.json";
 
 let protocol = new pmtiles.Protocol();
 maplibregl.addProtocol("pmtiles", protocol.tile);
+
+// Years vars
 
 let years = Object.keys(data).sort();
 let currentYearIndex = 0;
@@ -11,8 +14,12 @@ let currentYearIndex = 0;
 let year = years[currentYearIndex];
 
 let MaxYear = years[years.length - 1];
-console.log(`MaxYear: ${MaxYear}`);
 let step = 1;
+
+// PLUTO choropleth vars
+
+let choroplethLayers = Object.keys(choropleth);
+let activeLayer = "landuse";
 
 var map = new maplibregl.Map({
   container: "map",
@@ -48,6 +55,81 @@ function addAttributeToId(elementId, attributeName, attributeValue) {
   }
 }
 
+function renderLegend(title, colors, labels) {
+  var legend = document.getElementById("legend");
+  var legendTitle = document.getElementById("layer");
+  legendTitle.innerHTML = title;
+  let legendHTML = "";
+  for (var i = 0; i < colors.length; i++) {
+    legendHTML += `
+    <div class="legend-item">
+      <div class="legend-color" style="background-color:${colors[i]}"></div>
+      <p class="legend-text">${labels[i]}</p>
+    </div>`;
+  }
+  legend.innerHTML = legendHTML;
+}
+
+function getLegend(choroplethLayer) {
+  let choroplethFill = choropleth[choroplethLayer].fillColor;
+
+  if (choroplethFill == undefined) {
+    return;
+  }
+
+  let colors = choroplethFill.slice(2).filter((c) => typeof c === "string");
+  let values;
+
+  if (choroplethFill[0] === "match") {
+    values = choropleth[choroplethLayer].legend;
+  } else if (choroplethFill[0] === "interpolate") {
+    values = choroplethFill.slice(2).filter((c) => typeof c === "number");
+
+    let formatter = (() => {
+      switch (choropleth[choroplethLayer].numberFormat) {
+        case "usd":
+          return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            notation: "compact",
+            compactDisplay: "short",
+          });
+        case "year":
+          return new Intl.NumberFormat("en-US", {
+            useGrouping: false,
+          });
+        case "int":
+          return new Intl.NumberFormat("en-US", {
+            style: "decimal",
+            notation: "compact",
+            compactDisplay: "short",
+          });
+        default:
+          return new Intl.NumberFormat("en-US", {
+            style: "decimal",
+            maximumFractionDigits: 1,
+          });
+      }
+    })();
+
+    values = values.map((v, i) => {
+      if (i === values.length - 1) {
+        return `${formatter.format(v)}+`;
+      }
+      return `${formatter.format(v)} – ${formatter.format(values[i + 1])}`;
+    });
+  }
+
+  if (colors.length != values.length) {
+    console.error("Number of colors and values in legend do not match");
+    return;
+  }
+
+  renderLegend(choropleth[choroplethLayer].title, colors, values);
+}
+
+getLegend(activeLayer);
+
 if (import.meta.env.VITE_KIOSK === "true") {
   console.log("Running in kiosk mode");
   document.body.classList.add("kiosk");
@@ -56,6 +138,8 @@ if (import.meta.env.VITE_KIOSK === "true") {
   addAttributeToId("about", "display", "none");
   addAttributeToId("prev-year", "display", "none");
   addAttributeToId("next-year", "display", "none");
+  addAttributeToId("prev-layer", "display", "none");
+  addAttributeToId("next-layer", "display", "none");
 }
 // hide for now while not working on vercel
 
@@ -163,47 +247,29 @@ map.on("load", function () {
       url: layerData.url,
     });
 
-    map.addLayer({
-      id: layerData.id,
-      source: `pluto-${y}`,
-      "source-layer": layerData.id,
-      type: "fill",
-      layout: {
-        visibility: isVisible,
-      },
-      paint: {
-        "fill-color": [
-          "match",
-          ["get", layerData.columns[0].id],
-          "01", // 1 & 2 Family Buildings
-          "#feffa8",
-          "02", // Multi-Family Walk-Up Buildings
-          "#fcb841",
-          "03", // Multi-Family Elevator Buildings
-          "#c98e0e",
-          "04", // Mixed Residential & Commercial Buildings
-          "#ff8341",
-          "05", // Commercial & Office Buildings
-          "#cc3e3d",
-          "06", // Industrial & Manufacturing
-          "#c26dd1",
-          "07", // Transportation & Utility
-          "#dfbeeb",
-          "08", // Public Facilities & Institutions
-          "#519dc4",
-          "09", // Open Space & Outdoor Recreation
-          "#699466",
-          "10", // Parking Facilities
-          "#bab8b6",
-          "11", // Vacant Land
-          "#555555",
-          "#e7e7e7", // Other
-        ],
-      },
-      minzoom: 2,
-      maxzoom: 16,
+    choroplethLayers.forEach((k) => {
+      let fillColor = choropleth[k].fillColor;
+      let choroplethIsVisible =
+        index === currentYearIndex && activeLayer === k ? "visible" : "none";
+
+      // Choropleth
+      map.addLayer({
+        id: `${layerData.id}-${k}`,
+        source: `pluto-${y}`,
+        "source-layer": layerData.id,
+        type: "fill",
+        layout: {
+          visibility: choroplethIsVisible,
+        },
+        paint: {
+          "fill-color": fillColor,
+        },
+        minzoom: 2,
+        maxzoom: 16,
+      });
     });
 
+    // Line
     map.addLayer({
       id: `${layerData.id}-line`,
       source: `pluto-${y}`,
@@ -224,8 +290,6 @@ map.on("load", function () {
 
   getZoom(map);
 
-  // console.log(map.getStyle().layers);)
-
   map.on("zoom", function () {
     getZoom(map);
   });
@@ -235,14 +299,7 @@ map.on("load", function () {
   });
 });
 
-// map.on("mousemove", (e) => {
-//   const features = map.queryRenderedFeatures(e.point);
-//   if (features.length > 0) {
-//     console.log(features);
-//   }
-// });
-
-function advanceYear(step) {
+function changeLayer(step, prevLayer, nextLayer) {
   if (currentYearIndex + step < MaxYear - 1 && currentYearIndex + step >= 0) {
     let curYear = years[currentYearIndex];
     let prevLayerData = data[curYear];
@@ -253,13 +310,23 @@ function advanceYear(step) {
     setYear(year);
 
     let layerData = data[year];
-    map.setLayoutProperty(layerData.id, "visibility", "visible");
-    map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
+    let choroId = `${layerData.id}-${nextLayer}`;
+    let prevChoroId = `${prevLayerData.id}-${prevLayer}`;
+
+    map.setLayoutProperty(choroId, "visibility", "visible");
+    if (step != 0) {
+      map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
+    }
+
+    let scalar = (1.59 - map.getZoom() / 10) * 5 + 1;
+    let timeout = 500 * scalar * (step === 0 ? step : 1);
 
     setTimeout(() => {
-      map.setLayoutProperty(prevLayerData.id, "visibility", "none");
-      map.setLayoutProperty(`${prevLayerData.id}-line`, "visibility", "none");
-    }, 750);
+      map.setLayoutProperty(prevChoroId, "visibility", "none");
+      if (step != 0) {
+        map.setLayoutProperty(`${prevLayerData.id}-line`, "visibility", "none");
+      }
+    }, timeout);
   }
 }
 
@@ -267,15 +334,39 @@ const prevYearButton = document.getElementById("prev-year");
 const nextYearButton = document.getElementById("next-year");
 
 prevYearButton.onclick = () => {
-  advanceYear(-step);
+  changeLayer(-step, activeLayer, activeLayer);
 };
 
 nextYearButton.onclick = () => {
-  advanceYear(step);
+  changeLayer(step, activeLayer, activeLayer);
+};
+
+const prevLayerButton = document.getElementById("prev-layer");
+const nextLayerButton = document.getElementById("next-layer");
+
+prevLayerButton.onclick = () => {
+  advanceLayer(-1);
+};
+
+nextLayerButton.onclick = () => {
+  advanceLayer(1);
+};
+
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
+
+const advanceLayer = (step) => {
+  let prevLayer = activeLayer;
+  let layerIndex = choroplethLayers.indexOf(activeLayer);
+  let nextLayerIndex = mod(layerIndex + step, choroplethLayers.length);
+  activeLayer = choroplethLayers[nextLayerIndex];
+
+  changeLayer(0, prevLayer, activeLayer);
+  getLegend(activeLayer);
 };
 
 document.onkeydown = function (e) {
-  console.log(e.key);
   switch (e.key) {
     case "p":
       window.print();
@@ -284,16 +375,16 @@ document.onkeydown = function (e) {
       window.print();
       break;
     case "a":
-      advanceYear(-step);
+      changeLayer(-step, activeLayer, activeLayer);
       break;
     case "s":
-      advanceYear(step);
+      changeLayer(step, activeLayer, activeLayer);
       break;
     case "PageDown":
-      advanceYear(-step);
+      changeLayer(-step, activeLayer, activeLayer);
       break;
     case "PageUp":
-      advanceYear(step);
+      changeLayer(step, activeLayer, activeLayer);
       break;
     case "q":
       if (map !== undefined) {

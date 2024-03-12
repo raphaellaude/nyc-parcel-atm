@@ -37,6 +37,7 @@
                 <h1 class="title">NYC Parcel ATM</h1>
             </div>
             <h2 class="subtitle">Exploring PLUTO's 22 year history</h2>
+            <p id="zoom" class="no-print"></p>
             <button
                 id="about"
                 hx-get="src/about.html"
@@ -47,109 +48,17 @@
                 About this project
             </button>
             <div id="about-modal"></div>
-            <div style="display: flex; align-items: center; gap: 8px">
+            <div id="switcher">
                 <button id="prev-year">&larr;</button>
                 <h3 class="title mapquest no-print" id="year">2002</h3>
                 <button id="next-year">&rarr;</button>
             </div>
-            <p id="zoom" class="no-print"></p>
-            <div id="legend">
-                <!-- <h3>Land use</h3> -->
-                <div class="legend-item">
-                    <div
-                        class="legend-color"
-                        style="background-color: #feffa8"
-                    ></div>
-                    <p class="legend-text">01: 1 & 2 Family Buildings</p>
-                </div>
-                <div class="legend-item">
-                    <div
-                        class="legend-color"
-                        style="background-color: #fcb841"
-                    ></div>
-                    <p class="legend-text">
-                        02: Multi-Family Walk-Up Buildings
-                    </p>
-                </div>
-                <div class="legend-item">
-                    <div
-                        class="legend-color"
-                        style="background-color: #c98e0e"
-                    ></div>
-                    <p class="legend-text">
-                        03: Multi-Family Elevator Buildings
-                    </p>
-                </div>
-                <div class="legend-item">
-                    <div
-                        class="legend-color"
-                        style="background-color: #ff8341"
-                    ></div>
-                    <p class="legend-text">
-                        04: Mixed Residential & Commercial Buildings
-                    </p>
-                </div>
-                <div class="legend-item">
-                    <div
-                        class="legend-color"
-                        style="background-color: #cc3e3d"
-                    ></div>
-                    <p class="legend-text">05: Commercial & Office Buildings</p>
-                </div>
-                <div class="legend-item">
-                    <div
-                        class="legend-color"
-                        style="background-color: #c26dd1"
-                    ></div>
-                    <p class="legend-text">06: Industrial & Manufacturing</p>
-                </div>
-                <div class="legend-item">
-                    <div
-                        class="legend-color"
-                        style="background-color: #dfbeeb"
-                    ></div>
-                    <p class="legend-text">07: Transportation & Utility</p>
-                </div>
-                <div class="legend-item">
-                    <div
-                        class="legend-color"
-                        style="background-color: #519dc4"
-                    ></div>
-                    <p class="legend-text">
-                        08: Public Facilities & Institutions
-                    </p>
-                </div>
-                <div class="legend-item">
-                    <div
-                        class="legend-color"
-                        style="background-color: #699466"
-                    ></div>
-                    <p class="legend-text">
-                        09: Open Space & Outdoor Recreation
-                    </p>
-                </div>
-                <div class="legend-item">
-                    <div
-                        class="legend-color"
-                        style="background-color: #bab8b6"
-                    ></div>
-                    <p class="legend-text">10: Parking Facilities</p>
-                </div>
-                <div class="legend-item">
-                    <div
-                        class="legend-color"
-                        style="background-color: #555555"
-                    ></div>
-                    <p class="legend-text">11: Vacant Land</p>
-                </div>
-                <div class="legend-item">
-                    <div
-                        class="legend-color"
-                        style="background-color: #e7e7e7"
-                    ></div>
-                    <p class="legend-text">Other</p>
-                </div>
+            <div id="switcher">
+                <button id="prev-layer">&larr;</button>
+                <h3 class="title mapquest no-print" id="layer">Land Use</h3>
+                <button id="next-layer">&rarr;</button>
             </div>
+            <div id="legend"></div>
             <div id="data"></div>
         </div>
         <div id="controls" class="mapquest no-print">

@@ -1,134 +1,376 @@
 {
-  "12": {
-    "year": 2012,
-    "id": "mappluto_12v2",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/mappluto_12v2.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "02": {
-    "year": 2002,
-    "id": "pluto02",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/pluto-02.pmtiles",
-    "columns": [{ "name": "Land use", "id": "landUse2" }]
-  },
-  "14": {
-    "year": 2014,
-    "id": "mappluto_14v2",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/mappluto_14v2.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "03": {
-    "year": 2003,
-    "id": "pluto03",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/pluto-03.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LANDUSE" }]
-  },
-  "15": {
-    "year": 2015,
-    "id": "mappluto_15v1",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/mappluto_15v1.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
   "08": {
     "year": 2008,
-    "id": "mappluto_08b",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/mappluto_08b.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "22": {
-    "year": 2022,
-    "id": "nyc_mappluto_22v2_arc_shp",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/nyc_mappluto_22v2_arc_shp.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "13": {
-    "year": 2013,
-    "id": "mappluto_13v2",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/mappluto_13v2.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "21": {
-    "year": 2021,
-    "id": "nyc_mappluto_21v3_arc_shp",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/nyc_mappluto_21v3_arc_shp.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "23": {
-    "year": 2023,
-    "id": "nyc_mappluto_23v2_arc_shp",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/nyc_mappluto_23v2_arc_shp.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "10": {
-    "year": 2010,
-    "id": "mappluto_10v2",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/mappluto_10v2.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "05": {
-    "year": 2005,
-    "id": "pluto05",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/pluto-05.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "09": {
-    "year": 2009,
-    "id": "mappluto_09v2",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/mappluto_09v2.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "16": {
-    "year": 2016,
-    "id": "mappluto_16v2",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/mappluto_16v2.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "04": {
-    "year": 2004,
-    "id": "pluto04",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/pluto-04.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LANDUSE" }]
-  },
-  "18": {
-    "year": 2018,
-    "id": "nyc_mappluto_18v2_1_arc_shp",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/nyc_mappluto_18v2_1_arc_shp.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "06": {
-    "year": 2006,
-    "id": "pluto06",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/pluto-06.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "07": {
-    "year": 2007,
-    "id": "mappluto_07c",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/mappluto_07c.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
-  },
-  "19": {
-    "year": 2019,
-    "id": "nyc_mappluto_19v2_arc_shp",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/nyc_mappluto_19v2_arc_shp.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
+    "id": "pluto08_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto08_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
   },
   "11": {
     "year": 2011,
-    "id": "mappluto_11v2",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/mappluto_11v2.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
+    "id": "pluto11_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto11_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "23": {
+    "year": 2023,
+    "id": "pluto23_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto23_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "07": {
+    "year": 2007,
+    "id": "pluto07_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto07_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "19": {
+    "year": 2019,
+    "id": "pluto19_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto19_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "16": {
+    "year": 2016,
+    "id": "pluto16_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto16_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "18": {
+    "year": 2018,
+    "id": "pluto18_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto18_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
   },
   "17": {
     "year": 2017,
-    "id": "mappluto_17v1_1",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/mappluto_17v1_1.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
+    "id": "pluto17_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto17_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "09": {
+    "year": 2009,
+    "id": "pluto09_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto09_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "10": {
+    "year": 2010,
+    "id": "pluto10_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto10_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "22": {
+    "year": 2022,
+    "id": "pluto22_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto22_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "06": {
+    "year": 2006,
+    "id": "pluto06_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto06_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "03": {
+    "year": 2003,
+    "id": "pluto03_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto03_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "15": {
+    "year": 2015,
+    "id": "pluto15_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto15_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "12": {
+    "year": 2012,
+    "id": "pluto12_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto12_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "04": {
+    "year": 2004,
+    "id": "pluto04_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto04_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
   },
   "20": {
     "year": 2020,
-    "id": "nyc_mappluto_20v8_arc_shp",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/nyc_mappluto_20v8_arc_shp.pmtiles",
-    "columns": [{ "name": "Land use", "id": "LandUse" }]
+    "id": "pluto20_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto20_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "13": {
+    "year": 2013,
+    "id": "pluto13_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto13_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "05": {
+    "year": 2005,
+    "id": "pluto05_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto05_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "21": {
+    "year": 2021,
+    "id": "pluto21_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto21_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "02": {
+    "year": 2002,
+    "id": "pluto02_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto02_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
+  },
+  "14": {
+    "year": 2014,
+    "id": "pluto14_shp_wgs",
+    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto14_shp_wgs.pmtiles",
+    "columns": [
+      { "name": "Land use", "id": "landuse" },
+      { "name": "Simplified zoning district", "id": "zonedist1" },
+      { "name": "Assessed land value", "id": "assessland" },
+      { "name": "Assessed total value", "id": "assesstot" },
+      { "name": "Number of floors", "id": "numfloors" },
+      { "name": "Year built", "id": "yearbuilt" },
+      { "name": "Residential units", "id": "unitsres" },
+      { "name": "Building class", "id": "bldgclass" },
+      { "name": "Year altered", "id": "yearalter1" },
+      { "name": "Built FAR", "id": "builtfar" }
+    ]
   }
 }
