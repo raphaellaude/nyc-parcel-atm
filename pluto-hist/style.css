@@ -109,15 +109,19 @@ h1 {
     }
 }
 
-#year {
-    /* position: fixed; */
-    /* top: 0.67em; */
-    /* z-index: 1; */
-    /* right: 0px; */
-    /* padding: var(--box-padding);
-  margin: var(--box-padding); */
+#switcher {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+#year,
+#layer {
     font-size: 1rem;
     font-weight: 500;
+    margin: 0;
 }
 
 #zoom {
@@ -128,7 +132,7 @@ h1 {
 
 #legend {
     color: var(--text-color);
-    margin-bottom: 1em;
+    margin: 1em 0;
 }
 
 .legend-item {

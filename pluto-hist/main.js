@@ -19,7 +19,6 @@ let step = 1;
 // PLUTO choropleth vars
 
 let choroplethLayers = Object.keys(choropleth);
-console.log(choroplethLayers);
 let activeLayer = "landuse";
 
 var map = new maplibregl.Map({
@@ -58,7 +57,9 @@ function addAttributeToId(elementId, attributeName, attributeValue) {
 
 function renderLegend(title, colors, labels) {
   var legend = document.getElementById("legend");
-  let legendHTML = `<h3>${title}</h3>`;
+  var legendTitle = document.getElementById("layer");
+  legendTitle.innerHTML = title;
+  let legendHTML = "";
   for (var i = 0; i < colors.length; i++) {
     legendHTML += `
     <div class="legend-item">
@@ -73,7 +74,6 @@ function getLegend(choroplethLayer) {
   let choroplethFill = choropleth[choroplethLayer].fillColor;
 
   if (choroplethFill == undefined) {
-    console.log("No fill color for choropleth layer: " + choroplethLayer);
     return;
   }
 
@@ -84,6 +84,40 @@ function getLegend(choroplethLayer) {
     values = choropleth[choroplethLayer].legend;
   } else if (choroplethFill[0] === "interpolate") {
     values = choroplethFill.slice(2).filter((c) => typeof c === "number");
+
+    let formatter = (() => {
+      switch (choropleth[choroplethLayer].numberFormat) {
+        case "usd":
+          return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            notation: "compact",
+            compactDisplay: "short",
+          });
+        case "year":
+          return new Intl.NumberFormat("en-US", {
+            useGrouping: false,
+          });
+        case "int":
+          return new Intl.NumberFormat("en-US", {
+            style: "decimal",
+            notation: "compact",
+            compactDisplay: "short",
+          });
+        default:
+          return new Intl.NumberFormat("en-US", {
+            style: "decimal",
+            maximumFractionDigits: 1,
+          });
+      }
+    })();
+
+    values = values.map((v, i) => {
+      if (i === values.length - 1) {
+        return `${formatter.format(v)}+`;
+      }
+      return `${formatter.format(v)} – ${formatter.format(values[i + 1])}`;
+    });
   }
 
   if (colors.length != values.length) {
@@ -104,6 +138,8 @@ if (import.meta.env.VITE_KIOSK === "true") {
   addAttributeToId("about", "display", "none");
   addAttributeToId("prev-year", "display", "none");
   addAttributeToId("next-year", "display", "none");
+  addAttributeToId("prev-layer", "display", "none");
+  addAttributeToId("next-layer", "display", "none");
 }
 // hide for now while not working on vercel
 
@@ -263,14 +299,7 @@ map.on("load", function () {
   });
 });
 
-// map.on("mousemove", (e) => {
-//   const features = map.queryRenderedFeatures(e.point);
-//   if (features.length > 0) {
-//     console.log(features);
-//   }
-// });
-
-function advanceYear(step) {
+function changeLayer(step, prevLayer, nextLayer) {
   if (currentYearIndex + step < MaxYear - 1 && currentYearIndex + step >= 0) {
     let curYear = years[currentYearIndex];
     let prevLayerData = data[curYear];
@@ -281,18 +310,22 @@ function advanceYear(step) {
     setYear(year);
 
     let layerData = data[year];
-    let choroId = `${layerData.id}-${activeLayer}`;
-    let prevChoroId = `${prevLayerData.id}-${activeLayer}`;
+    let choroId = `${layerData.id}-${nextLayer}`;
+    let prevChoroId = `${prevLayerData.id}-${prevLayer}`;
 
     map.setLayoutProperty(choroId, "visibility", "visible");
-    map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
+    if (step != 0) {
+      map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
+    }
 
     let scalar = (1.59 - map.getZoom() / 10) * 5 + 1;
-    let timeout = 500 * scalar;
+    let timeout = 500 * scalar * (step === 0 ? step : 1);
 
     setTimeout(() => {
       map.setLayoutProperty(prevChoroId, "visibility", "none");
-      map.setLayoutProperty(`${prevLayerData.id}-line`, "visibility", "none");
+      if (step != 0) {
+        map.setLayoutProperty(`${prevLayerData.id}-line`, "visibility", "none");
+      }
     }, timeout);
   }
 }
@@ -301,11 +334,36 @@ const prevYearButton = document.getElementById("prev-year");
 const nextYearButton = document.getElementById("next-year");
 
 prevYearButton.onclick = () => {
-  advanceYear(-step);
+  changeLayer(-step, activeLayer, activeLayer);
 };
 
 nextYearButton.onclick = () => {
-  advanceYear(step);
+  changeLayer(step, activeLayer, activeLayer);
+};
+
+const prevLayerButton = document.getElementById("prev-layer");
+const nextLayerButton = document.getElementById("next-layer");
+
+prevLayerButton.onclick = () => {
+  advanceLayer(-1);
+};
+
+nextLayerButton.onclick = () => {
+  advanceLayer(1);
+};
+
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
+
+const advanceLayer = (step) => {
+  let prevLayer = activeLayer;
+  let layerIndex = choroplethLayers.indexOf(activeLayer);
+  let nextLayerIndex = mod(layerIndex + step, choroplethLayers.length);
+  activeLayer = choroplethLayers[nextLayerIndex];
+
+  changeLayer(0, prevLayer, activeLayer);
+  getLegend(activeLayer);
 };
 
 document.onkeydown = function (e) {
@@ -317,16 +375,16 @@ document.onkeydown = function (e) {
       window.print();
       break;
     case "a":
-      advanceYear(-step);
+      changeLayer(-step, activeLayer, activeLayer);
       break;
     case "s":
-      advanceYear(step);
+      changeLayer(step, activeLayer, activeLayer);
       break;
     case "PageDown":
-      advanceYear(-step);
+      changeLayer(-step, activeLayer, activeLayer);
       break;
     case "PageUp":
-      advanceYear(step);
+      changeLayer(step, activeLayer, activeLayer);
       break;
     case "q":
       if (map !== undefined) {

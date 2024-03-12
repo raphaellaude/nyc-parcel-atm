@@ -37,6 +37,7 @@
                 <h1 class="title">NYC Parcel ATM</h1>
             </div>
             <h2 class="subtitle">Exploring PLUTO's 22 year history</h2>
+            <p id="zoom" class="no-print"></p>
             <button
                 id="about"
                 hx-get="src/about.html"
@@ -47,12 +48,16 @@
                 About this project
             </button>
             <div id="about-modal"></div>
-            <div style="display: flex; align-items: center; gap: 8px">
+            <div id="switcher">
                 <button id="prev-year">&larr;</button>
                 <h3 class="title mapquest no-print" id="year">2002</h3>
                 <button id="next-year">&rarr;</button>
             </div>
-            <p id="zoom" class="no-print"></p>
+            <div id="switcher">
+                <button id="prev-layer">&larr;</button>
+                <h3 class="title mapquest no-print" id="layer">Land Use</h3>
+                <button id="next-layer">&rarr;</button>
+            </div>
             <div id="legend"></div>
             <div id="data"></div>
         </div>
