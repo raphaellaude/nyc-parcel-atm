@@ -232,9 +232,9 @@ h1 {
     z-index: 1;
 }
 
-#receipt {
+/* #receipt {
     display: none;
-}
+} */
 
 @media print {
     .no-print,

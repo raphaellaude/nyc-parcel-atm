@@ -13,6 +13,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from jinja import render_template
 from pyproj import Transformer
+from barcode import EAN13
 
 app = FastAPI()
 
@@ -183,8 +184,16 @@ def receipt(lat: str, lon: str):
     body = body.replace("stroke=\"#555555\"", "stroke=\"#000000\"")
     body = scale_svg(body, 300)
 
+    address = result.address[0]
+
+    address_hash = abs(hash(address)) % (10 ** 12)
+    print(address_hash)
+    barcode = EAN13(str(address_hash))
+    barcode_svg = barcode.render()
+    print(barcode_svg)
+
     # svg.body = str.encode(body)
 
     # sql = render_template("receipt.sql.jinja", year=year, lat=y, lon=x)
 
-    return HTMLResponse(render_template("receipt.html.jinja", svg=body, address=result.address[0]))
+    return HTMLResponse(render_template("receipt.html.jinja", svg=body, address=address, barcode=barcode_svg.decode("utf-8")))
