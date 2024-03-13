@@ -33,10 +33,11 @@
                 <img
                     src="atm-logo.jpeg"
                     style="width: 24px; height: 24px; margin-right: 8px"
+                    class="no-print"
                 />
-                <h1 class="title">NYC Parcel ATM</h1>
+                <h1 class="title no-print">NYC Parcel ATM</h1>
             </div>
-            <h2 class="subtitle">Exploring PLUTO's 22 year history</h2>
+            <h2 class="subtitle no-print">Exploring PLUTO's 22 year history</h2>
             <p id="zoom" class="no-print"></p>
             <button
                 id="about"
@@ -47,19 +48,20 @@
             >
                 About this project
             </button>
-            <div id="about-modal"></div>
-            <div id="switcher">
+            <div id="about-modal" class="no-print"></div>
+            <div id="switcher" class="no-print">
                 <button id="prev-year">&larr;</button>
                 <h3 class="title mapquest no-print" id="year">2002</h3>
                 <button id="next-year">&rarr;</button>
             </div>
-            <div id="switcher">
+            <div id="switcher" class="no-print">
                 <button id="prev-layer">&larr;</button>
                 <h3 class="title mapquest no-print" id="layer">Land Use</h3>
                 <button id="next-layer">&rarr;</button>
             </div>
-            <div id="legend"></div>
+            <div id="legend" class="no-print"></div>
             <div id="data"></div>
+            <div id="receipt"></div>
         </div>
         <div id="controls" class="mapquest no-print">
             <div class="legend-item">
@@ -89,7 +91,7 @@
         </div>
         <div id="map" class="no-print"></div>
         <div id="centerMarker" class="no-print"></div>
-        <div id="spinner">&#10003;</div>
+        <div id="spinner" class="no-print">&#10003;</div>
         <script type="module" src="main.js"></script>
     </body>
 </html>

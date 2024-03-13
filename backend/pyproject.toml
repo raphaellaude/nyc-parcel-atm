@@ -14,6 +14,8 @@ duckdb = "^0.10.0"
 python-dotenv = "^1.0.1"
 pandas = "^2.2.0"
 pyproj = "^3.6.1"
+pyogrio = "^0.7.2"
+geopandas = "^0.14.3"
 
 
 [build-system]

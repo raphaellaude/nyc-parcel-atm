@@ -33,7 +33,7 @@ def populate_duckdb_database() -> None:
         print(f"Shp dir: {shp_dir}")
         shp_files = list(shp_dir.glob("**/*mappluto.shp", case_sensitive=False))
         print(f"Found {len(shp_files)} shapefiles for {alias}.")
-        create_table(alias, shp_files) #pyright: ignore
+        create_table(alias, shp_files)  # pyright: ignore
 
 
 def harmonize_pluto_columns() -> DataFrame:
@@ -41,7 +41,7 @@ def harmonize_pluto_columns() -> DataFrame:
     Harmonize PLUTO columns across years.
     """
     tables = [get_pluto_key(year, "shp") for year in YEARS]
-    col_availibility = column_availibility(tables) #pyright: ignore
+    col_availibility = column_availibility(tables)  # pyright: ignore
     match_df = column_similarity(col_availibility)
 
     print(

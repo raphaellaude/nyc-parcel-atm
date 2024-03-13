@@ -232,10 +232,22 @@ h1 {
     z-index: 1;
 }
 
+#receipt {
+    display: none;
+}
+
 @media print {
-    .no-print {
+    .no-print,
+    #controls,
+    #year,
+    #layer {
         display: none;
     }
+
+    #receipt {
+        display: block;
+    }
+
     .mapquest {
         all: unset;
     }

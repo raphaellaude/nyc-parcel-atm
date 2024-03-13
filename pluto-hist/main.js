@@ -212,6 +212,37 @@ async function queryFeatures(year, lat, lng) {
   }
 }
 
+async function getReceipt(lat, lng) {
+  spinner.start();
+
+  // should use queryRenderedFeatures to figure out if there's a feature at the point
+  // before making the API call;
+
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/receipt/${lat}/${lng}`,
+  )
+    .then((response) => {
+      spinner.stop();
+      return response;
+    })
+    .catch((error) => {
+      spinner.stop();
+      console.error("Error:", error);
+    });
+
+  if (response.ok) {
+    if (response.status === 204) {
+      document.getElementById("receipt").innerHTML = "No data";
+      return;
+    }
+    const data = await response.text();
+    document.getElementById("receipt").innerHTML = data;
+  } else {
+    const data = await response.text();
+    document.getElementById("receipt").innerHTML = "Uh oh!" + " " + data;
+  }
+}
+
 async function wakeServer() {
   spinner.start();
 
@@ -366,12 +397,22 @@ const advanceLayer = (step) => {
   getLegend(activeLayer);
 };
 
+async function getReceiptFromKeyPress() {
+  // get location in center screen
+  const { lng, lat } = map.getCenter();
+  console.log(lat, lng);
+  await getReceipt(lat, lng);
+}
+
 document.onkeydown = function (e) {
   switch (e.key) {
     case "p":
-      window.print();
+      getReceiptFromKeyPress().then(() => {
+        window.print();
+      });
       break;
     case "F13":
+      getReceiptFromKeyPress();
       window.print();
       break;
     case "a":

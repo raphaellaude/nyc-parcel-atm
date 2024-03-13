@@ -1,0 +1,7 @@
+{# templates/receipt.sql.jinja #}
+SELECT
+    geom
+FROM
+    pluto{{year}}
+WHERE
+    ST_Intersects(geom, ST_AsWKB(ST_Point({{lon}}, {{lat}})));

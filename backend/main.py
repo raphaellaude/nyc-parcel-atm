@@ -5,6 +5,7 @@ Parcel ATM API
 import os
 import re
 import duckdb
+from pyogrio import read_dataframe
 from dotenv import load_dotenv
 from constants import LAT_REGEX, LON_REGEX, YEARS_REGEX, BASE_PATH, MIN_YEAR, MAX_YEAR
 from fastapi import FastAPI, HTTPException
@@ -98,7 +99,7 @@ def single_year_pluto(year: str, lat: str, lon: str):
     try:
         cursor = conn.execute(sql)
     except duckdb.SerializationException as e:
-        return HTMLResponse("<p style=\"color=grey\">No parcel found</p>")
+        return HTMLResponse('<p style="color=grey">No parcel found</p>')
 
     if cursor.description is None:
         return HTTPException(detail="No cursor description", status_code=404)
@@ -118,3 +119,72 @@ def single_year_pluto(year: str, lat: str, lon: str):
         del record["geom"]
 
     return HTMLResponse(render_template("record_table.html.jinja", record=record))
+
+
+def scale_svg(svg_body, min_dimension=300):
+    width_match = re.search(r'width="([\d.]+)"', svg_body)
+    height_match = re.search(r'height="([\d.]+)"', svg_body)
+
+    if width_match and height_match:
+        width, height = float(width_match.group(1)), float(height_match.group(1))
+
+        aspect_ratio = width / height
+
+        if width > height:
+            new_width = min_dimension
+            new_height = min_dimension / aspect_ratio
+        else:
+            new_height = min_dimension
+            new_width = min_dimension * aspect_ratio
+
+        svg_body = re.sub(r'width="([\d.]+)"', f'width="{new_width}"', svg_body, count=1)
+        svg_body = re.sub(r'height="([\d.]+)"', f'height="{new_height}"', svg_body, count=1)
+
+        stroke_width = re.search(r'stroke-width="([\d.]+)"', svg_body)
+        if stroke_width:
+            scale_factor = width / new_width
+            new_stroke_width = float(stroke_width.group(1)) * scale_factor * .5
+            svg_body = re.sub(r'stroke-width="([\d.]+)"', f'stroke-width="{new_stroke_width}"', svg_body)
+
+        return svg_body
+    else:
+        raise ValueError("Width and height not found in SVG")
+
+
+@app.get("/receipt/{lat}/{lon}")
+def receipt(lat: str, lon: str):
+    """
+    Single year pluto view.
+    """
+    if not re.match(LON_REGEX, lon):
+        raise HTTPException(detail="Invalid longitude", status_code=400)
+
+    if not re.match(LAT_REGEX, lat):
+        return HTTPException(detail="Invalid latitude", status_code=400)
+
+    x, y = WGStoAlbersNYLI.transform(float(lat), float(lon))
+    year = "23"
+    table = pluto_years.get(year)
+
+    result = read_dataframe(
+        table,
+        columns=["address", "geom"],
+        force_2d=True,
+        bbox=(x, y, x, y),
+    )
+
+    try:
+        svg = HTMLResponse(result.geometry[0]._repr_svg_())
+    except KeyError:
+        return HTTPException(detail="No parcel found", status_code=404)
+
+    body = svg.body.decode("utf-8")
+    body = body.replace("fill=\"#66cc99\"", "fill=\"#ffffff\"")
+    body = body.replace("stroke=\"#555555\"", "stroke=\"#000000\"")
+    body = scale_svg(body, 300)
+
+    # svg.body = str.encode(body)
+
+    # sql = render_template("receipt.sql.jinja", year=year, lat=y, lon=x)
+
+    return HTMLResponse(render_template("receipt.html.jinja", svg=body, address=result.address[0]))

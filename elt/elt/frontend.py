@@ -50,7 +50,6 @@ def create_json():
                     {
                         "name": "Assessed total value",
                         "id": "assesstot",
-
                     },
                     {
                         "name": "Number of floors",
