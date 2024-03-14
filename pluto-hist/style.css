@@ -221,9 +221,9 @@ h1 {
 
 /* Receipt CSS */
 
-/* #receipt {
+#receipt {
     display: none;
-} */
+}
 
 .receipt-p-sm {
     font-size: 0.6rem;
@@ -235,6 +235,13 @@ h1 {
     font-size: 0.8rem;
     margin: 0;
     padding: 0;
+}
+
+.dataframe {
+    border-spacing: 0px;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.55rem;
 }
 
 @media print {

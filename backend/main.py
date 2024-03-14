@@ -200,13 +200,10 @@ def get_year_geom_svg(year, x, y):
     # body = svg.body.decode("utf-8")
     body = body.replace('fill="#66cc99"', 'fill="#ffffff"')
     body = body.replace('stroke="#555555"', 'stroke="#000000"')
-    body = re.sub(
-        r'opacity="([\d.]+)"', f'fill-opacity="0.0"', body
-    )
+    body = re.sub(r'opacity="([\d.]+)"', f'fill-opacity="0.0"', body)
     body = scale_svg(body, 75)
 
     return body
-
 
 
 @app.get("/receipt/{lat}/{lon}")
@@ -224,18 +221,17 @@ def receipt(lat: str, lon: str):
 
     svgs = {}
 
-    for yr in range(MIN_YEAR, MAX_YEAR + 1):
-        year = str(yr).zfill(2)
+    for year in pluto_years.keys():
         body = get_year_geom_svg(year, x, y)
         if body is not None:
             svgs[year] = body
 
-    # try:
-    #     address = result.address[0]
-    # except KeyError:
-    #     return HTTPException(detail="No address found", status_code=404)
-
-    address = "TEMP ADDRESS " * 3
+    try:
+        table = pluto_years.get("23")
+        cursor = conn.query(f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB(ST_Point({x}, {y})))")
+        address = cursor.fetchone()[0]
+    except Exception as e:
+        return HTTPException(detail="Could not find address!", status_code=404)
 
     address_hash = str(abs(hash(address * 3)) % (10**12))[:12]
     try:
@@ -248,14 +244,33 @@ def receipt(lat: str, lon: str):
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # sql = render_template("receipt.sql.jinja", year=year, lat=y, lon=x)
+    sql = render_template(
+        "receipt.sql.jinja", tables=pluto_years, lat=y, lon=x
+    )
+
+    try:
+        cursor = conn.execute(sql)
+    except duckdb.SerializationException as e:
+        logger.error(f"Serialization error: {e}")
+        return HTMLResponse('<p style="color=grey">No parcel found</p>')
+
+    if cursor.description is None:
+        logger.error("No cursor description")
+        return HTTPException(detail="No cursor description", status_code=404)
+
+    df_html = cursor.fetchdf().to_html(index=False)
+    df_html = df_html.replace('border="1"', 'border="0"')
+    df_html = df_html.replace('text-align: right', 'text-align: left')
 
     return HTMLResponse(
         render_template(
             "receipt.html.jinja",
+            lon=lon[:8],
+            lat=lat[:7],
             svgs=svgs,
             address=address,
             barcode=barcode_svg,
             timestamp=timestamp,
+            table=df_html,
         )
     )

@@ -81,18 +81,27 @@ ALTER TABLE pluto03_shp RENAME far TO builtfar;
     )
 
 
+@with_conn
 def export_fgbs(conn):
+    """
+    Export Feature Geometries Binary (FGB) files for each year's PLUTO data.
+    """
     out_path = os.path.join(ASSETS_DIR, "fgbs")
     if not os.path.exists(out_path):
         os.makedirs(out_path, exist_ok=True)
 
     for year in YEARS:
         alias = get_pluto_key(year, "shp")
-        fgb_sql = render_template("export_fgb.jinja", table=alias, out_path=out_path)
+        out_table_id = f"pluto{str(year).zfill(2)}"
+        fgb_sql = render_template("export_fgb.jinja", table=alias, out_path=out_path, out_table_id=out_table_id)
         conn.execute(fgb_sql)
 
 
+@with_conn
 def export_geojsons_for_tippecannoe(conn):
+    """
+    Export geojsons for tippecannoe for each year's PLUTO data.
+    """
     out_path = os.path.join(ASSETS_DIR, "geojsons")
     if not os.path.exists(out_path):
         print(f"Creating {out_path}. Does not exist.")
