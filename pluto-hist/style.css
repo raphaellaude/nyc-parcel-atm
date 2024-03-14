@@ -125,11 +125,16 @@ h1 {
     margin: 0;
 }
 
-#zoom {
+/* #year-label,
+#layer-label {
+    display: none;
+} */
+
+/* #zoom {
     font-size: 0.75em;
     color: var(--text-color);
     top: calc(40px + var(--box-padding) * 4);
-}
+} */
 
 #legend {
     color: var(--text-color);

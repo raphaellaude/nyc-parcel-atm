@@ -155,6 +155,9 @@ if (import.meta.env.VITE_KIOSK === "true") {
   addAttributeToId("next-year", "display", "none");
   addAttributeToId("prev-layer", "display", "none");
   addAttributeToId("next-layer", "display", "none");
+} else {
+  addAttributeToId("year-label", "display", "none");
+  addAttributeToId("layer-label", "display", "none");
 }
 // hide for now while not working on vercel
 
