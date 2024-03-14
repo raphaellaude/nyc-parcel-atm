@@ -13,12 +13,21 @@ let currentYearIndex = 0;
 
 let year = years[currentYearIndex];
 
-let MaxYear = years[years.length - 1];
+let maxYear = years[years.length - 1];
+let minYear = years[0];
 let step = 1;
+
+let center = [-73.983242, 40.70791];
+let defaultZoom = 13;
+const deltaDistance = 25;
+function easing(t) {
+  return t * (2 - t);
+}
 
 // PLUTO choropleth vars
 
 let choroplethLayers = Object.keys(choropleth);
+let prevLayer;
 let activeLayer = "landuse";
 
 var map = new maplibregl.Map({
@@ -28,24 +37,26 @@ var map = new maplibregl.Map({
     sources: {},
     layers: [],
   },
-  center: [-73.948615, 40.6535],
-  zoom: 13,
+  center: center,
+  zoom: defaultZoom,
   maxZoom: 15.9,
   minZoom: 13,
   maxBounds: [
     [-74.28851, 40.48159],
     [-73.69342, 40.9241],
   ],
+  keyboard: false,
+  doubleClickZoom: false,
 });
 
 var marker = new maplibregl.Marker({ color: "#000000" })
   .setLngLat([0, 0])
   .addTo(map);
 
-function getZoom(map) {
-  let zoom = map.getZoom();
-  document.getElementById("zoom").innerHTML = zoom.toFixed(1);
-}
+// function getZoom(map) {
+//   let zoom = map.getZoom();
+//   document.getElementById("zoom").innerHTML = zoom.toFixed(1);
+// }
 
 function setYear(year) {
   year = `20${year}`;
@@ -234,6 +245,7 @@ async function getReceipt(lat, lng) {
       console.error("Error:", error);
     });
 
+  console.log(response);
   if (response.ok) {
     if (response.status === 204) {
       document.getElementById("receipt").innerHTML = "No data";
@@ -272,6 +284,7 @@ async function wakeServer() {
 
 map.on("load", function () {
   wakeServer();
+  map.getCanvas().focus();
   marker.setLngLat(map.getCenter());
 
   years.forEach((y, index) => {
@@ -324,11 +337,11 @@ map.on("load", function () {
     });
   });
 
-  getZoom(map);
+  // getZoom(map);
 
-  map.on("zoom", function () {
-    getZoom(map);
-  });
+  // map.on("zoom", function () {
+  //   getZoom(map);
+  // });
 
   map.on("click", (e) => {
     queryFeatures(year, e.lngLat.lat, e.lngLat.lng);
@@ -337,10 +350,41 @@ map.on("load", function () {
   map.on("move", function (e) {
     marker.setLngLat(map.getCenter());
   });
+
+  map.getCanvas().addEventListener(
+    "keydown",
+    (e) => {
+      let scalar = (1.59 - map.getZoom() / 10) * 20 + 1;
+      map.getCanvas().focus();
+      e.preventDefault();
+      if (e.which === 38) {
+        // up
+        map.panBy([0, -deltaDistance * scalar], {
+          easing: easing,
+        });
+      } else if (e.which === 40) {
+        // down
+        map.panBy([0, deltaDistance * scalar], {
+          easing: easing,
+        });
+      } else if (e.which === 37) {
+        // left
+        map.panBy([-deltaDistance * scalar, 0], {
+          easing: easing,
+        });
+      } else if (e.which === 39) {
+        // right
+        map.panBy([deltaDistance * scalar, 0], {
+          easing: easing,
+        });
+      }
+    },
+    true,
+  );
 });
 
 function changeLayer(step, prevLayer, nextLayer) {
-  if (currentYearIndex + step < MaxYear - 1 && currentYearIndex + step >= 0) {
+  if (currentYearIndex + step < maxYear - 1 && currentYearIndex + step >= 0) {
     let curYear = years[currentYearIndex];
     let prevLayerData = data[curYear];
 
@@ -406,6 +450,16 @@ const advanceLayer = (step) => {
   getLegend(activeLayer);
 };
 
+const changeLayerFromID = (layerID) => {
+  if (activeLayer === layerID) {
+    return;
+  }
+  prevLayer = activeLayer;
+  activeLayer = layerID;
+  changeLayer(0, prevLayer, activeLayer);
+  getLegend(activeLayer);
+};
+
 async function getReceiptFromKeyPress() {
   // get location in center screen
   const { lng, lat } = map.getCenter();
@@ -421,13 +475,37 @@ document.onkeydown = function (e) {
       });
       break;
     case "F13":
-      getReceiptFromKeyPress();
-      window.print();
+      getReceiptFromKeyPress().then(() => {
+        window.print();
+      });
       break;
-    case "a":
+    case "F7":
+      // go to first year
+      let firstYearStep = minYear - year;
+      if (firstYearStep === 0) {
+        break;
+      }
+      console.log(firstYearStep);
+      setTimeout(() => {
+        changeLayer(firstYearStep, activeLayer, activeLayer);
+      }, 1000);
+      break;
+    case "F9":
+      // go to last year
+      let lastYearStep = maxYear - year;
+      if (lastYearStep === 0) {
+        break;
+      }
+      console.log(lastYearStep);
+      // set timeout
+      setTimeout(() => {
+        changeLayer(lastYearStep, activeLayer, activeLayer);
+      }, 1000);
+      break;
+    case ",":
       changeLayer(-step, activeLayer, activeLayer);
       break;
-    case "s":
+    case ".":
       changeLayer(step, activeLayer, activeLayer);
       break;
     case "PageDown":
@@ -442,14 +520,41 @@ document.onkeydown = function (e) {
         queryFeatures(year, lat, lng);
       }
       break;
-    case "w":
-      // TODO: Implement change layer
+    case "u":
+      changeLayerFromID("landuse");
+      break;
+    case "r":
+      changeLayerFromID("unitsres");
+      break;
+    case "f":
+      changeLayerFromID("builtfar");
+      break;
+    case "h":
+      changeLayerFromID("numfloors");
+      break;
+    case "a":
+      changeLayerFromID("yearalter1");
+      break;
+    case "l":
+      changeLayerFromID("assessland");
+      break;
+    case "v":
+      changeLayerFromID("assesstot");
       break;
     case "i":
       map.zoomIn();
       break;
     case "o":
       map.zoomOut();
+      break;
+    case "Home":
+      map.flyTo({
+        center: center,
+        zoom: defaultZoom,
+      });
+      break;
+    case "0":
+      location.reload();
       break;
   }
 };

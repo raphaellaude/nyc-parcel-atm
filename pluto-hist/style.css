@@ -58,6 +58,7 @@ h1 {
     height: calc(100vh - 2 * calc(var(--box-padding)));
     /* margin: calc(var(--box-padding) + 0.67em) var(--box-padding); */
     z-index: 1;
+    min-width: var(--sidebar-width) - 1px;
     width: var(--sidebar-width) - 1px;
     background-color: var(--bg);
     color: var(--text-color);
@@ -69,7 +70,7 @@ h1 {
 
 .title {
     font-size: 1.2em;
-    font-weight: 600;
+    font-weight: 900;
     line-height: 1.1;
     color: var(--text-color);
 }

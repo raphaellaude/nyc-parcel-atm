@@ -194,7 +194,6 @@ def get_year_geom_svg(year, x, y):
     try:
         body = result.geometry[0]._repr_svg_()
     except KeyError:
-        print("No geometry found")
         return None
 
     # body = svg.body.decode("utf-8")
@@ -226,12 +225,15 @@ def receipt(lat: str, lon: str):
         if body is not None:
             svgs[year] = body
 
+    if len(svgs) == 0:
+        return HTMLResponse("No parcels found", status_code=204)
+
     try:
         table = pluto_years.get("23")
         cursor = conn.query(f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB(ST_Point({x}, {y})))")
         address = cursor.fetchone()[0]
     except Exception as e:
-        return HTTPException(detail="Could not find address!", status_code=404)
+        return HTMLResponse("Could not find an address!", status_code=204)
 
     address_hash = str(abs(hash(address * 3)) % (10**12))[:12]
     try:
