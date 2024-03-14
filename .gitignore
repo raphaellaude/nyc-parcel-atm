@@ -10,3 +10,4 @@ pyrightconfig.json
 .credentials
 .vercel
 scratch/
+.env
