@@ -58,6 +58,7 @@ h1 {
     height: calc(100vh - 2 * calc(var(--box-padding)));
     /* margin: calc(var(--box-padding) + 0.67em) var(--box-padding); */
     z-index: 1;
+    min-width: var(--sidebar-width) - 1px;
     width: var(--sidebar-width) - 1px;
     background-color: var(--bg);
     color: var(--text-color);
@@ -69,7 +70,7 @@ h1 {
 
 .title {
     font-size: 1.2em;
-    font-weight: 600;
+    font-weight: 900;
     line-height: 1.1;
     color: var(--text-color);
 }
@@ -124,11 +125,16 @@ h1 {
     margin: 0;
 }
 
-#zoom {
+/* #year-label,
+#layer-label {
+    display: none;
+} */
+
+/* #zoom {
     font-size: 0.75em;
     color: var(--text-color);
     top: calc(40px + var(--box-padding) * 4);
-}
+} */
 
 #legend {
     color: var(--text-color);
@@ -219,23 +225,48 @@ h1 {
     border-left: #000 1px solid;
 }
 
-#centerMarker {
-    visibility: hidden;
-    position: absolute;
-    top: calc(50% - 2px);
-    left: calc(50vw + var(--sidebar-width) / 2 + 16px);
-    width: 10px;
-    height: 10px;
-    border: 1px solid #000;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
+/* Receipt CSS */
+
+#receipt {
+    display: none;
+}
+
+.receipt-p-sm {
+    font-size: 0.6rem;
+    margin: 0;
+    padding: 0;
+}
+
+.receipt-p-md {
+    font-size: 0.8rem;
+    margin: 0;
+    padding: 0;
+}
+
+.dataframe {
+    border-spacing: 0px;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.55rem;
 }
 
 @media print {
-    .no-print {
+    body {
+        align-items: normal !important;
+    }
+
+    .no-print,
+    #controls,
+    #year,
+    #layer {
         display: none;
     }
+
+    #receipt {
+        display: block;
+        margin-top: 0;
+    }
+
     .mapquest {
         all: unset;
     }
@@ -262,11 +293,6 @@ h1 {
 
     #modal {
         left: 1rem;
-    }
-
-    #centerMarker {
-        left: 50%;
-        top: 25%;
     }
 
     #controls {

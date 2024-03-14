@@ -20,6 +20,7 @@ def with_conn(func):
         value = func(*args, **kwargs, conn=conn)
 
         return value
+
     return wrapper_decorator
 
 

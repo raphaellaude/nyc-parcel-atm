@@ -33,7 +33,7 @@ def populate_duckdb_database() -> None:
         print(f"Shp dir: {shp_dir}")
         shp_files = list(shp_dir.glob("**/*mappluto.shp", case_sensitive=False))
         print(f"Found {len(shp_files)} shapefiles for {alias}.")
-        create_table(alias, shp_files) #pyright: ignore
+        create_table(alias, shp_files)  # pyright: ignore
 
 
 def harmonize_pluto_columns() -> DataFrame:
@@ -41,7 +41,7 @@ def harmonize_pluto_columns() -> DataFrame:
     Harmonize PLUTO columns across years.
     """
     tables = [get_pluto_key(year, "shp") for year in YEARS]
-    col_availibility = column_availibility(tables) #pyright: ignore
+    col_availibility = column_availibility(tables)  # pyright: ignore
     match_df = column_similarity(col_availibility)
 
     print(
@@ -81,18 +81,32 @@ ALTER TABLE pluto03_shp RENAME far TO builtfar;
     )
 
 
+@with_conn
 def export_fgbs(conn):
+    """
+    Export Feature Geometries Binary (FGB) files for each year's PLUTO data.
+    """
     out_path = os.path.join(ASSETS_DIR, "fgbs")
     if not os.path.exists(out_path):
         os.makedirs(out_path, exist_ok=True)
 
     for year in YEARS:
         alias = get_pluto_key(year, "shp")
-        fgb_sql = render_template("export_fgb.jinja", table=alias, out_path=out_path)
+        out_table_id = f"pluto{str(year).zfill(2)}"
+        fgb_sql = render_template(
+            "export_fgb.jinja",
+            table=alias,
+            out_path=out_path,
+            out_table_id=out_table_id,
+        )
         conn.execute(fgb_sql)
 
 
+@with_conn
 def export_geojsons_for_tippecannoe(conn):
+    """
+    Export geojsons for tippecannoe for each year's PLUTO data.
+    """
     out_path = os.path.join(ASSETS_DIR, "geojsons")
     if not os.path.exists(out_path):
         print(f"Creating {out_path}. Does not exist.")

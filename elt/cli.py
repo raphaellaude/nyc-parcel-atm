@@ -75,17 +75,17 @@ def harmonize_pluto_columns() -> None:
 
 @cli.command("rename-columns", help="Rename columns based on column matches.")
 def rename_columns():
-    _rename_columns() #pyright: ignore
+    _rename_columns()  # pyright: ignore
 
 
 @cli.command("export-fgbs", help="Export FGBs for each PLUTO year.")
 def export_fgbs():
-    _export_fgbs() #pyright: ignore
+    _export_fgbs()  # pyright: ignore
 
 
 @cli.command("export-geojsons-for-tippecannoe", help="Export GeoJSON for tippecannoe.")
 def export_geojsons_for_tippecannoe():
-    _export_geojsons_for_tippecannoe() #pyright: ignore
+    _export_geojsons_for_tippecannoe()  # pyright: ignore
 
 
 @cli.command("create-tilesets", help="Create tilesets for each PLUTO year.")
@@ -94,7 +94,9 @@ def create_tilesets():
 
 
 @cli.command("get-tileset-json", help="Get tileset json for each PLUTO year.")
-@click.option("-o", "--out-path", help="Output file path.", default="data.json", type=str)
+@click.option(
+    "-o", "--out-path", help="Output file path.", default="data.json", type=str
+)
 def get_tileset_json(out_path):
     _get_tileset_json(out_path)
 

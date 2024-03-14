@@ -1,0 +1,19 @@
+{# templates/receipt.sql.jinja #}
+{% for year, table in tables.items() %}
+SELECT
+    '{{year}}' AS year,
+    ownername,
+    -- CONCAT(borocode, block, lot) AS bbl,
+    zonedist1,
+    builtfar,
+    yearalter1,
+    CAST(assesstot AS INTEGER) AS assesstot,
+FROM
+    ST_Read(
+        '{{table}}',
+        spatial_filter=ST_AsWKB(
+            ST_Point({{lon}}, {{lat}})
+        )
+    )
+{% if not loop.last %}UNION ALL{% endif %}
+{% endfor %};

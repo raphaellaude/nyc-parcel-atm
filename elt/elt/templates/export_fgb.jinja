@@ -1,7 +1,7 @@
 {# elt/templates/export_fgb.jinja #}
 COPY (
     SELECT * FROM {{table}} WHERE geom IS NOT NULL
-) TO '{{out_path}}/{{table}}.fgb'
+) TO '{{out_path}}/{{out_table_id}}.fgb'
 WITH (
     FORMAT GDAL,
     DRIVER 'FlatGeobuf',
