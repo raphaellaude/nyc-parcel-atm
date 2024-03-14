@@ -230,7 +230,9 @@ def receipt(lat: str, lon: str):
 
     try:
         table = pluto_years.get("23")
-        cursor = conn.query(f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB(ST_Point({x}, {y})))")
+        cursor = conn.query(
+            f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB(ST_Point({x}, {y})))"
+        )
         address = cursor.fetchone()[0]
     except Exception as e:
         return HTMLResponse("Could not find an address!", status_code=204)
@@ -246,9 +248,7 @@ def receipt(lat: str, lon: str):
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    sql = render_template(
-        "receipt.sql.jinja", tables=pluto_years, lat=y, lon=x
-    )
+    sql = render_template("receipt.sql.jinja", tables=pluto_years, lat=y, lon=x)
 
     try:
         cursor = conn.execute(sql)
@@ -262,7 +262,7 @@ def receipt(lat: str, lon: str):
 
     df_html = cursor.fetchdf().to_html(index=False)
     df_html = df_html.replace('border="1"', 'border="0"')
-    df_html = df_html.replace('text-align: right', 'text-align: left')
+    df_html = df_html.replace("text-align: right", "text-align: left")
 
     return HTMLResponse(
         render_template(

@@ -93,7 +93,12 @@ def export_fgbs(conn):
     for year in YEARS:
         alias = get_pluto_key(year, "shp")
         out_table_id = f"pluto{str(year).zfill(2)}"
-        fgb_sql = render_template("export_fgb.jinja", table=alias, out_path=out_path, out_table_id=out_table_id)
+        fgb_sql = render_template(
+            "export_fgb.jinja",
+            table=alias,
+            out_path=out_path,
+            out_table_id=out_table_id,
+        )
         conn.execute(fgb_sql)
 
 
