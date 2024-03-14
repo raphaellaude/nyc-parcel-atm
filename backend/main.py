@@ -59,12 +59,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DB_PATH = os.getenv("DB_PATH")
-logger.info(f"DB_PATH set to {DB_PATH}")
+# DB_PATH = os.getenv("DB_PATH")
+# logger.info(f"DB_PATH set to {DB_PATH}")
 
-if DB_PATH is not None:
-    conn = duckdb.connect(database=DB_PATH, read_only=True)
-    conn.execute("INSTALL spatial; LOAD spatial;")
+# if DB_PATH is not None:
+conn = duckdb.connect(database=":memory:")
+conn.execute("INSTALL spatial; LOAD spatial;")
 
 WGStoAlbersNYLI = Transformer.from_crs("EPSG:4326", "EPSG:2263")
 
