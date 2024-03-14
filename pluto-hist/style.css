@@ -219,24 +219,29 @@ h1 {
     border-left: #000 1px solid;
 }
 
-#centerMarker {
-    visibility: hidden;
-    position: absolute;
-    top: calc(50% - 2px);
-    left: calc(50vw + var(--sidebar-width) / 2 + 16px);
-    width: 10px;
-    height: 10px;
-    border: 1px solid #000;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-}
+/* Receipt CSS */
 
 /* #receipt {
     display: none;
 } */
 
+.receipt-p-sm {
+    font-size: 0.6rem;
+    margin: 0;
+    padding: 0;
+}
+
+.receipt-p-md {
+    font-size: 0.8rem;
+    margin: 0;
+    padding: 0;
+}
+
 @media print {
+    body {
+        align-items: normal !important;
+    }
+
     .no-print,
     #controls,
     #year,
@@ -246,6 +251,7 @@ h1 {
 
     #receipt {
         display: block;
+        margin-top: 0;
     }
 
     .mapquest {
@@ -274,11 +280,6 @@ h1 {
 
     #modal {
         left: 1rem;
-    }
-
-    #centerMarker {
-        left: 50%;
-        top: 25%;
     }
 
     #controls {

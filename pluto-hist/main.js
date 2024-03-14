@@ -38,6 +38,10 @@ var map = new maplibregl.Map({
   ],
 });
 
+var marker = new maplibregl.Marker({ color: "#000000" })
+  .setLngLat([0, 0])
+  .addTo(map);
+
 function getZoom(map) {
   let zoom = map.getZoom();
   document.getElementById("zoom").innerHTML = zoom.toFixed(1);
@@ -268,6 +272,7 @@ async function wakeServer() {
 
 map.on("load", function () {
   wakeServer();
+  marker.setLngLat(map.getCenter());
 
   years.forEach((y, index) => {
     let isVisible = index === currentYearIndex ? "visible" : "none";
@@ -327,6 +332,10 @@ map.on("load", function () {
 
   map.on("click", (e) => {
     queryFeatures(year, e.lngLat.lat, e.lngLat.lng);
+  });
+
+  map.on("move", function (e) {
+    marker.setLngLat(map.getCenter());
   });
 });
 

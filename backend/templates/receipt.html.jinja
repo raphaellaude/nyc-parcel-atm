@@ -1,13 +1,26 @@
 {# templates/receipt.html.jinja #}
-<div style="text-align: center;">
+<div style="text-align: center; min-height: 750px">
     <h1 style="font-size: 1rem;">NYC PARCEL ATM</h1>
-    <p>PARCEL RECEIPT</p>
-    <p>-------------------------------</p>
-    <p>{{address}}</p>
-    <div style="width: 100%; max-height: 300px;">
-        {{svg}}
+    <p class="receipt-p-sm">PARCEL RECEIPT</p>
+    <p class="receipt-p-sm">-------------------------------</p>
+    <p class="receipt-p-md">CHK 1305</p>
+    <p class="receipt-p-sm">{{address}}</p>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(auto-fit, 95px); width: 100%; position: relative;">
+        {% for year, svg in svgs.items() %}
+            <div style="align-self: start; justify-self: center; max-height: 95px;">
+            <p class="receipt-p-sm">20{{year}}</p>
+            {{svg}}
+            </div>
+        {% endfor %}
     </div>
-    <div style="width: 80%; max-height: 32px; margin: 0 auto;">
+    <div style="width: 80%; height: 150px; margin: 0 auto;">
         {{barcode}}
     </div>
+    <p class="receipt-p-sm">******************************</p>
+    <p class="receipt-p-sm">Parcel ATM</p>
+    <p class="receipt-p-sm">ATM #: 112</p>
+    <p class="receipt-p-sm">647 Fulton Street</p>
+    <p class="receipt-p-sm">Brooklyn, NY 11217</p>
+    <p class="receipt-p-sm">{{timestamp}}</p>
+    <p class="receipt-p-sm">******************************</p>
 </div>
