@@ -208,8 +208,14 @@ h1 {
 }
 
 .control-key {
+    font-size: 1em;
     color: var(--medium-grey);
     margin: 0;
+}
+
+.control-text {
+    font-size: 1em;
+    margin-left: 0.5em;
 }
 
 #legend p,
