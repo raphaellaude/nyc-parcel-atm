@@ -11,3 +11,4 @@ pyrightconfig.json
 .vercel
 scratch/
 .env
+*.swp
