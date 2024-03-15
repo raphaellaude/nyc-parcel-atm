@@ -228,6 +228,8 @@ def receipt(lat: str, lon: str):
     if len(svgs) == 0:
         return HTMLResponse("No parcels found", status_code=204)
 
+    address = ""
+
     try:
         table = pluto_years.get("23")
         cursor = conn.query(
@@ -276,3 +278,35 @@ def receipt(lat: str, lon: str):
             table=df_html,
         )
     )
+
+
+@app.get("/location_summary/{lat}/{lon}")
+def location_summary(lat: str, lon: str):
+    """
+    Single year pluto view.
+    """
+    if not re.match(LON_REGEX, lon):
+        raise HTTPException(detail="Invalid longitude", status_code=400)
+
+    if not re.match(LAT_REGEX, lat):
+        return HTTPException(detail="Invalid latitude", status_code=400)
+
+    x, y = WGStoAlbersNYLI.transform(float(lat), float(lon))
+
+    sql = render_template("receipt.sql.jinja", tables=pluto_years, lat=y, lon=x)
+
+    try:
+        cursor = conn.execute(sql)
+    except duckdb.SerializationException as e:
+        logger.error(f"Serialization error: {e}")
+        return HTMLResponse('<p style="color=grey">No parcel found</p>')
+
+    if cursor.description is None:
+        logger.error("No cursor description")
+        return HTTPException(detail="No cursor description", status_code=404)
+
+    df_html = cursor.fetchdf().to_html(index=False)
+    df_html = df_html.replace('border="1"', 'border="0"')
+    df_html = df_html.replace("text-align: right", "text-align: left")
+
+    return HTMLResponse(df_html)

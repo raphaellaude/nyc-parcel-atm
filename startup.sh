@@ -22,4 +22,3 @@ VITE_KIOSK=true npm run dev &
 cd ..
 
 /usr/bin/chromium-browser --noerrdialogs --disable-infobars --kiosk --kiosk-printing http://localhost:5173
-
