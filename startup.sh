@@ -4,6 +4,8 @@ xset s noblank
 xset s off
 xset -dpms
 
+sudo tailscale up
+
 unclutter -idle 0.5 -root &
 
 USER=fishmulch
