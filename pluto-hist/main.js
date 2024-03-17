@@ -482,7 +482,7 @@ document.onkeydown = function (e) {
         window.print();
       });
       break;
-    case "F7":
+    case "b":
       // go to first year
       let firstYearStep = minYear - year;
       if (firstYearStep === 0) {
@@ -493,7 +493,7 @@ document.onkeydown = function (e) {
         changeLayer(firstYearStep, activeLayer, activeLayer);
       }, 1000);
       break;
-    case "F9":
+    case "n":
       // go to last year
       let lastYearStep = maxYear - year;
       if (lastYearStep === 0) {
