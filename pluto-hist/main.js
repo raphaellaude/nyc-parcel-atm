@@ -49,9 +49,11 @@ var map = new maplibregl.Map({
   doubleClickZoom: false,
 });
 
-var marker = new maplibregl.Marker({ color: "#000000" })
-  .setLngLat([0, 0])
-  .addTo(map);
+let marker = new maplibregl.Marker({ color: "#000000" })
+
+if (import.meta.env.VITE_KIOSK === "true") {
+  marker.setLngLat([0, 0]).addTo(map);
+}
 
 // function getZoom(map) {
 //   let zoom = map.getZoom();
@@ -288,7 +290,10 @@ async function wakeServer() {
 map.on("load", function () {
   wakeServer();
   map.getCanvas().focus();
-  marker.setLngLat(map.getCenter());
+  
+  if (import.meta.env.VITE_KIOSK === "true") {
+    marker.setLngLat(map.getCenter());
+  }
 
   years.forEach((y, index) => {
     let isVisible = index === currentYearIndex ? "visible" : "none";
@@ -350,9 +355,11 @@ map.on("load", function () {
     queryFeatures(year, e.lngLat.lat, e.lngLat.lng);
   });
 
-  map.on("move", function (e) {
-    marker.setLngLat(map.getCenter());
-  });
+  if (import.meta.env.VITE_KIOSK === "true") {
+    map.on("move", function (e) {
+      marker.setLngLat(map.getCenter());
+    });
+  }
 
   map.getCanvas().addEventListener(
     "keydown",
