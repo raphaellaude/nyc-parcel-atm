@@ -305,7 +305,7 @@ def location_summary(lat: str, lon: str):
         logger.error("No cursor description")
         return HTTPException(detail="No cursor description", status_code=404)
 
-    df_html = cursor.fetchdf().to_html(index=False)
+    df_html = cursor.fetchdf().head(22).to_html(index=False)
     df_html = df_html.replace('border="1"', 'border="0"')
     df_html = df_html.replace("text-align: right", "text-align: left")
 
