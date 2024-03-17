@@ -14,7 +14,7 @@ sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' "/home/$USER/.config/ch
 sed -i 's/"exit_type":"Crashed"/"exit_type":"Normal"/' "/home/$USER/.config/chromium/Default/Preferences"
 
 cd backend
-poetry run uvicorn main:app --reload & # start backend
+poetry run uvicorn main:app --reload --log-config log.conf & # start backend
 cd ..
 
 cd pluto-hist

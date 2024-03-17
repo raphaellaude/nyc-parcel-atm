@@ -74,6 +74,8 @@ pluto_years = {
     for x in range(MIN_YEAR, MAX_YEAR + 1)
 }
 
+logger.info(f"PLUTO years: {pluto_years}")
+
 
 @app.get("/")
 def read_root():
@@ -129,6 +131,7 @@ def single_year_pluto(year: str, lat: str, lon: str):
     try:
         first_record = cursor.fetchone()
     except Exception as e:
+        logger.error(f"Error fetching record: {e}")
         return HTTPException(detail=str(e), status_code=500)
 
     if first_record is None:
@@ -211,21 +214,26 @@ def receipt(lat: str, lon: str):
     Single year pluto view.
     """
     if not re.match(LON_REGEX, lon):
+        logger.error(f"Invalid longitude: {lon}")
         raise HTTPException(detail="Invalid longitude", status_code=400)
 
     if not re.match(LAT_REGEX, lat):
+        logger.error(f"Invalid latitude: {lat}")
         return HTTPException(detail="Invalid latitude", status_code=400)
 
+    logger.info("Transforming coordinates to Albers")
     x, y = WGStoAlbersNYLI.transform(float(lat), float(lon))
 
     svgs = {}
 
     for year in pluto_years.keys():
+        logger.info(f"Getting SVG for year {year}")
         body = get_year_geom_svg(year, x, y)
         if body is not None:
             svgs[year] = body
 
     if len(svgs) == 0:
+        logger.info("No SVGs")
         return HTMLResponse("No parcels found", status_code=204)
 
     address = ""
@@ -237,12 +245,14 @@ def receipt(lat: str, lon: str):
         )
         address = cursor.fetchone()[0]
     except Exception as e:
+        logger.info(f"Could not find an address: {e}")
         return HTMLResponse("Could not find an address!", status_code=204)
 
     address_hash = str(abs(hash(address * 3)) % (10**12))[:12]
     try:
         barcode = EAN13(address_hash)
     except NumberOfDigitsError:
+        logger.error(f"Number of digits error getting barcode for address '{address}' and hash {address_hash}")
         random_id = randint(int(10e11), int(10e12))
         barcode = EAN13(str(random_id)[:12])
 
@@ -262,7 +272,7 @@ def receipt(lat: str, lon: str):
         logger.error("No cursor description")
         return HTTPException(detail="No cursor description", status_code=404)
 
-    df_html = cursor.fetchdf().to_html(index=False)
+    df_html = cursor.fetchdf().head(22).to_html(index=False)
     df_html = df_html.replace('border="1"', 'border="0"')
     df_html = df_html.replace("text-align: right", "text-align: left")
 

@@ -12,3 +12,4 @@ pyrightconfig.json
 scratch/
 .env
 *.swp
+logfile.log
