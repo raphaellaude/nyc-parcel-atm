@@ -114,7 +114,7 @@ def single_year_pluto(year: str, lat: str, lon: str):
         logger.error(f"Year not found: {year}")
         return HTTPException(detail="Year not found", status_code=404)
 
-    sql = render_template("spatial_join_2.sql.jinja", table=table, lat=y, lon=x)
+    sql = render_template("point_lookup.sql.jinja", table=table, lat=y, lon=x)
 
     try:
         cursor = conn.execute(sql)
@@ -239,11 +239,13 @@ def receipt(lat: str, lon: str):
     address = ""
 
     try:
+        logger.info("Getting address")
         table = pluto_years.get("23")
         cursor = conn.query(
             f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB(ST_Point({x}, {y})))"
         )
         address = cursor.fetchone()[0]
+        logger.info(f"Address: {address}")
     except Exception as e:
         logger.info(f"Could not find an address: {e}")
         return HTMLResponse("Could not find an address!", status_code=204)

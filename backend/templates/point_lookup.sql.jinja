@@ -1,4 +1,4 @@
-{# templates/spatial_join_2.sql.jinja #}
+{# templates/point_lookup.sql.jinja #}
 SELECT
     address,
  ownername,
@@ -17,4 +17,5 @@ SELECT
  exempttot,
  yearalter1,
 FROM
-    ST_Read('{{table}}', spatial_filter=ST_AsWKB(ST_Point({{lon}}, {{lat}})));
+    ST_Read('{{table}}', spatial_filter=ST_AsWKB(ST_Point({{lon}}, {{lat}})))
+LIMIT 1;

@@ -16,4 +16,5 @@ FROM
         )
     )
 {% if not loop.last %}UNION ALL{% endif %}
-{% endfor %};
+{% endfor %}
+LIMIT 22;
