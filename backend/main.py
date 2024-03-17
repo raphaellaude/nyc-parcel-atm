@@ -114,8 +114,10 @@ def single_year_pluto(year: str, lat: str, lon: str):
         logger.error(f"Year not found: {year}")
         return HTTPException(detail="Year not found", status_code=404)
 
+    logger.info(f"Rendering SQL template")
     sql = render_template("point_lookup.sql.jinja", table=table, lat=y, lon=x)
 
+    logger.info(f"Looking up point ({x}, {y}) in table {table}")
     try:
         cursor = conn.execute(sql)
     except duckdb.SerializationException as e:
@@ -129,6 +131,7 @@ def single_year_pluto(year: str, lat: str, lon: str):
     column_names = [desc[0] for desc in cursor.description]
 
     try:
+        logger.info("Fetching first record")
         first_record = cursor.fetchone()
     except Exception as e:
         logger.error(f"Error fetching record: {e}")
@@ -137,8 +140,14 @@ def single_year_pluto(year: str, lat: str, lon: str):
     if first_record is None:
         logger.info("No parcel found")
         return HTMLResponse("<p>No parcel found</p>")
+    elif all(v == '' or v == 0 or v is None for v in first_record):
+        logger.info("All values are None")
+        return HTMLResponse("<p>No parcel found</p>")
+    else:
+        logger.info(f"Found parcel: {first_record}")
 
     record = dict(zip(column_names, first_record))
+
     if "geom" in record:
         logger.info("Removing geom column")
         del record["geom"]
@@ -226,14 +235,15 @@ def receipt(lat: str, lon: str):
 
     svgs = {}
 
+    logger.info("Getting SVGs")
     for year in pluto_years.keys():
-        logger.info(f"Getting SVG for year {year}")
         body = get_year_geom_svg(year, x, y)
         if body is not None:
             svgs[year] = body
 
+    logger.info(f"Found {len(svgs)} SVGs for years {list(svgs.keys())}")
+
     if len(svgs) == 0:
-        logger.info("No SVGs")
         return HTMLResponse("No parcels found", status_code=204)
 
     address = ""
