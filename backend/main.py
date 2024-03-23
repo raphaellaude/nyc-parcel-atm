@@ -10,7 +10,16 @@ from datetime import datetime
 from numpy.random import randint
 from pyogrio import read_dataframe
 from dotenv import load_dotenv
-from constants import LAT_REGEX, LON_REGEX, YEARS_REGEX, BASE_PATH, MIN_YEAR, MAX_YEAR
+from constants import (
+    LAT_REGEX,
+    LON_REGEX,
+    YEARS_REGEX,
+    BASE_PATH,
+    MIN_YEAR,
+    MAX_YEAR,
+    BOOL_REGEX,
+    SHORT_SUMMARY_COLS,
+)
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -74,6 +83,8 @@ pluto_years = {
     for x in range(MIN_YEAR, MAX_YEAR + 1)
 }
 
+logger.info(f"PLUTO years: {pluto_years}")
+
 
 @app.get("/")
 def read_root():
@@ -86,7 +97,7 @@ def healthcheck():
 
 
 @app.get("/single_year_point_lookup/{year}/{lat}/{lon}")
-def single_year_pluto(year: str, lat: str, lon: str):
+def single_year_pluto(year: str, lat: str, lon: str, kiosk="false"):
     """
     Single year pluto view.
     """
@@ -102,6 +113,10 @@ def single_year_pluto(year: str, lat: str, lon: str):
         logger.error(f"Invalid year: {year}")
         return HTTPException(detail="Invalid year", status_code=400)
 
+    if not re.match(BOOL_REGEX, kiosk):
+        logger.error(f"Invalid kiosk: {kiosk}")
+        return HTTPException(detail="Invalid kiosk", status_code=400)
+
     logger.info("Transforming coordinates to Albers")
     x, y = WGStoAlbersNYLI.transform(float(lat), float(lon))
 
@@ -112,8 +127,18 @@ def single_year_pluto(year: str, lat: str, lon: str):
         logger.error(f"Year not found: {year}")
         return HTTPException(detail="Year not found", status_code=404)
 
-    sql = render_template("spatial_join_2.sql.jinja", table=table, lat=y, lon=x)
+    logger.info(f"Rendering SQL template")
 
+    columns = ["*"]
+
+    if kiosk == "true":
+        columns = SHORT_SUMMARY_COLS
+
+    sql = render_template(
+        "point_lookup.sql.jinja", table=table, lat=y, lon=x, columns=columns
+    )
+
+    logger.info(f"Looking up point ({x}, {y}) in table {table}")
     try:
         cursor = conn.execute(sql)
     except duckdb.SerializationException as e:
@@ -127,15 +152,23 @@ def single_year_pluto(year: str, lat: str, lon: str):
     column_names = [desc[0] for desc in cursor.description]
 
     try:
+        logger.info("Fetching first record")
         first_record = cursor.fetchone()
     except Exception as e:
+        logger.error(f"Error fetching record: {e}")
         return HTTPException(detail=str(e), status_code=500)
 
     if first_record is None:
         logger.info("No parcel found")
         return HTMLResponse("<p>No parcel found</p>")
+    elif all(v == "" or v == 0 or v is None for v in first_record):
+        logger.info("All values are None")
+        return HTMLResponse("<p>No parcel found</p>")
+    else:
+        logger.info(f"Found parcel: {first_record}")
 
     record = dict(zip(column_names, first_record))
+
     if "geom" in record:
         logger.info("Removing geom column")
         del record["geom"]
@@ -211,36 +244,50 @@ def receipt(lat: str, lon: str):
     Single year pluto view.
     """
     if not re.match(LON_REGEX, lon):
+        logger.error(f"Invalid longitude: {lon}")
         raise HTTPException(detail="Invalid longitude", status_code=400)
 
     if not re.match(LAT_REGEX, lat):
+        logger.error(f"Invalid latitude: {lat}")
         return HTTPException(detail="Invalid latitude", status_code=400)
 
+    logger.info("Transforming coordinates to Albers")
     x, y = WGStoAlbersNYLI.transform(float(lat), float(lon))
 
     svgs = {}
 
+    logger.info("Getting SVGs")
     for year in pluto_years.keys():
         body = get_year_geom_svg(year, x, y)
         if body is not None:
             svgs[year] = body
 
+    logger.info(f"Found {len(svgs)} SVGs for years {list(svgs.keys())}")
+
     if len(svgs) == 0:
         return HTMLResponse("No parcels found", status_code=204)
 
+    address = ""
+
     try:
+        logger.info("Getting address")
         table = pluto_years.get("23")
         cursor = conn.query(
             f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB(ST_Point({x}, {y})))"
         )
         address = cursor.fetchone()[0]
+        logger.info(f"Address: {address}")
     except Exception as e:
+        logger.info(f"Could not find an address: {e}")
         return HTMLResponse("Could not find an address!", status_code=204)
 
     address_hash = str(abs(hash(address * 3)) % (10**12))[:12]
     try:
         barcode = EAN13(address_hash)
     except NumberOfDigitsError:
+        logger.error(
+            f"Number of digits error getting barcode for address '{address}' and hash {address_hash}"
+        )
         random_id = randint(int(10e11), int(10e12))
         barcode = EAN13(str(random_id)[:12])
 
@@ -260,7 +307,7 @@ def receipt(lat: str, lon: str):
         logger.error("No cursor description")
         return HTTPException(detail="No cursor description", status_code=404)
 
-    df_html = cursor.fetchdf().to_html(index=False)
+    df_html = cursor.fetchdf().head(22).to_html(index=False)
     df_html = df_html.replace('border="1"', 'border="0"')
     df_html = df_html.replace("text-align: right", "text-align: left")
 

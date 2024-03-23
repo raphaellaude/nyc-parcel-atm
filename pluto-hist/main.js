@@ -49,7 +49,7 @@ var map = new maplibregl.Map({
   doubleClickZoom: false,
 });
 
-let marker = new maplibregl.Marker({ color: "#000000" })
+let marker = new maplibregl.Marker({ color: "#000000" });
 
 if (import.meta.env.VITE_KIOSK === "true") {
   marker.setLngLat([0, 0]).addTo(map);
@@ -208,7 +208,7 @@ async function queryFeatures(year, lat, lng) {
   // before making the API call;
 
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/single_year_point_lookup/${year}/${lat}/${lng}`,
+    `${import.meta.env.VITE_API_URL}/single_year_point_lookup/${year}/${lat}/${lng}${import.meta.env.VITE_KIOSK === "true" ? "/?kiosk=true" : ""}`,
   )
     .then((response) => {
       spinner.stop();
@@ -290,7 +290,7 @@ async function wakeServer() {
 map.on("load", function () {
   wakeServer();
   map.getCanvas().focus();
-  
+
   if (import.meta.env.VITE_KIOSK === "true") {
     marker.setLngLat(map.getCenter());
   }
@@ -489,7 +489,7 @@ document.onkeydown = function (e) {
         window.print();
       });
       break;
-    case "F7":
+    case "b":
       // go to first year
       let firstYearStep = minYear - year;
       if (firstYearStep === 0) {
@@ -500,7 +500,7 @@ document.onkeydown = function (e) {
         changeLayer(firstYearStep, activeLayer, activeLayer);
       }, 1000);
       break;
-    case "F9":
+    case "n":
       // go to last year
       let lastYearStep = maxYear - year;
       if (lastYearStep === 0) {

@@ -1,5 +1,0 @@
-{# templates/spatial_join_2.sql.jinja #}
-SELECT
-    *
-FROM
-    ST_Read('{{table}}', spatial_filter=ST_AsWKB(ST_Point({{lon}}, {{lat}})));

@@ -6,7 +6,7 @@ authors = ["Raphael Paul Laude <raphlaude@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.11"
 fastapi = "^0.109.2"
 uvicorn = { extras = ["standard"], version = "^0.27.1" }
 jinja2 = "^3.1.3"

@@ -1,0 +1,8 @@
+{# templates/point_lookup.sql.jinja #}
+SELECT
+{% for column in columns %}
+    {{column}},
+{% endfor %}
+FROM
+    ST_Read('{{table}}', spatial_filter=ST_AsWKB(ST_Point({{lon}}, {{lat}})))
+LIMIT 1;

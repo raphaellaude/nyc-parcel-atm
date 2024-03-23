@@ -10,3 +10,6 @@ pyrightconfig.json
 .credentials
 .vercel
 scratch/
+.env
+*.swp
+logfile.log

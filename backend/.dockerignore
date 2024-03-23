@@ -2,3 +2,4 @@
 # created by virtualenv automatically
 .venv/**/*
 fly.toml
+logfile.log
