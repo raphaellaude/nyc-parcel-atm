@@ -10,4 +10,24 @@ LAT_REGEX = (
 )
 LON_REGEX = r"^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,15})?))$"
 YEARS_REGEX = r"\b(?:0[1-9]|1\d|2[0-3])\b"
+BOOL_REGEX = r"^(true|false)?$"
 MIN_YEAR, MAX_YEAR = 2, 23
+
+SHORT_SUMMARY_COLS = [
+    "address",
+    "ownername",
+    "yearbuilt",
+    "numbldgs",
+    "numfloors",
+    "bldgclass",
+    "zonedist1",
+    "overlay1",
+    "builtfar",
+    "unitsres",
+    "resarea",
+    "comarea",
+    "assessland",
+    "assesstot",
+    "exempttot",
+    "yearalter1",
+]

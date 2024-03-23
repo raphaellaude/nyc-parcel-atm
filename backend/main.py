@@ -10,7 +10,16 @@ from datetime import datetime
 from numpy.random import randint
 from pyogrio import read_dataframe
 from dotenv import load_dotenv
-from constants import LAT_REGEX, LON_REGEX, YEARS_REGEX, BASE_PATH, MIN_YEAR, MAX_YEAR
+from constants import (
+    LAT_REGEX,
+    LON_REGEX,
+    YEARS_REGEX,
+    BASE_PATH,
+    MIN_YEAR,
+    MAX_YEAR,
+    BOOL_REGEX,
+    SHORT_SUMMARY_COLS,
+)
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -88,7 +97,7 @@ def healthcheck():
 
 
 @app.get("/single_year_point_lookup/{year}/{lat}/{lon}")
-def single_year_pluto(year: str, lat: str, lon: str):
+def single_year_pluto(year: str, lat: str, lon: str, kiosk="false"):
     """
     Single year pluto view.
     """
@@ -104,6 +113,10 @@ def single_year_pluto(year: str, lat: str, lon: str):
         logger.error(f"Invalid year: {year}")
         return HTTPException(detail="Invalid year", status_code=400)
 
+    if not re.match(BOOL_REGEX, kiosk):
+        logger.error(f"Invalid kiosk: {kiosk}")
+        return HTTPException(detail="Invalid kiosk", status_code=400)
+
     logger.info("Transforming coordinates to Albers")
     x, y = WGStoAlbersNYLI.transform(float(lat), float(lon))
 
@@ -115,7 +128,13 @@ def single_year_pluto(year: str, lat: str, lon: str):
         return HTTPException(detail="Year not found", status_code=404)
 
     logger.info(f"Rendering SQL template")
-    sql = render_template("point_lookup.sql.jinja", table=table, lat=y, lon=x)
+
+    columns = ["*"]
+
+    if kiosk == "true":
+        columns = SHORT_SUMMARY_COLS
+
+    sql = render_template("point_lookup.sql.jinja", table=table, lat=y, lon=x, columns=columns)
 
     logger.info(f"Looking up point ({x}, {y}) in table {table}")
     try:
@@ -140,7 +159,7 @@ def single_year_pluto(year: str, lat: str, lon: str):
     if first_record is None:
         logger.info("No parcel found")
         return HTMLResponse("<p>No parcel found</p>")
-    elif all(v == '' or v == 0 or v is None for v in first_record):
+    elif all(v == "" or v == 0 or v is None for v in first_record):
         logger.info("All values are None")
         return HTMLResponse("<p>No parcel found</p>")
     else:
@@ -264,7 +283,9 @@ def receipt(lat: str, lon: str):
     try:
         barcode = EAN13(address_hash)
     except NumberOfDigitsError:
-        logger.error(f"Number of digits error getting barcode for address '{address}' and hash {address_hash}")
+        logger.error(
+            f"Number of digits error getting barcode for address '{address}' and hash {address_hash}"
+        )
         random_id = randint(int(10e11), int(10e12))
         barcode = EAN13(str(random_id)[:12])
 
