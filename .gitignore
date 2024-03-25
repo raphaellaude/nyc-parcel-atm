@@ -13,3 +13,4 @@ scratch/
 .env
 *.swp
 logfile.log
+assets/
