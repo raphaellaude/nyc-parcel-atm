@@ -10,7 +10,7 @@ from typing import Union
 from zipfile import ZipFile
 import requests
 
-from .constants import BASE_DIR, YEARS, ASSETS_DIR
+from .constants import ASSETS_DIR
 
 
 def get_pluto_key(year: int, alias: str) -> str:

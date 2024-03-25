@@ -134,7 +134,7 @@ This project includes also includes some undocumented EDA.
 
 This project uses [poetry](https://python-poetry.org/docs/) to manage dependencies for the backend, ELT pipeline, and EDA. Make sure you have poetry installed.
 
-GDAL and GEOS are dependencies of this project.
+GDAL and GEOS are dependencies of this project. Django has a great [walkthrough](https://docs.djangoproject.com/en/5.0/ref/contrib/gis/install/geolibs/) for installing these dependencies which should work for this project.
 
 #### Environment Variables
 
@@ -143,6 +143,16 @@ Create a `.env` file in the root directory with:
 ```
 DEV=true
 ```
+
+### Contributing
+
+Contributions are most welcome! Please open a PR for small changes. For larger changes, please open an issue first so we can discuss.
+
+#### Formatting
+
+This project is formatted with ruff using pre-commit hooks. Make sure [pre-commit](https://pre-commit.com/) and [ruff](https://pypi.org/project/ruff/) are intalled then run `pre-commit install` in the root directory.
+
+Test that the pre-commit hooks are working by running `pre-commit run --all-files`.
 
 ### Disclaimer
 
