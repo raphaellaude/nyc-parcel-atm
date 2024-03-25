@@ -8,7 +8,7 @@ _Parcel ATM_ is an art project and website conceived for [Data through Design 20
 
 The following instructions are for running and maintaining the physical ATM made for the DxD show. It was built with:
 
-- A [Raspberry Pi 4](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/specifications/)
+- A [Raspberry Pi 5](https://www.raspberrypi.com/products/raspberry-pi-5/)
 - [LCD screen](https://www.pishop.us/product/hdmi-8-ips-lcd-screen-kit-1024x768/)
 - [TM-T20III Thermal Receipt Printer](https://epson.com/For-Work/Printers/POS/TM-T20III-Thermal-Receipt-Printer/p/C31CH51A9972)
 - [Nullbits TIDBIT](https://nullbits.co/tidbit/) customizeable 19-key numpad
