@@ -2,7 +2,7 @@
   "08": {
     "year": 2008,
     "id": "pluto08_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto08_shp_wgs.pmtiles",
+    "url": "pluto08_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -19,7 +19,7 @@
   "11": {
     "year": 2011,
     "id": "pluto11_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto11_shp_wgs.pmtiles",
+    "url": "pluto11_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -36,7 +36,7 @@
   "23": {
     "year": 2023,
     "id": "pluto23_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto23_shp_wgs.pmtiles",
+    "url": "pluto23_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -53,7 +53,7 @@
   "07": {
     "year": 2007,
     "id": "pluto07_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto07_shp_wgs.pmtiles",
+    "url": "pluto07_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -70,7 +70,7 @@
   "19": {
     "year": 2019,
     "id": "pluto19_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto19_shp_wgs.pmtiles",
+    "url": "pluto19_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -87,7 +87,7 @@
   "16": {
     "year": 2016,
     "id": "pluto16_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto16_shp_wgs.pmtiles",
+    "url": "pluto16_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -104,7 +104,7 @@
   "18": {
     "year": 2018,
     "id": "pluto18_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto18_shp_wgs.pmtiles",
+    "url": "pluto18_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -121,7 +121,7 @@
   "17": {
     "year": 2017,
     "id": "pluto17_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto17_shp_wgs.pmtiles",
+    "url": "pluto17_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -138,7 +138,7 @@
   "09": {
     "year": 2009,
     "id": "pluto09_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto09_shp_wgs.pmtiles",
+    "url": "pluto09_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -155,7 +155,7 @@
   "10": {
     "year": 2010,
     "id": "pluto10_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto10_shp_wgs.pmtiles",
+    "url": "pluto10_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -172,7 +172,7 @@
   "22": {
     "year": 2022,
     "id": "pluto22_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto22_shp_wgs.pmtiles",
+    "url": "pluto22_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -189,7 +189,7 @@
   "06": {
     "year": 2006,
     "id": "pluto06_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto06_shp_wgs.pmtiles",
+    "url": "pluto06_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -206,7 +206,7 @@
   "03": {
     "year": 2003,
     "id": "pluto03_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto03_shp_wgs.pmtiles",
+    "url": "pluto03_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -223,7 +223,7 @@
   "15": {
     "year": 2015,
     "id": "pluto15_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto15_shp_wgs.pmtiles",
+    "url": "pluto15_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -240,7 +240,7 @@
   "12": {
     "year": 2012,
     "id": "pluto12_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto12_shp_wgs.pmtiles",
+    "url": "pluto12_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -257,7 +257,7 @@
   "04": {
     "year": 2004,
     "id": "pluto04_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto04_shp_wgs.pmtiles",
+    "url": "pluto04_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -274,7 +274,7 @@
   "20": {
     "year": 2020,
     "id": "pluto20_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto20_shp_wgs.pmtiles",
+    "url": "pluto20_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -291,7 +291,7 @@
   "13": {
     "year": 2013,
     "id": "pluto13_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto13_shp_wgs.pmtiles",
+    "url": "pluto13_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -308,7 +308,7 @@
   "05": {
     "year": 2005,
     "id": "pluto05_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto05_shp_wgs.pmtiles",
+    "url": "pluto05_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -325,7 +325,7 @@
   "21": {
     "year": 2021,
     "id": "pluto21_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto21_shp_wgs.pmtiles",
+    "url": "pluto21_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -342,7 +342,7 @@
   "02": {
     "year": 2002,
     "id": "pluto02_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto02_shp_wgs.pmtiles",
+    "url": "pluto02_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
@@ -359,7 +359,7 @@
   "14": {
     "year": 2014,
     "id": "pluto14_shp_wgs",
-    "url": "pmtiles://https://pluto-hist.s3.amazonaws.com/data/tilesets/pluto14_shp_wgs.pmtiles",
+    "url": "pluto14_shp_wgs.pmtiles",
     "columns": [
       { "name": "Land use", "id": "landuse" },
       { "name": "Simplified zoning district", "id": "zonedist1" },
