@@ -1,6 +1,6 @@
-# Pluto-hist API
+# Backend API
 
-## Set-up
+## Developer set-up
 
 For local development, add `.env` with `BASE_PATH=/path/to/directory-where-your-parquets-are-stored`
 
