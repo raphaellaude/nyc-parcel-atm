@@ -2,17 +2,26 @@
 
 ![The *Parcel ATM* at BRIC](./ATM-at-BRIC.jpg)
 
-_Parcel ATM_ is an art project and website conceived for [Data through Design 2024](https://datathroughdesign.com/). The installation will allow visitors to query [22 years of NYC MapPLUTO data](https://www.nyc.gov/site/planning/data-maps/open-data/bytes-archive.page). This repo contains the source code for the ATM's interface.
-
-Under the hood, the ATM interface is just a website running in chromium in kiosk mode, a feature that allows the browser to run in full-screen mode, hiding the address bar and other browser controls.
+_Parcel ATM_ is an art project and website conceived for [Data through Design 2024](https://datathroughdesign.com/) (DxD). The installation was open March 15-24 2024 and allowed visitors to query [22 years of NYC MapPLUTO data](https://www.nyc.gov/site/planning/data-maps/open-data/bytes-archive.page). This repo contains the instructions for operating the physical ATM and running the interface's source code.
 
 ## Running the ATM
+
+The following instructions are for running and maintaining the physical ATM made for the DxD show. It was built with:
+
+- A [Raspberry Pi 4](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/specifications/)
+- [LCD screen](https://www.pishop.us/product/hdmi-8-ips-lcd-screen-kit-1024x768/)
+- [TM-T20III Thermal Receipt Printer](https://epson.com/For-Work/Printers/POS/TM-T20III-Thermal-Receipt-Printer/p/C31CH51A9972)
+- [Nullbits TIDBIT](https://nullbits.co/tidbit/) customizeable 19-key numpad
+- Custom vessel
+- Lots of cords
+
+If you are just interested in running the ATM's source code, skip to [Developer set-up](#developer-set-up).
 
 ### Turning it on
 
 1. Pull the ATM a few inches from the wall so you can access its internals.
 1. Plug cords back if unplugged.
-1. Turn on the raspberry pi (it may do so automatically when you plug it in; if not, press the on button on the side). A green light on raspberry pi should be illuminated, going from flashing green to solid green. After the raspberry pi is on, the following should be true: screen is illuminated and showing a desktop; the numpad keyboard should be faintly illuminated behind the keys; printer is on (see that the solid blue light on top is illuminated).
+1. Turn on the Raspberry Pi (it may do so automatically when you plug it in; if not, press the on button on the side). A green light on Raspberry Pi should be illuminated, going from flashing green to solid green. After the Raspberry Pi is on, the following should be true: screen is illuminated and showing a desktop; the numpad keyboard should be faintly illuminated behind the keys; printer is on (see that the solid blue light on top is illuminated).
 1. Open the terminal app.
 1. Remove the full keyboard and mouse from the back of the ATM. I like to place them on the top of the ATM. Turn on the keyboard and mouse as necessary.
 1. Open the terminal app by clicking the `>\_` icon in the menu bar at top.
@@ -68,12 +77,12 @@ Replacing the paper
 1. Pull the feeder side of the paper out and close the door, making sure the roll stays well coiled.
 1. Check that it is working.
 
-Is the printer on and connected to the raspberry pi?
+Is the printer on and connected to the Raspberry Pi?
 
 1. Open the door with the key
 1. Check that the printer is on (a blue light should be illuminated)
 1. Check that the paper is full (the lights on the front should indicate this but you can also open it up)
-1. Check that the grey cord is properly connected to the back of the printer and is plugged into the raspberry pi
+1. Check that the grey cord is properly connected to the back of the printer and is plugged into the Raspberry Pi
 
 Paper is not feeding properly
 
@@ -89,7 +98,7 @@ For anything else, refer to the [printer manual](https://download4.epson.biz/sec
 #### Screen isn’t turning on
 
 - Make sure that the screen is turned on. It should be on by default when the power is on but there is a tiny “POWER” button on the thin mini-PCB board with buttons connected to the screen driver PCB board.
-- Try switching the HDMI port the screen is connected to on the Raspberry Pi. There are two next to each other on the side of the Raspberry PI.
+- Try switching the HDMI port the screen is connected to on the Raspberry Pi. There are two next to each other on the side of the Raspberry Pi.
 - Check that the screen driver PCB board is connected to the screen, via the Flexible Flat Cable (FFC).
 
 ##### Reconnecting the FFC
@@ -105,28 +114,27 @@ To reconnect the FFC to the screen driver PCB:
 1. Pull the ATM away from the wall
 1. Grab the keyboard and mouse from the back, turning them back on.
 1. Stop the app: `Alt` + `Cnrl` + `T` to open a terminal window; run `pkill chromium`
-1. Shutdown the raspberry pi by pressing the green light button.
+1. Shutdown the Raspberry Pi by pressing the green light button.
 1. Click Shutdown from the menu shown on the screen.
 1. Turn off the printer.
 
 ## Developer set-up
 
-This project includes four components:
+Under the hood, the ATM's interface is just a website. To get started:
 
-1. [Backend](./backend/README.md)
-1. [Frontend](./pluto-hist/README.md)
-1. [ELT](./elt/README.md)
-1. [EDA](./eda/README.md)
+1. Run the [ELT pipeline](./elt/README.md)
+1. Spin up the [backend](./backend/README.md)
+1. Run the [frontend](./pluto-hist/README.md)
 
-Component-specific set-up instructions for each component are included in the `README.md` files linked above.
+You're done!
+
+This project includes also includes some undocumented EDA.
 
 ### General set-up
 
-#### Python: Backend, ELT, EDA
+This project uses [poetry](https://python-poetry.org/docs/) to manage dependencies for the backend, ELT pipeline, and EDA. Make sure you have poetry installed.
 
-This project uses the [poetry](https://python-poetry.org/docs/) dependency manager tool for the backend, ELT, and EDA components. Make sure you have poetry installed. GDAL and GEOS are dependencies of this project.
-
-The frontend is a VanillaJS app using Vite. Follow their [installation guide](https://vitejs.dev/guide/) to get started.
+GDAL and GEOS are dependencies of this project.
 
 #### Environment Variables
 
