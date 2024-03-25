@@ -143,3 +143,9 @@ Create a `.env` file in the root directory with:
 ```
 DEV=true
 ```
+
+### Disclaimer
+
+This project was developed on an M1 MacBook Pro. I make no guarantees that it will work on your machine out-of-the-box. Poetry is designed to make cross-platform easy, though, so hopefully it does work! :blush:
+
+Have fun! If you liked this project, star it on shoot me a note on [insta](https://www.instagram.com/fishmulch/).

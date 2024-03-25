@@ -4,7 +4,9 @@ The frontend is a VanillaJS app using Vite. Follow Vite's [installation guide](h
 
 ## Local set-up
 
-1. Install dependencies: `npm install`
+Make sure you have node.js and npm installed.
+
+1. `cd pluto-hist` from root and `npm install`
 
 2. Create a `.env` file with the following:
 
@@ -12,6 +14,8 @@ The frontend is a VanillaJS app using Vite. Follow Vite's [installation guide](h
 VITE_API_URL=http://127.0.0.1:8000
 VITE_KIOSK=false
 ```
+
+If you wish the run the frontend in kiosk mode, set `VITE_KIOSK=true`.
 
 3. `npm run dev` and navigate to the localhost URL shown in the terminal!
 
