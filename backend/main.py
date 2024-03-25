@@ -68,10 +68,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# DB_PATH = os.getenv("DB_PATH")
-# logger.info(f"DB_PATH set to {DB_PATH}")
-
-# if DB_PATH is not None:
 conn = duckdb.connect(database=":memory:")
 conn.execute("INSTALL spatial; LOAD spatial;")
 
@@ -127,7 +123,7 @@ def single_year_pluto(year: str, lat: str, lon: str, kiosk="false"):
         logger.error(f"Year not found: {year}")
         return HTTPException(detail="Year not found", status_code=404)
 
-    logger.info(f"Rendering SQL template")
+    logger.info("Rendering SQL template")
 
     columns = ["*"]
 
@@ -229,10 +225,9 @@ def get_year_geom_svg(year, x, y):
     except KeyError:
         return None
 
-    # body = svg.body.decode("utf-8")
     body = body.replace('fill="#66cc99"', 'fill="#ffffff"')
     body = body.replace('stroke="#555555"', 'stroke="#000000"')
-    body = re.sub(r'opacity="([\d.]+)"', f'fill-opacity="0.0"', body)
+    body = re.sub(r'opacity="([\d.]+)"', 'fill-opacity="0.0"', body)
     body = scale_svg(body, 75)
 
     return body

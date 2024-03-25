@@ -1,4 +1,3 @@
-import os
 import duckdb
 import functools
 import pandas as pd
@@ -7,8 +6,7 @@ from itertools import combinations
 from pathlib import Path
 from typing import Union, Sequence
 
-from .constants import DB_PATH, YEARS
-from .jinja import render_template
+from .constants import DB_PATH
 
 
 def with_conn(func):

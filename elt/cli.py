@@ -46,7 +46,7 @@ def harmonize_pluto_columns() -> None:
 
     for col1, col2, similarity in match_df[["col1", "col2", "similarity"]].values:
         print(f"{col1} and {col2} have a similarity of {similarity}%")
-        print(f"Are these the same column? (yes/no/exit)")
+        print("Are these the same column? (yes/no/exit)")
         response = click.prompt(">", type=str, default="yes")
         if response == "yes":
             matches.append(1)

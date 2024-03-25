@@ -1,7 +1,5 @@
 import os
-import glob
 import json
-import duckdb
 import subprocess
 from pandas import DataFrame
 from pathlib import Path
