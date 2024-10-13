@@ -2,6 +2,23 @@ import "./style.css";
 import * as pmtiles from "pmtiles";
 import data from "./data.json";
 import choropleth from "./choropleth.json";
+import * as Sentry from "@sentry/browser";
+
+Sentry.init({
+  dsn: "https://e405c9bd0305a5b3d13e603b05e2c619@o4506839635853312.ingest.us.sentry.io/4508115982548992",
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.replayIntegration(),
+  ],
+  // https://pluto-hist-backend-v2.fly.dev/
+  tracesSampleRate: 1.0,
+  tracePropagationTargets: [
+    "localhost",
+    /^https:\/\/pluto-hist-backend-v2\.fly\.dev/,
+  ],
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
+});
 
 let protocol = new pmtiles.Protocol();
 maplibregl.addProtocol("pmtiles", protocol.tile);

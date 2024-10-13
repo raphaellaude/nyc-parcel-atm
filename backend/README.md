@@ -25,7 +25,7 @@ The path to your assets should matches that used when running the pipeline.
 3. Run the server:
 
 ```bash
-poetry run uvicorn main:app --reload`
+poetry run uvicorn main:app --reload
 ```
 
 ## Deployment
