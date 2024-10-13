@@ -27,6 +27,13 @@ from jinja import render_template
 from pyproj import Transformer
 from barcode import EAN13
 from barcode.errors import NumberOfDigitsError
+import sentry_sdk
+
+sentry_sdk.init(
+    dsn="https://ade1c60a5cd99ca0404fd00c38063620@o4506839635853312.ingest.us.sentry.io/4506839636180992",
+    traces_sample_rate=1.0,
+    profiles_sample_rate=0.1,
+)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

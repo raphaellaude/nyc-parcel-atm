@@ -17,6 +17,8 @@ pyproj = "^3.6.1"
 pyogrio = "^0.7.2"
 geopandas = "^0.14.3"
 python-barcode = "^0.15.1"
+sentry-sdk = {extras = ["fastapi"], version = "^2.16.0"}
+numpy = "<2.0"
 
 
 [build-system]
