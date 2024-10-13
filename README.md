@@ -1,6 +1,6 @@
 # Parcel ATM
 
-![The *Parcel ATM* at BRIC](./ATM-at-BRIC.jpg)
+![The *Parcel ATM* at BRIC](https://raphaellaude-portfolio.s3.amazonaws.com/parcel_atm.webp)
 
 _Parcel ATM_ is an art project and website conceived for [Data through Design 2024](https://datathroughdesign.com/) (DxD). The installation was open March 15-24 2024 and allowed visitors to query [22 years of NYC MapPLUTO data](https://www.nyc.gov/site/planning/data-maps/open-data/bytes-archive.page). This repo contains the instructions for operating the physical ATM and running the interface's source code.
 
