@@ -177,43 +177,6 @@ h1 {
     padding-right: 0.25em;
 }
 
-/* Printer button styles */
-.printer-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5em;
-    margin: 0.5rem 0;
-    padding: 0.5rem 1rem;
-    background-color: var(--very-light-grey);
-    border: 2px solid var(--light-grey);
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9em;
-    font-weight: 500;
-    color: var(--text-color);
-    width: 100%;
-}
-
-.printer-button:hover {
-    background-color: var(--light-grey);
-    border-color: var(--medium-grey);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow);
-}
-
-.printer-button.active {
-    background-color: var(--dark-grey);
-    color: #fff;
-    border-color: var(--dark-grey);
-}
-
-.printer-button.active:hover {
-    background-color: var(--medium-grey);
-    border-color: var(--medium-grey);
-}
-
 .printer-icon {
     font-size: 1.2em;
     line-height: 1;

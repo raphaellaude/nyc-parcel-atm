@@ -54,7 +54,11 @@
             </button>
             <div id="about-modal" class="no-print"></div>
             <button id="print-mode-toggle" class="printer-button no-print">
-                <span class="printer-icon">🖨️</span>
+                <img
+                    src="reader.svg"
+                    alt="Document icon"
+                    class="printer-icon"
+                />
                 <span class="printer-text">Get Historical Report</span>
             </button>
             <!-- Hidden element for HTMX receipt fetching -->
@@ -63,7 +67,7 @@
                 hx-get=""
                 hx-target="#receipt"
                 hx-trigger="click"
-                style="display: none;"
+                style="display: none"
             ></div>
             <div id="switcher" class="no-print">
                 <div>
