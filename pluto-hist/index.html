@@ -48,13 +48,16 @@
                 hx-target="#about-modal"
                 class="uk-button uk-button-primary"
                 _="on htmx:afterOnLoad wait 10ms then add .uk-open to #modal"
+                style="width: 100%"
             >
                 About this project
             </button>
             <div id="about-modal" class="no-print"></div>
             <div id="switcher" class="no-print">
-                <button id="first-year">&laquo;</button>
-                <button id="prev-year">&larr;</button>
+                <div>
+                    <button id="first-year">&laquo;</button>
+                    <button id="prev-year">&larr;</button>
+                </div>
                 <p
                     id="year-label"
                     class="legend-text no-print"
@@ -63,8 +66,10 @@
                     Year
                 </p>
                 <h3 class="title mapquest no-print" id="year">2002</h3>
-                <button id="next-year">&rarr;</button>
-                <button id="last-year">&raquo;</button>
+                <div>
+                    <button id="next-year">&rarr;</button>
+                    <button id="last-year">&raquo;</button>
+                </div>
             </div>
             <div id="switcher" class="no-print">
                 <button id="prev-layer">&larr;</button>
