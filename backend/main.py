@@ -20,7 +20,7 @@ from constants import (
     BOOL_REGEX,
     SHORT_SUMMARY_COLS,
 )
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from jinja import render_template
@@ -101,7 +101,12 @@ def healthcheck():
 
 
 @app.get("/single_year_point_lookup/{year}/{lat}/{lon}")
-def single_year_pluto(year: str, lat: str, lon: str, kiosk="false"):
+def single_year_pluto(
+    year: str,
+    lat: str,
+    lon: str,
+    kiosk=Query(default=False, description="Returns a limited set of attributes"),
+):
     """
     Single year pluto view.
     """
@@ -138,9 +143,7 @@ def single_year_pluto(year: str, lat: str, lon: str, kiosk="false"):
     if kiosk == "true":
         columns = SHORT_SUMMARY_COLS
 
-    sql = render_template(
-        "point_lookup.sql.jinja", table=table, columns=columns
-    )
+    sql = render_template("point_lookup.sql.jinja", table=table, columns=columns)
 
     logger.info(f"Looking up point ({x}, {y}) in table {table}")
     try:
@@ -277,7 +280,7 @@ def receipt(lat: str, lon: str):
         table = pluto_years.get("23")
         cursor = conn.query(
             f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB(ST_POINT($1, $2))) LIMIT 1",
-            params=(x, y)
+            params=(x, y),
         )
         address = cursor.fetchone()[0]
         logger.info(f"Address: {address}")
@@ -325,7 +328,4 @@ def receipt(lat: str, lon: str):
         timestamp=timestamp,
         table=df_html,
     )
-    return HTMLResponse(
-        content=data,
-        status_code=200
-    )
+    return HTMLResponse(content=data, status_code=200)
