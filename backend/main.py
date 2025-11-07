@@ -268,7 +268,7 @@ def receipt(lat: str, lon: str):
     logger.info(f"Found {len(svgs)} SVGs for years {list(svgs.keys())}")
 
     if len(svgs) == 0:
-        return HTMLResponse("No parcels found", status_code=204)
+        return HTMLResponse("No parcels found", status_code=404)
 
     address = ""
 
@@ -276,13 +276,14 @@ def receipt(lat: str, lon: str):
         logger.info("Getting address")
         table = pluto_years.get("23")
         cursor = conn.query(
-            f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB('POINT({x} {y})'::GEOMETRY)))"
+            f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB(ST_POINT($1, $2))) LIMIT 1",
+            params=(x, y)
         )
         address = cursor.fetchone()[0]
         logger.info(f"Address: {address}")
     except Exception as e:
         logger.info(f"Could not find an address: {e}")
-        return HTMLResponse("Could not find an address!", status_code=204)
+        return HTMLResponse("Could not find an address!", status_code=404)
 
     address_hash = str(abs(hash(address * 3)) % (10**12))[:12]
     try:
@@ -314,15 +315,17 @@ def receipt(lat: str, lon: str):
     df_html = df_html.replace('border="1"', 'border="0"')
     df_html = df_html.replace("text-align: right", "text-align: left")
 
+    data = render_template(
+        "receipt.html.jinja",
+        lon=lon[:8],
+        lat=lat[:7],
+        svgs=svgs,
+        address=address,
+        barcode=barcode_svg,
+        timestamp=timestamp,
+        table=df_html,
+    )
     return HTMLResponse(
-        render_template(
-            "receipt.html.jinja",
-            lon=lon[:8],
-            lat=lat[:7],
-            svgs=svgs,
-            address=address,
-            barcode=barcode_svg,
-            timestamp=timestamp,
-            table=df_html,
-        )
+        content=data,
+        status_code=200
     )
