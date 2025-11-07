@@ -323,10 +323,10 @@ def receipt(
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    sql = render_template("receipt.sql.jinja", tables=pluto_years, lat=y, lon=x)
+    sql = render_template("receipt.sql.jinja", tables=pluto_years)
 
     try:
-        cursor = conn.execute(sql)
+        cursor = conn.execute(sql, parameters=(x, y))
     except (duckdb.SerializationException, duckdb.InvalidInputException) as e:
         logger.error(f"Serialization error: {e}")
         return HTMLResponse('<p style="color=grey">No parcel found</p>')
