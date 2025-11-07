@@ -17,7 +17,7 @@ uv sync
 2. Create a `.env` file in the root directory with:
 
 ```bash
-BASE_PATH=/path/to/your/assets
+BASE_DIR=/path/to/your/assets
 ```
 
 The path to your assets should matches that used when running the pipeline.
