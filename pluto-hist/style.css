@@ -16,7 +16,7 @@
     --very-light-grey: #f8f8f8;
     --text-color: #272750;
     --box-padding: 0.75em;
-    --sidebar-width: 450px;
+    --sidebar-width: 500px;
     --mapquest-gradient: linear-gradient(to top, #f0f0e1, #ffffff);
     --shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
         rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
@@ -106,7 +106,7 @@ h1 {
     position: absolute;
     width: 250px;
     top: 1rem;
-    left: calc(var(--sidebar-width) + 3rem);
+    left: calc(var(--sidebar-width) + 1rem);
     background-color: var(--bg);
     color: var(--text-color);
     padding: var(--box-padding);
@@ -185,18 +185,29 @@ h1 {
     padding-right: 0.25em;
 }
 
-.printer-button {
-    width: 100%;
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
     margin-top: 0.5em;
 }
 
-.printer-icon {
-    font-size: 1.2em;
-    line-height: 1;
+#print-mode-toggle {
+    margin: 0;
 }
 
-.printer-text {
-    font-family: inherit;
+.checkbox-container input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--text-color);
+}
+
+.checkbox-container label {
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
 }
 
 #controls {

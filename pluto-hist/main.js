@@ -374,25 +374,23 @@ function fetchReceiptWithHTMX(lat, lng) {
 }
 
 function togglePrintMode() {
-  printMode = !printMode;
-
-  const printButton = document.getElementById("print-mode-toggle");
+  const printCheckbox = document.getElementById("print-mode-toggle");
   const dataElement = document.getElementById("data");
   const receiptElement = document.getElementById("receipt");
 
-  if (!printButton || !dataElement || !receiptElement) {
+  if (!printCheckbox || !dataElement || !receiptElement) {
     console.error("Required elements not found");
     return;
   }
 
+  printMode = printCheckbox.checked;
+
   if (printMode) {
-    printButton.classList.add("active");
     // Hide single year data, show receipt container
     dataElement.style.display = "none";
     receiptElement.style.display = "block";
     receiptElement.innerHTML = "Click on the map to get a historical report";
   } else {
-    printButton.classList.remove("active");
     // Show single year data, hide receipt
     dataElement.style.display = "block";
     receiptElement.style.display = "none";
@@ -753,8 +751,8 @@ document.onkeydown = function (e) {
   }
 };
 
-// Print mode button handler
+// Print mode checkbox handler
 const printModeToggle = document.getElementById("print-mode-toggle");
 if (printModeToggle) {
-  printModeToggle.addEventListener("click", togglePrintMode);
+  printModeToggle.addEventListener("change", togglePrintMode);
 }
