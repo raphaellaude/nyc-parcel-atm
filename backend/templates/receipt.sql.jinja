@@ -6,8 +6,8 @@ SELECT
     -- CONCAT(borocode, block, lot) AS bbl,
     zonedist1,
     {# Temp hack: there seems to be an issue with these two files on prod machine. #}
-    {% if year in ('02', '03') %}null as builtfar{% else %}builtfar,
-    {% if year in ('02') %}yearalter as yearalter1{% else %}yearalter1,
+    {% if year in ('02', '03') %}null as builtfar{% else %}builtfar{% endif %},
+    {% if year in ('02') %}null as yearalter1{% else %}yearalter1{% endif %},
     CAST(assesstot AS INTEGER) AS assesstot,
 FROM
     ST_Read(
