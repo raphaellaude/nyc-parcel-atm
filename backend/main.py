@@ -20,7 +20,7 @@ from constants import (
     BOOL_REGEX,
     SHORT_SUMMARY_COLS,
 )
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from jinja import render_template
@@ -101,9 +101,21 @@ def healthcheck():
 
 
 @app.get("/single_year_point_lookup/{year}/{lat}/{lon}")
-def single_year_pluto(year: str, lat: str, lon: str, kiosk="false"):
+def single_year_pluto(
+    year: str,
+    lat: str,
+    lon: str,
+    kiosk=Query(default=False, description="Returns a limited set of attributes"),
+):
     """
     Single year pluto view.
+
+    Parameters:
+        year (str): Two digit year (e.g., "21", "05"). Supported years are 02-23
+        lat (str): Latitude in decimal degrees (e.g., "40.7128")
+        lon (str): Longitude in decimal degrees (e.g., "-73.9352")
+        kiosk (bool): Returns a limited set of attributes. This feature is for the ATM
+            running in kiosk mode so as not to overflow the screen.
     """
     if not re.match(LON_REGEX, lon):
         logger.error(f"Invalid longitude: {lon}")
@@ -138,9 +150,7 @@ def single_year_pluto(year: str, lat: str, lon: str, kiosk="false"):
     if kiosk == "true":
         columns = SHORT_SUMMARY_COLS
 
-    sql = render_template(
-        "point_lookup.sql.jinja", table=table, columns=columns
-    )
+    sql = render_template("point_lookup.sql.jinja", table=table, columns=columns)
 
     logger.info(f"Looking up point ({x}, {y}) in table {table}")
     try:
@@ -242,9 +252,23 @@ def get_year_geom_svg(year, x, y):
 
 
 @app.get("/receipt/{lat}/{lon}")
-def receipt(lat: str, lon: str):
+def receipt(
+    lat: str,
+    lon: str,
+    kiosk=Query(default=False, description="Returns a limited set of attributes"),
+):
     """
-    Single year pluto view.
+    Returns a summary of the parcels at the input location over time including
+    the intersecting parcel boundaries and other longitudinal attributes.
+
+    Parameters:
+        lat (str): The latitude of the location.
+        lon (str): The longitude of the location.
+        kiosk (bool): Returns the same data without receipt boilerplate
+            (barcode, header, etc.).
+
+    Returns:
+        str: The summary of the parcels at the input location over time.
     """
     if not re.match(LON_REGEX, lon):
         logger.error(f"Invalid longitude: {lon}")
@@ -268,7 +292,7 @@ def receipt(lat: str, lon: str):
     logger.info(f"Found {len(svgs)} SVGs for years {list(svgs.keys())}")
 
     if len(svgs) == 0:
-        return HTMLResponse("No parcels found", status_code=204)
+        return HTMLResponse("No parcels found", status_code=404)
 
     address = ""
 
@@ -276,13 +300,14 @@ def receipt(lat: str, lon: str):
         logger.info("Getting address")
         table = pluto_years.get("23")
         cursor = conn.query(
-            f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB('POINT({x} {y})'::GEOMETRY)))"
+            f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB(ST_POINT($1, $2))) LIMIT 1",
+            params=(x, y),
         )
         address = cursor.fetchone()[0]
         logger.info(f"Address: {address}")
     except Exception as e:
         logger.info(f"Could not find an address: {e}")
-        return HTMLResponse("Could not find an address!", status_code=204)
+        return HTMLResponse("Could not find an address!", status_code=404)
 
     address_hash = str(abs(hash(address * 3)) % (10**12))[:12]
     try:
@@ -302,7 +327,7 @@ def receipt(lat: str, lon: str):
 
     try:
         cursor = conn.execute(sql)
-    except duckdb.SerializationException as e:
+    except (duckdb.SerializationException, duckdb.InvalidInputException) as e:
         logger.error(f"Serialization error: {e}")
         return HTMLResponse('<p style="color=grey">No parcel found</p>')
 
@@ -314,15 +339,17 @@ def receipt(lat: str, lon: str):
     df_html = df_html.replace('border="1"', 'border="0"')
     df_html = df_html.replace("text-align: right", "text-align: left")
 
-    return HTMLResponse(
-        render_template(
-            "receipt.html.jinja",
-            lon=lon[:8],
-            lat=lat[:7],
-            svgs=svgs,
-            address=address,
-            barcode=barcode_svg,
-            timestamp=timestamp,
-            table=df_html,
-        )
+    _kiosk = kiosk if isinstance(kiosk, bool) else kiosk == "true"
+
+    data = render_template(
+        "receipt.html.jinja",
+        lon=lon[:8],
+        lat=lat[:7],
+        svgs=svgs,
+        address=address,
+        barcode=barcode_svg,
+        timestamp=timestamp,
+        table=df_html,
+        kiosk=_kiosk,
     )
+    return HTMLResponse(content=data, status_code=200)

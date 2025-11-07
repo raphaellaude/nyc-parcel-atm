@@ -47,6 +47,9 @@ let choroplethLayers = Object.keys(choropleth);
 let prevLayer;
 let activeLayer = "landuse";
 
+// Print mode state
+let printMode = false;
+
 var map = new maplibregl.Map({
   container: "map",
   style: {
@@ -245,7 +248,7 @@ async function queryFeatures(year, lat, lng) {
   // before making the API call;
 
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/single_year_point_lookup/${year}/${lat}/${lng}${import.meta.env.VITE_KIOSK === "true" ? "/?kiosk=true" : ""}`,
+    `${import.meta.env.VITE_API_URL}/single_year_point_lookup/${year}/${lat}/${lng}?kiosk=${import.meta.env.VITE_KIOSK || 'false'}`,
   )
     .then((response) => {
       spinner.stop();
@@ -345,6 +348,56 @@ async function wakeServer() {
   }
 }
 
+function fetchReceiptWithHTMX(lat, lng) {
+  spinner.start();
+
+  const receiptElement = document.getElementById("receipt");
+  if (!receiptElement) {
+    console.error("Receipt element not found");
+    spinner.stop();
+    return;
+  }
+
+  const url = `${import.meta.env.VITE_API_URL}/receipt/${lat}/${lng}?kiosk=${import.meta.env.VITE_KIOSK || 'false'}`;
+
+  // Use htmx.ajax for programmatic HTMX requests
+  htmx.ajax('GET', url, {
+    target: '#receipt',
+    swap: 'innerHTML'
+  }).then(() => {
+    spinner.stop();
+  }).catch((error) => {
+    spinner.stop();
+    console.error("Error fetching receipt:", error);
+    receiptElement.innerHTML = "Error fetching receipt - please try again";
+  });
+}
+
+function togglePrintMode() {
+  const printCheckbox = document.getElementById("print-mode-toggle");
+  const dataElement = document.getElementById("data");
+  const receiptElement = document.getElementById("receipt");
+
+  if (!printCheckbox || !dataElement || !receiptElement) {
+    console.error("Required elements not found");
+    return;
+  }
+
+  printMode = printCheckbox.checked;
+
+  if (printMode) {
+    // Hide single year data, show receipt container
+    dataElement.style.display = "none";
+    receiptElement.style.display = "block";
+    receiptElement.innerHTML = "Click on the map to get a historical report";
+  } else {
+    // Show single year data, hide receipt
+    dataElement.style.display = "block";
+    receiptElement.style.display = "none";
+    receiptElement.innerHTML = "";
+  }
+}
+
 map.on("load", function () {
   wakeServer();
   map.getCanvas().focus();
@@ -419,7 +472,11 @@ map.on("load", function () {
   // });
 
   map.on("click", (e) => {
-    queryFeatures(year, e.lngLat.lat, e.lngLat.lng);
+    if (printMode) {
+      fetchReceiptWithHTMX(e.lngLat.lat, e.lngLat.lng);
+    } else {
+      queryFeatures(year, e.lngLat.lat, e.lngLat.lng);
+    }
   });
 
   if (import.meta.env.VITE_KIOSK === "true") {
@@ -693,3 +750,9 @@ document.onkeydown = function (e) {
       break;
   }
 };
+
+// Print mode checkbox handler
+const printModeToggle = document.getElementById("print-mode-toggle");
+if (printModeToggle) {
+  printModeToggle.addEventListener("change", togglePrintMode);
+}

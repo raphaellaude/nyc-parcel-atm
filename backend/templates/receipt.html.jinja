@@ -1,10 +1,13 @@
 {# templates/receipt.html.jinja #}
+{% set kiosk = kiosk|default(False) %}
 <div style="text-align: center; min-height: 750px">
+    {% if kiosk %}
     <h1 style="font-size: 1rem;">NYC PARCEL ATM</h1>
     <p class="receipt-p-md">{{address}}</p>
     <p class="receipt-p-sm">{{timestamp}}</p>
     <p class="receipt-p-sm">{{lon}}, {{lat}}</p>
     <p class="receipt-p-sm">-------------------------------</p>
+    {% endif %}
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(auto-fit, 95px); width: 100%; position: relative;">
         {% for year, svg in svgs.items() %}
             <div style="align-self: start; justify-self: center; max-height: 95px;">
@@ -13,10 +16,13 @@
             </div>
         {% endfor %}
     </div>
+    {% if kiosk %}
     <p class="receipt-p-sm">-------------------------------</p>
+    {% endif %}
     <div>
         {{table}}
     </div>
+    {% if kiosk %}
     <p class="receipt-p-sm">-------------------------------</p>
     <p class="receipt-p-sm">Thank you. Come back again.</p>
     <p class="receipt-p-sm">-------------------------------</p>
@@ -29,4 +35,5 @@
     <p class="receipt-p-sm">--- 647 Fulton Street ---</p>
     <p class="receipt-p-sm">--- Brooklyn, NY 11217 ---</p>
     <p class="receipt-p-sm">******************************</p>
+    {% endif %}
 </div>
