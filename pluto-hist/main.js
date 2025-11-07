@@ -47,6 +47,9 @@ let choroplethLayers = Object.keys(choropleth);
 let prevLayer;
 let activeLayer = "landuse";
 
+// Print mode state
+let printMode = false;
+
 var map = new maplibregl.Map({
   container: "map",
   style: {
@@ -345,6 +348,68 @@ async function wakeServer() {
   }
 }
 
+function fetchReceiptWithHTMX(lat, lng) {
+  spinner.start();
+
+  const receiptFetcher = document.getElementById("receipt-fetcher");
+  if (!receiptFetcher) {
+    console.error("Receipt fetcher element not found");
+    spinner.stop();
+    return;
+  }
+
+  // Set the URL for HTMX to fetch
+  receiptFetcher.setAttribute(
+    "hx-get",
+    `${import.meta.env.VITE_API_URL}/receipt/${lat}/${lng}`
+  );
+
+  // Trigger the HTMX request
+  htmx.trigger(receiptFetcher, "click");
+
+  // Listen for HTMX after swap event to stop spinner
+  receiptFetcher.addEventListener("htmx:afterSwap", () => {
+    spinner.stop();
+  }, { once: true });
+
+  receiptFetcher.addEventListener("htmx:afterRequest", (event) => {
+    if (!event.detail.successful) {
+      spinner.stop();
+      const receiptElement = document.getElementById("receipt");
+      if (receiptElement) {
+        receiptElement.innerHTML = "Error fetching receipt - please try again";
+      }
+    }
+  }, { once: true });
+}
+
+function togglePrintMode() {
+  printMode = !printMode;
+
+  const printButton = document.getElementById("print-mode-toggle");
+  const dataElement = document.getElementById("data");
+  const receiptElement = document.getElementById("receipt");
+
+  if (!printButton || !dataElement || !receiptElement) {
+    console.error("Required elements not found");
+    return;
+  }
+
+  if (printMode) {
+    printButton.classList.add("active");
+    // Hide single year data, show receipt container
+    dataElement.style.display = "none";
+    receiptElement.style.display = "block";
+    receiptElement.innerHTML = "Click on the map to get a historical report";
+  } else {
+    printButton.classList.remove("active");
+    // Show single year data, hide receipt
+    dataElement.style.display = "block";
+    receiptElement.style.display = "none";
+    receiptElement.innerHTML = "";
+  }
+}
+
 map.on("load", function () {
   wakeServer();
   map.getCanvas().focus();
@@ -419,7 +484,11 @@ map.on("load", function () {
   // });
 
   map.on("click", (e) => {
-    queryFeatures(year, e.lngLat.lat, e.lngLat.lng);
+    if (printMode) {
+      fetchReceiptWithHTMX(e.lngLat.lat, e.lngLat.lng);
+    } else {
+      queryFeatures(year, e.lngLat.lat, e.lngLat.lng);
+    }
   });
 
   if (import.meta.env.VITE_KIOSK === "true") {
@@ -693,3 +762,9 @@ document.onkeydown = function (e) {
       break;
   }
 };
+
+// Print mode button handler
+const printModeToggle = document.getElementById("print-mode-toggle");
+if (printModeToggle) {
+  printModeToggle.addEventListener("click", togglePrintMode);
+}
