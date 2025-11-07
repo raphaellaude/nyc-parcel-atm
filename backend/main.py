@@ -29,17 +29,8 @@ from barcode import EAN13
 from barcode.errors import NumberOfDigitsError
 import sentry_sdk
 
-sentry_sdk.init(
-    dsn="https://ade1c60a5cd99ca0404fd00c38063620@o4506839635853312.ingest.us.sentry.io/4506839636180992",
-    traces_sample_rate=1.0,
-    profiles_sample_rate=0.1,
-)
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-
-logger.info("Starting Parcel ATM API")
-app = FastAPI()
 
 logger.info("Loading environment variables from .env file.")
 load_dotenv()
@@ -66,6 +57,16 @@ if ENV == "dev":
         "http://localhost:5173",
         "http://127.0.0.1:5173",
     ]
+else:
+    logger.info("Not running in dev mode! Setting up Sentry.")
+    sentry_sdk.init(
+        dsn="https://ade1c60a5cd99ca0404fd00c38063620@o4506839635853312.ingest.us.sentry.io/4506839636180992",
+        traces_sample_rate=1.0,
+        profiles_sample_rate=0.1,
+    )
+
+logger.info("Starting Parcel ATM API")
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -138,14 +139,14 @@ def single_year_pluto(year: str, lat: str, lon: str, kiosk="false"):
         columns = SHORT_SUMMARY_COLS
 
     sql = render_template(
-        "point_lookup.sql.jinja", table=table, lat=y, lon=x, columns=columns
+        "point_lookup.sql.jinja", table=table, columns=columns
     )
 
     logger.info(f"Looking up point ({x}, {y}) in table {table}")
     try:
-        cursor = conn.execute(sql)
-    except duckdb.SerializationException as e:
-        logger.error(f"Serialization error: {e}")
+        cursor = conn.execute(sql, parameters=(x, y))
+    except (duckdb.SerializationException, duckdb.InvalidInputException) as e:
+        logger.error(f"Serialization or InvalidInputException error: {e}")
         return HTMLResponse('<p style="color=grey">No parcel found</p>')
 
     if cursor.description is None:
@@ -275,7 +276,7 @@ def receipt(lat: str, lon: str):
         logger.info("Getting address")
         table = pluto_years.get("23")
         cursor = conn.query(
-            f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB(ST_Point({x}, {y})))"
+            f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB('POINT({x} {y})'::GEOMETRY)))"
         )
         address = cursor.fetchone()[0]
         logger.info(f"Address: {address}")
