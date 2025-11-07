@@ -79,7 +79,10 @@ if (import.meta.env.VITE_KIOSK === "true") {
 
 function setYear(year) {
   year = `20${year}`;
-  document.getElementById("year").innerHTML = year;
+  const yearElement = document.getElementById("year");
+  if (yearElement) {
+    yearElement.innerHTML = year;
+  }
 }
 
 function addAttributeToId(elementId, attributeName, attributeValue) {
@@ -92,6 +95,10 @@ function addAttributeToId(elementId, attributeName, attributeValue) {
 function renderLegend(title, colors, labels) {
   var legend = document.getElementById("legend");
   var legendTitle = document.getElementById("layer");
+  if (!legend || !legendTitle) {
+    console.error("Legend elements not found");
+    return;
+  }
   legendTitle.innerHTML = title;
   let legendHTML = "";
   for (var i = 0; i < colors.length; i++) {
@@ -105,6 +112,11 @@ function renderLegend(title, colors, labels) {
 }
 
 function getLegend(choroplethLayer) {
+  if (!choropleth || !choropleth[choroplethLayer]) {
+    console.error("Choropleth layer not found:", choroplethLayer);
+    return;
+  }
+
   let choroplethFill = choropleth[choroplethLayer].fillColor;
 
   if (choroplethFill == undefined) {
@@ -120,7 +132,7 @@ function getLegend(choroplethLayer) {
     values = choroplethFill.slice(2).filter((c) => typeof c === "number");
 
     let formatter = (() => {
-      switch (choropleth[choroplethLayer].numberFormat) {
+      switch (choropleth[choroplethLayer]?.numberFormat) {
         case "usd":
           return new Intl.NumberFormat("en-US", {
             style: "currency",
@@ -159,7 +171,8 @@ function getLegend(choroplethLayer) {
     return;
   }
 
-  renderLegend(choropleth[choroplethLayer].title, colors, values);
+  const title = choropleth[choroplethLayer]?.title || "Unknown";
+  renderLegend(title, colors, values);
 }
 
 getLegend(activeLayer);
@@ -199,7 +212,10 @@ class Spinner {
       ];
       let index = 0;
       this.spinnerInterval = setInterval(() => {
-        document.getElementById(this.elementId).innerHTML = spinnerChars[index];
+        const spinnerElement = document.getElementById(this.elementId);
+        if (spinnerElement) {
+          spinnerElement.innerHTML = spinnerChars[index];
+        }
         index = (index + 1) % spinnerChars.length;
       }, 100);
     }
@@ -210,8 +226,10 @@ class Spinner {
     this.activeSpinners--;
     if (this.activeSpinners === 0) {
       clearInterval(this.spinnerInterval);
-      document.getElementById(this.elementId).innerHTML =
-        "&nbsp;&#10003;&nbsp;"; // Clear the spinner
+      const spinnerElement = document.getElementById(this.elementId);
+      if (spinnerElement) {
+        spinnerElement.innerHTML = "&nbsp;&#10003;&nbsp;"; // Clear the spinner
+      }
     }
   }
 }
@@ -234,18 +252,27 @@ async function queryFeatures(year, lat, lng) {
     .catch((error) => {
       spinner.stop();
       console.error("Error:", error);
+      return null;
     });
 
-  if (response.ok) {
+  const dataElement = document.getElementById("data");
+  if (!dataElement) {
+    console.error("Data element not found");
+    return;
+  }
+
+  if (response?.ok) {
     if (response.status === 204) {
-      document.getElementById("data").innerHTML = "No data";
+      dataElement.innerHTML = "No data";
       return;
     }
     const data = await response.text();
-    document.getElementById("data").innerHTML = data;
-  } else {
+    dataElement.innerHTML = data;
+  } else if (response) {
     const data = await response.text();
-    document.getElementById("data").innerHTML = "Uh oh!" + " " + data;
+    dataElement.innerHTML = "Uh oh!" + " " + data;
+  } else {
+    dataElement.innerHTML = "Network error - please try again";
   }
 }
 
@@ -265,19 +292,28 @@ async function getReceipt(lat, lng) {
     .catch((error) => {
       spinner.stop();
       console.error("Error:", error);
+      return null;
     });
 
+  const receiptElement = document.getElementById("receipt");
+  if (!receiptElement) {
+    console.error("Receipt element not found");
+    return;
+  }
+
   console.log(response);
-  if (response.ok) {
+  if (response?.ok) {
     if (response.status === 204) {
-      document.getElementById("receipt").innerHTML = "No data";
+      receiptElement.innerHTML = "No data";
       return;
     }
     const data = await response.text();
-    document.getElementById("receipt").innerHTML = data;
-  } else {
+    receiptElement.innerHTML = data;
+  } else if (response) {
     const data = await response.text();
-    document.getElementById("receipt").innerHTML = "Uh oh!" + " " + data;
+    receiptElement.innerHTML = "Uh oh!" + " " + data;
+  } else {
+    receiptElement.innerHTML = "Network error - please try again";
   }
 }
 
@@ -293,14 +329,17 @@ async function wakeServer() {
     .catch((error) => {
       spinner.stop();
       console.error("Error:", error);
+      return null;
     });
 
-  if (response.ok) {
+  if (response?.ok) {
     const data = await response.text();
     console.log(data);
-  } else {
+  } else if (response) {
     const data = await response.text();
     console.log("Uh oh!" + " " + data);
+  } else {
+    console.log("Network error - could not reach server");
   }
 }
 
@@ -316,12 +355,21 @@ map.on("load", function () {
     let isVisible = index === currentYearIndex ? "visible" : "none";
     let layerData = data[y];
 
+    if (!layerData || !layerData.url || !layerData.id) {
+      console.error("Invalid layer data for year:", y);
+      return;
+    }
+
     map.addSource(`pluto-${y}`, {
       type: "vector",
       url: `${import.meta.env.VITE_TILE_DIR}${layerData.url}`,
     });
 
     choroplethLayers.forEach((k) => {
+      if (!choropleth[k]) {
+        console.error("Choropleth layer not found:", k);
+        return;
+      }
       let fillColor = choropleth[k].fillColor;
       let choroplethIsVisible =
         index === currentYearIndex && activeLayer === k ? "visible" : "none";
@@ -415,53 +463,79 @@ function changeLayer(step, prevLayer, nextLayer) {
     let curYear = years[currentYearIndex];
     let prevLayerData = data[curYear];
 
+    if (!prevLayerData || !prevLayerData.id) {
+      console.error("Invalid previous layer data for year:", curYear);
+      return;
+    }
+
     currentYearIndex += step;
     year = years[currentYearIndex];
 
     setYear(year);
 
     let layerData = data[year];
+    if (!layerData || !layerData.id) {
+      console.error("Invalid layer data for year:", year);
+      return;
+    }
+
     let choroId = `${layerData.id}-${nextLayer}`;
     let prevChoroId = `${prevLayerData.id}-${prevLayer}`;
 
-    map.setLayoutProperty(choroId, "visibility", "visible");
-    if (step != 0) {
-      map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
-    }
-
-    let scalar = (1.59 - map.getZoom() / 10) * 5 + 1;
-    let timeout = 500 * scalar * (step === 0 ? step : 1);
-
-    setTimeout(() => {
-      map.setLayoutProperty(prevChoroId, "visibility", "none");
+    try {
+      map.setLayoutProperty(choroId, "visibility", "visible");
       if (step != 0) {
-        map.setLayoutProperty(`${prevLayerData.id}-line`, "visibility", "none");
+        map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
       }
-    }, timeout);
+
+      let scalar = (1.59 - map.getZoom() / 10) * 5 + 1;
+      let timeout = 500 * scalar * (step === 0 ? step : 1);
+
+      setTimeout(() => {
+        try {
+          map.setLayoutProperty(prevChoroId, "visibility", "none");
+          if (step != 0) {
+            map.setLayoutProperty(`${prevLayerData.id}-line`, "visibility", "none");
+          }
+        } catch (error) {
+          console.error("Error hiding previous layer:", error);
+        }
+      }, timeout);
+    } catch (error) {
+      console.error("Error changing layer visibility:", error);
+    }
   }
 }
 
 const prevYearButton = document.getElementById("prev-year");
 const nextYearButton = document.getElementById("next-year");
 
-prevYearButton.onclick = () => {
-  changeLayer(-step, activeLayer, activeLayer);
-};
+if (prevYearButton) {
+  prevYearButton.onclick = () => {
+    changeLayer(-step, activeLayer, activeLayer);
+  };
+}
 
-nextYearButton.onclick = () => {
-  changeLayer(step, activeLayer, activeLayer);
-};
+if (nextYearButton) {
+  nextYearButton.onclick = () => {
+    changeLayer(step, activeLayer, activeLayer);
+  };
+}
 
 const prevLayerButton = document.getElementById("prev-layer");
 const nextLayerButton = document.getElementById("next-layer");
 
-prevLayerButton.onclick = () => {
-  advanceLayer(-1);
-};
+if (prevLayerButton) {
+  prevLayerButton.onclick = () => {
+    advanceLayer(-1);
+  };
+}
 
-nextLayerButton.onclick = () => {
-  advanceLayer(1);
-};
+if (nextLayerButton) {
+  nextLayerButton.onclick = () => {
+    advanceLayer(1);
+  };
+}
 
 function mod(n, m) {
   return ((n % m) + m) % m;
@@ -489,7 +563,16 @@ const changeLayerFromID = (layerID) => {
 
 async function getReceiptFromKeyPress() {
   // get location in center screen
-  const { lng, lat } = map.getCenter();
+  if (!map) {
+    console.error("Map not initialized");
+    return;
+  }
+  const center = map.getCenter();
+  if (!center) {
+    console.error("Could not get map center");
+    return;
+  }
+  const { lng, lat } = center;
   console.log(lat, lng);
   await getReceipt(lat, lng);
 }
@@ -543,8 +626,11 @@ document.onkeydown = function (e) {
       break;
     case "q":
       if (map !== undefined) {
-        const { lng, lat } = map.getCenter();
-        queryFeatures(year, lat, lng);
+        const center = map.getCenter();
+        if (center) {
+          const { lng, lat } = center;
+          queryFeatures(year, lat, lng);
+        }
       }
       break;
     case "u":
