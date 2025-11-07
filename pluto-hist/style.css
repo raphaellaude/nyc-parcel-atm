@@ -115,7 +115,6 @@ h1 {
     display: flex;
     align-items: center;
     gap: 8px;
-    justify-content: space-between;
 }
 
 #year,

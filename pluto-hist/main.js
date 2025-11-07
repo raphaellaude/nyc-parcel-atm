@@ -183,8 +183,10 @@ if (import.meta.env.VITE_KIOSK === "true") {
   addAttributeToId("controls", "visibility", "visible");
   addAttributeToId("centerMarker", "visibility", "visible");
   addAttributeToId("about", "display", "none");
+  addAttributeToId("first-year", "display", "none");
   addAttributeToId("prev-year", "display", "none");
   addAttributeToId("next-year", "display", "none");
+  addAttributeToId("last-year", "display", "none");
   addAttributeToId("prev-layer", "display", "none");
   addAttributeToId("next-layer", "display", "none");
 } else {
@@ -507,8 +509,19 @@ function changeLayer(step, prevLayer, nextLayer) {
   }
 }
 
+const firstYearButton = document.getElementById("first-year");
 const prevYearButton = document.getElementById("prev-year");
 const nextYearButton = document.getElementById("next-year");
+const lastYearButton = document.getElementById("last-year");
+
+if (firstYearButton) {
+  firstYearButton.onclick = () => {
+    let firstYearStep = minYear - year;
+    if (firstYearStep !== 0) {
+      changeLayer(firstYearStep, activeLayer, activeLayer);
+    }
+  };
+}
 
 if (prevYearButton) {
   prevYearButton.onclick = () => {
@@ -519,6 +532,15 @@ if (prevYearButton) {
 if (nextYearButton) {
   nextYearButton.onclick = () => {
     changeLayer(step, activeLayer, activeLayer);
+  };
+}
+
+if (lastYearButton) {
+  lastYearButton.onclick = () => {
+    let lastYearStep = maxYear - year;
+    if (lastYearStep !== 0) {
+      changeLayer(lastYearStep, activeLayer, activeLayer);
+    }
   };
 }
 
