@@ -1,5 +1,7 @@
 {# templates/receipt.sql.jinja #}
 {% for year, table in tables.items() %}
+{# Temp hack: there seems to be an issue with these two files on prod machine. #}
+{% if year not in ('02', '03') %}
 SELECT
     '{{year}}' AS year,
     ownername,
@@ -15,6 +17,23 @@ FROM
             ST_Point($1, $2)
         )
     )
+{% else %}
+SELECT
+    '{{year}}' AS year,
+    ownername,
+    -- CONCAT(borocode, block, lot) AS bbl,
+    zonedist1,
+    null AS builtfar,
+    yearalter1,
+    CAST(assesstot AS INTEGER) AS assesstot,
+FROM
+    ST_Read(
+        '{{table}}',
+        spatial_filter=ST_AsWKB(
+            ST_Point($1, $2)
+        )
+    )
+{% endif %}
 {% if not loop.last %}UNION ALL{% endif %}
 {% endfor %}
 LIMIT 22;
