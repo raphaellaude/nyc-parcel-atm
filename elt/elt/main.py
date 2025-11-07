@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 import subprocess
 from pandas import DataFrame
 from pathlib import Path
@@ -10,6 +11,10 @@ from .database import create_table, column_availibility, column_similarity, with
 from .constants import ASSETS_DIR, YEARS
 from .jinja import render_template
 from .frontend import create_json
+
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 
 def download_and_unzip() -> None:
@@ -80,7 +85,7 @@ ALTER TABLE pluto03_shp RENAME far TO builtfar;
 
 
 @with_conn
-def export_fgbs(conn):
+def export_fgbs(conn, years: list[int] | None = None):
     """
     Export Feature Geometries Binary (FGB) files for each year's PLUTO data.
     """
@@ -88,7 +93,10 @@ def export_fgbs(conn):
     if not os.path.exists(out_path):
         os.makedirs(out_path, exist_ok=True)
 
-    for year in YEARS:
+    _years = years or YEARS
+
+    for year in _years:
+        logger.info(f"Exporting FGB for year {year}")
         alias = get_pluto_key(year, "shp")
         out_table_id = f"pluto{str(year).zfill(2)}"
         fgb_sql = render_template(
@@ -101,7 +109,7 @@ def export_fgbs(conn):
 
 
 @with_conn
-def export_geojsons_for_tippecannoe(conn):
+def export_geojsons_for_tippecannoe(conn, years: list[int] | None = None):
     """
     Export geojsons for tippecannoe for each year's PLUTO data.
     """
@@ -110,7 +118,9 @@ def export_geojsons_for_tippecannoe(conn):
         print(f"Creating {out_path}. Does not exist.")
         os.makedirs(out_path, exist_ok=True)
 
-    for year in YEARS:
+    _years = years or YEARS
+
+    for year in _years:
         print(f"Exporting geojson for tippecanoe for year {year}")
         alias = get_pluto_key(year, "shp")
         fgb_sql = render_template(
@@ -126,7 +136,7 @@ def export_geojsons_for_tippecannoe(conn):
         os.remove(out_file)
 
 
-def create_tilesets():
+def create_tilesets(years: list[int] | None = None):
     fbg_tippecanoe_path = os.path.join(ASSETS_DIR, "geojsons")
     out_path = os.path.join(ASSETS_DIR, "tilesets")
     if not os.path.exists(out_path):
@@ -147,7 +157,9 @@ def create_tilesets():
 
     includes = [f"--include={col}" for col in to_include]
 
-    for year in YEARS:
+    _years = years or YEARS
+
+    for year in _years:
         print(f"Creating tileset for {year}")
         alias = get_pluto_key(year, "shp_wgs")
         in_file = os.path.join(fbg_tippecanoe_path, f"{alias}.geojson")

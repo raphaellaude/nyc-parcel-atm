@@ -79,18 +79,27 @@ def rename_columns():
 
 
 @cli.command("export-fgbs", help="Export FGBs for each PLUTO year.")
-def export_fgbs():
-    _export_fgbs()  # pyright: ignore
+@click.option(
+    "-y", "--years", help="Years to export.", multiple=True, type=int
+)
+def export_fgbs(years: list[int] | None = None):
+    _export_fgbs(years=years)  # pyright: ignore
 
 
 @cli.command("export-geojsons-for-tippecannoe", help="Export GeoJSON for tippecannoe.")
-def export_geojsons_for_tippecannoe():
-    _export_geojsons_for_tippecannoe()  # pyright: ignore
+@click.option(
+    "-y", "--years", help="Years to export.", multiple=True, type=int
+)
+def export_geojsons_for_tippecannoe(years: list[int] | None = None):
+    _export_geojsons_for_tippecannoe(years=years)  # pyright: ignore
 
 
 @cli.command("create-tilesets", help="Create tilesets for each PLUTO year.")
-def create_tilesets():
-    _create_tilesets()
+@click.option(
+    "-y", "--years", help="Years to export.", multiple=True, type=int
+)
+def create_tilesets(years: list[int] | None = None):
+    _create_tilesets(years=years)
 
 
 @cli.command("get-tileset-json", help="Get tileset json for each PLUTO year.")
