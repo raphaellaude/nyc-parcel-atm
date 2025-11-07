@@ -16,7 +16,7 @@
     --very-light-grey: #f8f8f8;
     --text-color: #272750;
     --box-padding: 0.75em;
-    --sidebar-width: 320px;
+    --sidebar-width: 450px;
     --mapquest-gradient: linear-gradient(to top, #f0f0e1, #ffffff);
     --shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
         rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
@@ -33,10 +33,9 @@ a:hover {
 
 body {
     margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 320px;
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    min-width: var(--sidebar-width);
     min-height: 100vh;
 }
 
@@ -47,25 +46,19 @@ h1 {
 
 .mapquest {
     border-radius: 0.5rem;
-    /* border: 1px solid #d7d7c4; */
-    /* background: var(--mapquest-gradient); */
     background: #fff;
-    /* box-shadow: var(--shadow); */
 }
 
 .sidebar {
-    /* position: fixed; */
-    height: calc(100vh - 2 * calc(var(--box-padding)));
-    /* margin: calc(var(--box-padding) + 0.67em) var(--box-padding); */
+    height: 100vh;
     z-index: 1;
-    min-width: var(--sidebar-width) - 1px;
-    width: var(--sidebar-width) - 1px;
     background-color: var(--bg);
     color: var(--text-color);
     overflow-y: auto;
     overflow-x: hidden;
     padding: 0 var(--box-padding);
     border-radius: 0;
+    box-sizing: border-box;
 }
 
 .title {
@@ -125,17 +118,6 @@ h1 {
     margin: 0;
 }
 
-/* #year-label,
-#layer-label {
-    display: none;
-} */
-
-/* #zoom {
-    font-size: 0.75em;
-    color: var(--text-color);
-    top: calc(40px + var(--box-padding) * 4);
-} */
-
 #legend {
     color: var(--text-color);
     margin: 1em 0;
@@ -167,7 +149,7 @@ h1 {
 #data {
     font-size: 0.8em;
     text-align: left;
-    max-width: calc(var(--sidebar-width) - 2 * var(--box-padding));
+    width: 100%;
 }
 
 #data td {
@@ -239,7 +221,7 @@ h1 {
 }
 
 #map {
-    width: calc(100vw - var(--sidebar-width));
+    width: 100%;
     height: 100vh;
     background-color: #fff;
     border-left: #000 1px solid;
@@ -252,7 +234,7 @@ h1 {
     font-size: 0.8em;
     text-align: center;
     margin-top: 1rem;
-    max-width: calc(var(--sidebar-width) - 2 * var(--box-padding));
+    width: 100%;
     overflow-x: auto;
 }
 
@@ -277,7 +259,7 @@ h1 {
     border-spacing: 0px;
     border-collapse: collapse;
     text-align: left;
-    font-size: 0.55rem;
+    font-size: 0.8rem;
     margin: 0 auto;
 }
 
@@ -307,17 +289,20 @@ h1 {
     /* flip view so sidebar is on bottom and map is on top */
 
     body {
-        flex-direction: column-reverse;
+        grid-template-columns: 1fr;
+        grid-template-rows: 50vh 50vh;
     }
 
     .sidebar {
-        width: calc(100vw - 2 * calc(var(--box-padding)));
+        grid-row: 2;
+        width: 100%;
         height: 50vh;
     }
 
     #map {
-        width: 100vw;
-        height: calc(50vh - 1px);
+        grid-row: 1;
+        width: 100%;
+        height: 50vh;
         border-left: none;
         border-bottom: #000 1px solid;
     }
