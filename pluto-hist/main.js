@@ -351,36 +351,26 @@ async function wakeServer() {
 function fetchReceiptWithHTMX(lat, lng) {
   spinner.start();
 
-  const receiptFetcher = document.getElementById("receipt-fetcher");
-  if (!receiptFetcher) {
-    console.error("Receipt fetcher element not found");
+  const receiptElement = document.getElementById("receipt");
+  if (!receiptElement) {
+    console.error("Receipt element not found");
     spinner.stop();
     return;
   }
 
-  // Set the URL for HTMX to fetch
-  receiptFetcher.setAttribute(
-    "hx-get",
-    `${import.meta.env.VITE_API_URL}/receipt/${lat}/${lng}`
-  );
+  const url = `${import.meta.env.VITE_API_URL}/receipt/${lat}/${lng}`;
 
-  // Trigger the HTMX request
-  htmx.trigger(receiptFetcher, "click");
-
-  // Listen for HTMX after swap event to stop spinner
-  receiptFetcher.addEventListener("htmx:afterSwap", () => {
+  // Use htmx.ajax for programmatic HTMX requests
+  htmx.ajax('GET', url, {
+    target: '#receipt',
+    swap: 'innerHTML'
+  }).then(() => {
     spinner.stop();
-  }, { once: true });
-
-  receiptFetcher.addEventListener("htmx:afterRequest", (event) => {
-    if (!event.detail.successful) {
-      spinner.stop();
-      const receiptElement = document.getElementById("receipt");
-      if (receiptElement) {
-        receiptElement.innerHTML = "Error fetching receipt - please try again";
-      }
-    }
-  }, { once: true });
+  }).catch((error) => {
+    spinner.stop();
+    console.error("Error fetching receipt:", error);
+    receiptElement.innerHTML = "Error fetching receipt - please try again";
+  });
 }
 
 function togglePrintMode() {
