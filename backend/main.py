@@ -109,6 +109,13 @@ def single_year_pluto(
 ):
     """
     Single year pluto view.
+
+    Parameters:
+        year (str): Two digit year (e.g., "21", "05"). Supported years are 02-23
+        lat (str): Latitude in decimal degrees (e.g., "40.7128")
+        lon (str): Longitude in decimal degrees (e.g., "-73.9352")
+        kiosk (bool): Returns a limited set of attributes. This feature is for the ATM
+            running in kiosk mode so as not to overflow the screen.
     """
     if not re.match(LON_REGEX, lon):
         logger.error(f"Invalid longitude: {lon}")
@@ -245,9 +252,23 @@ def get_year_geom_svg(year, x, y):
 
 
 @app.get("/receipt/{lat}/{lon}")
-def receipt(lat: str, lon: str):
+def receipt(
+    lat: str,
+    lon: str,
+    kiosk=Query(default=False, description="Returns a limited set of attributes"),
+):
     """
-    Single year pluto view.
+    Returns a summary of the parcels at the input location over time including
+    the intersecting parcel boundaries and other longitudinal attributes.
+
+    Parameters:
+        lat (str): The latitude of the location.
+        lon (str): The longitude of the location.
+        kiosk (bool): Returns the same data without receipt boilerplate
+            (barcode, header, etc.).
+
+    Returns:
+        str: The summary of the parcels at the input location over time.
     """
     if not re.match(LON_REGEX, lon):
         logger.error(f"Invalid longitude: {lon}")
@@ -306,7 +327,7 @@ def receipt(lat: str, lon: str):
 
     try:
         cursor = conn.execute(sql)
-    except duckdb.SerializationException as e:
+    except (duckdb.SerializationException, duckdb.InvalidInputException) as e:
         logger.error(f"Serialization error: {e}")
         return HTMLResponse('<p style="color=grey">No parcel found</p>')
 
@@ -318,6 +339,8 @@ def receipt(lat: str, lon: str):
     df_html = df_html.replace('border="1"', 'border="0"')
     df_html = df_html.replace("text-align: right", "text-align: left")
 
+    _kiosk = kiosk if isinstance(kiosk, bool) else kiosk == "true"
+
     data = render_template(
         "receipt.html.jinja",
         lon=lon[:8],
@@ -327,5 +350,6 @@ def receipt(lat: str, lon: str):
         barcode=barcode_svg,
         timestamp=timestamp,
         table=df_html,
+        kiosk=_kiosk,
     )
     return HTMLResponse(content=data, status_code=200)

@@ -248,7 +248,7 @@ async function queryFeatures(year, lat, lng) {
   // before making the API call;
 
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/single_year_point_lookup/${year}/${lat}/${lng}${import.meta.env.VITE_KIOSK === "true" ? "/?kiosk=true" : ""}`,
+    `${import.meta.env.VITE_API_URL}/single_year_point_lookup/${year}/${lat}/${lng}?kiosk=${import.meta.env.VITE_KIOSK || 'false'}`,
   )
     .then((response) => {
       spinner.stop();
@@ -358,7 +358,7 @@ function fetchReceiptWithHTMX(lat, lng) {
     return;
   }
 
-  const url = `${import.meta.env.VITE_API_URL}/receipt/${lat}/${lng}`;
+  const url = `${import.meta.env.VITE_API_URL}/receipt/${lat}/${lng}?kiosk=${import.meta.env.VITE_KIOSK || 'false'}`;
 
   // Use htmx.ajax for programmatic HTMX requests
   htmx.ajax('GET', url, {
