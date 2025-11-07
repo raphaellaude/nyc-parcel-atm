@@ -11,13 +11,13 @@
 1. Install python dependencies:
 
 ```bash
-poetry install
+uv sync
 ```
 
 2. Create a `.env` file in the root directory with:
 
 ```bash
-BASE_PATH=/path/to/your/assets
+BASE_DIR=/path/to/your/assets
 ```
 
 The path to your assets should matches that used when running the pipeline.
@@ -25,7 +25,7 @@ The path to your assets should matches that used when running the pipeline.
 3. Run the server:
 
 ```bash
-poetry run uvicorn main:app --reload
+uv run uvicorn main:app --reload
 ```
 
 ## Deployment

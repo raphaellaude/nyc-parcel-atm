@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BASE_PATH = os.getenv("BASE_PATH")
+BASE_DIR = os.getenv("BASE_DIR")
 LAT_REGEX = (
     r"^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,15})?))$"
 )

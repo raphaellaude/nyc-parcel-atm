@@ -14,7 +14,7 @@ from constants import (
     LAT_REGEX,
     LON_REGEX,
     YEARS_REGEX,
-    BASE_PATH,
+    BASE_DIR,
     MIN_YEAR,
     MAX_YEAR,
     BOOL_REGEX,
@@ -82,7 +82,7 @@ WGStoAlbersNYLI = Transformer.from_crs("EPSG:4326", "EPSG:2263")
 
 
 pluto_years = {
-    str(x).zfill(2): os.path.join(BASE_PATH, f"fgbs/pluto{str(x).zfill(2)}.fgb")
+    str(x).zfill(2): os.path.join(str(BASE_DIR), f"fgbs/pluto{str(x).zfill(2)}.fgb")
     for x in range(MIN_YEAR, MAX_YEAR + 1)
 }
 
