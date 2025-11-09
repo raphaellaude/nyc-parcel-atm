@@ -5,6 +5,7 @@ import subprocess
 from pandas import DataFrame
 from pathlib import Path
 from typing import Union
+from itertools import chain
 
 from .assets import download_zipfiles, unzip_zipfiles, get_pluto_key
 from .database import create_table, column_availibility, column_similarity, with_conn
@@ -14,7 +15,7 @@ from .frontend import create_json
 
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+logger.setLevel(logging.INFO)
 
 
 def download_and_unzip() -> None:
@@ -154,8 +155,17 @@ def create_tilesets(years: list[int] | None = None):
         "yearalter1",
         "builtfar",
     ]
+    to_include_params = [f"--include={col}" for col in to_include]
 
-    includes = [f"--include={col}" for col in to_include]
+    cast_to_int = [
+        "landuse",
+        "unitsres",
+        "yearalter1",
+        "yearbuilt",
+    ]
+    cast_to_int_params = list(
+        chain.from_iterable([("-T", f"{col}:int") for col in cast_to_int])
+    )
 
     _years = years or YEARS
 
@@ -164,22 +174,23 @@ def create_tilesets(years: list[int] | None = None):
         alias = get_pluto_key(year, "shp_wgs")
         in_file = os.path.join(fbg_tippecanoe_path, f"{alias}.fgb")
         out_file = os.path.join(out_path, f"{alias}.pmtiles")
-        subprocess.run(
-            [
-                "tippecanoe",
-                "-z",
-                "13",
-                "-o",
-                out_file,
-                "--coalesce-smallest-as-needed",
-                "--extend-zooms-if-still-dropping",
-                *includes,
-                "--force",
-                "-l",
-                alias,
-                in_file,
-            ]
-        )
+        command = [
+            "tippecanoe",
+            "-z",
+            "13",
+            "-o",
+            out_file,
+            "--coalesce-smallest-as-needed",
+            "--extend-zooms-if-still-dropping",
+            *to_include_params,
+            *cast_to_int_params,
+            "--force",
+            "-l",
+            alias,
+            in_file,
+        ]
+        print(f"Running with command:\n{command}")
+        subprocess.run(command, check=True)
 
 
 def get_tileset_json(out_path: Union[str, Path]):
