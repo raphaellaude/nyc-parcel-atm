@@ -307,7 +307,6 @@ async function getReceipt(lat, lng) {
     return;
   }
 
-  console.log(response);
   if (response?.ok) {
     if (response.status === 204) {
       receiptElement.innerHTML = "No data";
@@ -343,9 +342,9 @@ async function wakeServer() {
     console.log(data);
   } else if (response) {
     const data = await response.text();
-    console.log("Uh oh!" + " " + data);
+    console.error("Uh oh!" + " " + data);
   } else {
-    console.log("Network error - could not reach server");
+    console.error("Network error - could not reach server");
   }
 }
 
@@ -542,7 +541,6 @@ map.on("load", function () {
       if (features.length > 0) {
         const feature = features[0];
         selectedParcelId = feature.id;
-        console.log(feature);
         map.setFeatureState(
           {
             source: `pluto-${years[currentYearIndex]}`,
@@ -575,7 +573,6 @@ map.on("load", function () {
         map.getCanvas().style.cursor = "pointer";
 
         const feature = features[0];
-        console.log(feature);
         const featureId = feature.id;
 
         if (hoveredParcelId !== null && hoveredParcelId !== featureId) {
@@ -863,7 +860,6 @@ async function getReceiptFromKeyPress() {
     return;
   }
   const { lng, lat } = center;
-  console.log(lat, lng);
   await getReceipt(lat, lng);
 }
 
@@ -886,7 +882,6 @@ if (inKioskMode) {
         if (firstYearStep === 0) {
           break;
         }
-        console.log(firstYearStep);
         setTimeout(() => {
           changeLayer(firstYearStep, activeLayer, activeLayer);
         }, 1000);
@@ -897,7 +892,6 @@ if (inKioskMode) {
         if (lastYearStep === 0) {
           break;
         }
-        console.log(lastYearStep);
         // set timeout
         setTimeout(() => {
           changeLayer(lastYearStep, activeLayer, activeLayer);
