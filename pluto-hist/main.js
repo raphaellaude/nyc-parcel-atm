@@ -681,6 +681,35 @@ function changeLayer(step, prevLayer, nextLayer) {
       return;
     }
 
+    // Clear feature states when changing years
+    if (step != 0) {
+      // Clear selection state from previous year
+      if (selectedParcelId !== null) {
+        map.setFeatureState(
+          {
+            source: `pluto-${curYear}`,
+            sourceLayer: prevLayerData.id,
+            id: selectedParcelId,
+          },
+          { selected: false },
+        );
+        selectedParcelId = null;
+      }
+
+      // Clear hover state from previous year (non-kiosk mode only)
+      if (!inKioskMode && hoveredParcelId !== null) {
+        map.setFeatureState(
+          {
+            source: `pluto-${curYear}`,
+            sourceLayer: prevLayerData.id,
+            id: hoveredParcelId,
+          },
+          { hover: false },
+        );
+        hoveredParcelId = null;
+      }
+    }
+
     currentYearIndex += step;
     year = years[currentYearIndex];
 
