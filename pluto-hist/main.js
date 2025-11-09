@@ -422,6 +422,7 @@ map.on("load", function () {
     map.addSource(`pluto-${y}`, {
       type: "vector",
       url: `pmtiles://${import.meta.env.VITE_TILE_DIR}${layerData.url}`,
+      promoteId: "bbl",
     });
 
     choroplethLayers.forEach((k) => {
