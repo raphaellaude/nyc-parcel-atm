@@ -123,15 +123,15 @@ def single_year_pluto(
 
     if not re.match(LAT_REGEX, lat):
         logger.error(f"Invalid latitude: {lat}")
-        return HTTPException(detail="Invalid latitude", status_code=400)
+        raise HTTPException(detail="Invalid latitude", status_code=400)
 
     if not re.match(YEARS_REGEX, year):
         logger.error(f"Invalid year: {year}")
-        return HTTPException(detail="Invalid year", status_code=400)
+        raise HTTPException(detail="Invalid year", status_code=400)
 
     if not re.match(BOOL_REGEX, kiosk):
         logger.error(f"Invalid kiosk: {kiosk}")
-        return HTTPException(detail="Invalid kiosk", status_code=400)
+        raise HTTPException(detail="Invalid kiosk", status_code=400)
 
     logger.info("Transforming coordinates to Albers")
     x, y = WGStoAlbersNYLI.transform(float(lat), float(lon))
@@ -141,7 +141,7 @@ def single_year_pluto(
 
     if table is None:
         logger.error(f"Year not found: {year}")
-        return HTTPException(detail="Year not found", status_code=404)
+        raise HTTPException(detail="Year not found", status_code=404)
 
     logger.info("Rendering SQL template")
 
@@ -161,7 +161,7 @@ def single_year_pluto(
 
     if cursor.description is None:
         logger.error("No cursor description")
-        return HTTPException(detail="No cursor description", status_code=404)
+        raise HTTPException(detail="No cursor description", status_code=404)
 
     column_names = [desc[0] for desc in cursor.description]
 
@@ -170,7 +170,7 @@ def single_year_pluto(
         first_record = cursor.fetchone()
     except Exception as e:
         logger.error(f"Error fetching record: {e}")
-        return HTTPException(detail=str(e), status_code=500)
+        raise HTTPException(detail=str(e), status_code=500)
 
     if first_record is None:
         logger.info("No parcel found")
@@ -276,7 +276,7 @@ def receipt(
 
     if not re.match(LAT_REGEX, lat):
         logger.error(f"Invalid latitude: {lat}")
-        return HTTPException(detail="Invalid latitude", status_code=400)
+        raise HTTPException(detail="Invalid latitude", status_code=400)
 
     logger.info("Transforming coordinates to Albers")
     x, y = WGStoAlbersNYLI.transform(float(lat), float(lon))
@@ -298,7 +298,7 @@ def receipt(
 
     try:
         logger.info("Getting address")
-        table = pluto_years.get("23")
+        table = pluto_years.get("25")
         cursor = conn.query(
             f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB(ST_POINT($1, $2))) LIMIT 1",
             params=(x, y),
@@ -330,10 +330,13 @@ def receipt(
     except (duckdb.SerializationException, duckdb.InvalidInputException) as e:
         logger.error(f"Serialization error: {e}")
         return HTMLResponse('<p style="color=grey">No parcel found</p>')
+    except Exception as e:
+        logger.error(f"Unexpected error: {e}")
+        raise HTTPException(detail=f"Unexpected error {e}", status_code=500)
 
     if cursor.description is None:
         logger.error("No cursor description")
-        return HTTPException(detail="No cursor description", status_code=404)
+        raise HTTPException(detail="No cursor description", status_code=404)
 
     df_html = cursor.fetchdf().head(22).to_html(index=False)
     df_html = df_html.replace('border="1"', 'border="0"')

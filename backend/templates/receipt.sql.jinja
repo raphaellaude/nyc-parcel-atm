@@ -8,7 +8,7 @@ SELECT
     {# Temp hack: there seems to be an issue with these two files on prod machine. #}
     {% if year in ('02', '03') %}null as builtfar{% else %}builtfar{% endif %},
     {% if year in ('02') %}null as yearalter1{% else %}yearalter1{% endif %},
-    CAST(assesstot AS INTEGER) AS assesstot,
+    CAST(assesstot AS INTEGER) AS assesstot
 FROM
     ST_Read(
         '{{table}}',
@@ -18,4 +18,4 @@ FROM
     )
 {% if not loop.last %}UNION ALL{% endif %}
 {% endfor %}
-LIMIT 22;
+LIMIT 24;
