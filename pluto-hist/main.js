@@ -52,6 +52,10 @@ let activeLayer = "landuse";
 // Print mode state
 let printMode = false;
 
+// Hover and selection state
+let hoveredParcelId = null;
+let selectedParcelId = null;
+
 var map = new maplibregl.Map({
   container: "map",
   style: {
@@ -303,7 +307,6 @@ async function getReceipt(lat, lng) {
     return;
   }
 
-  console.log(response);
   if (response?.ok) {
     if (response.status === 204) {
       receiptElement.innerHTML = "No data";
@@ -339,9 +342,9 @@ async function wakeServer() {
     console.log(data);
   } else if (response) {
     const data = await response.text();
-    console.log("Uh oh!" + " " + data);
+    console.error("Uh oh!" + " " + data);
   } else {
-    console.log("Network error - could not reach server");
+    console.error("Network error - could not reach server");
   }
 }
 
@@ -463,15 +466,169 @@ map.on("load", function () {
       minzoom: 2,
       maxzoom: 16,
     });
+
+    // Hover layer (light gray fill, only in non-kiosk mode)
+    if (!inKioskMode) {
+      map.addLayer({
+        id: `${layerData.id}-hover`,
+        source: `pluto-${y}`,
+        "source-layer": layerData.id,
+        type: "fill",
+        layout: {
+          visibility: isVisible,
+        },
+        paint: {
+          "fill-color": "#333333",
+          "fill-opacity": [
+            "case",
+            ["boolean", ["feature-state", "hover"], false],
+            0.3,
+            0,
+          ],
+        },
+        minzoom: 2,
+        maxzoom: 16,
+      });
+    }
+
+    // Selection layer (thin black edge)
+    map.addLayer({
+      id: `${layerData.id}-selected`,
+      source: `pluto-${y}`,
+      "source-layer": layerData.id,
+      type: "line",
+      layout: {
+        visibility: isVisible,
+      },
+      paint: {
+        "line-color": "#000000",
+        "line-width": 2,
+        "line-opacity": [
+          "case",
+          ["boolean", ["feature-state", "selected"], false],
+          1,
+          0,
+        ],
+      },
+      minzoom: 2,
+      maxzoom: 16,
+    });
   });
 
   map.on("click", (e) => {
+    const currentYearData = data[years[currentYearIndex]];
+
+    // Clear previous selection
+    if (selectedParcelId !== null && currentYearData) {
+      map.setFeatureState(
+        {
+          source: `pluto-${years[currentYearIndex]}`,
+          sourceLayer: currentYearData.id,
+          id: selectedParcelId,
+        },
+        { selected: false },
+      );
+      selectedParcelId = null;
+    }
+
+    // Query for features at click point
+    if (currentYearData) {
+      const features = map.queryRenderedFeatures(e.point, {
+        layers: choroplethLayers.map((k) => `${currentYearData.id}-${k}`),
+      });
+
+      // Set new selection
+      if (features.length > 0) {
+        const feature = features[0];
+        selectedParcelId = feature.id;
+        map.setFeatureState(
+          {
+            source: `pluto-${years[currentYearIndex]}`,
+            sourceLayer: currentYearData.id,
+            id: selectedParcelId,
+          },
+          { selected: true },
+        );
+      }
+    }
+
     if (printMode) {
       fetchReceiptWithHTMX(e.lngLat.lat, e.lngLat.lng);
     } else {
       queryFeatures(year, e.lngLat.lat, e.lngLat.lng);
     }
   });
+
+  // Hover handlers (only in non-kiosk mode)
+  if (!inKioskMode) {
+    map.on("mousemove", (e) => {
+      const currentYearData = data[years[currentYearIndex]];
+      if (!currentYearData) return;
+
+      const features = map.queryRenderedFeatures(e.point, {
+        layers: choroplethLayers.map((k) => `${currentYearData.id}-${k}`),
+      });
+
+      if (features.length > 0) {
+        map.getCanvas().style.cursor = "pointer";
+
+        const feature = features[0];
+        const featureId = feature.id;
+
+        if (hoveredParcelId !== null && hoveredParcelId !== featureId) {
+          map.setFeatureState(
+            {
+              source: `pluto-${years[currentYearIndex]}`,
+              sourceLayer: currentYearData.id,
+              id: hoveredParcelId,
+            },
+            { hover: false },
+          );
+        }
+
+        hoveredParcelId = featureId;
+        map.setFeatureState(
+          {
+            source: `pluto-${years[currentYearIndex]}`,
+            sourceLayer: currentYearData.id,
+            id: featureId,
+          },
+          { hover: true },
+        );
+      } else {
+        if (hoveredParcelId !== null) {
+          map.setFeatureState(
+            {
+              source: `pluto-${years[currentYearIndex]}`,
+              sourceLayer: currentYearData.id,
+              id: hoveredParcelId,
+            },
+            { hover: false },
+          );
+          hoveredParcelId = null;
+        }
+        map.getCanvas().style.cursor = "";
+      }
+    });
+
+    map.on("mouseleave", () => {
+      if (hoveredParcelId !== null) {
+        const currentYearData = data[years[currentYearIndex]];
+        if (currentYearData) {
+          map.setFeatureState(
+            {
+              source: `pluto-${years[currentYearIndex]}`,
+              sourceLayer: currentYearData.id,
+              id: hoveredParcelId,
+            },
+            { hover: false },
+          );
+        }
+        hoveredParcelId = null;
+      }
+      map.getCanvas().style.cursor = "";
+    });
+  }
 
   if (inKioskMode) {
     map.on("move", function (e) {
@@ -521,6 +678,35 @@ function changeLayer(step, prevLayer, nextLayer) {
       return;
     }
 
+    // Clear feature states when changing years
+    if (step != 0) {
+      // Clear selection state from previous year
+      if (selectedParcelId !== null) {
+        map.setFeatureState(
+          {
+            source: `pluto-${curYear}`,
+            sourceLayer: prevLayerData.id,
+            id: selectedParcelId,
+          },
+          { selected: false },
+        );
+        selectedParcelId = null;
+      }
+
+      // Clear hover state from previous year (non-kiosk mode only)
+      if (!inKioskMode && hoveredParcelId !== null) {
+        map.setFeatureState(
+          {
+            source: `pluto-${curYear}`,
+            sourceLayer: prevLayerData.id,
+            id: hoveredParcelId,
+          },
+          { hover: false },
+        );
+        hoveredParcelId = null;
+      }
+    }
+
     currentYearIndex += step;
     year = years[currentYearIndex];
 
@@ -539,6 +725,18 @@ function changeLayer(step, prevLayer, nextLayer) {
       map.setLayoutProperty(choroId, "visibility", "visible");
       if (step != 0) {
         map.setLayoutProperty(`${layerData.id}-line`, "visibility", "visible");
+        if (!inKioskMode) {
+          map.setLayoutProperty(
+            `${layerData.id}-hover`,
+            "visibility",
+            "visible",
+          );
+        }
+        map.setLayoutProperty(
+          `${layerData.id}-selected`,
+          "visibility",
+          "visible",
+        );
       }
 
       let scalar = (1.59 - map.getZoom() / 10) * 5 + 1;
@@ -550,6 +748,18 @@ function changeLayer(step, prevLayer, nextLayer) {
           if (step != 0) {
             map.setLayoutProperty(
               `${prevLayerData.id}-line`,
+              "visibility",
+              "none",
+            );
+            if (!inKioskMode) {
+              map.setLayoutProperty(
+                `${prevLayerData.id}-hover`,
+                "visibility",
+                "none",
+              );
+            }
+            map.setLayoutProperty(
+              `${prevLayerData.id}-selected`,
               "visibility",
               "none",
             );
@@ -650,7 +860,6 @@ async function getReceiptFromKeyPress() {
     return;
   }
   const { lng, lat } = center;
-  console.log(lat, lng);
   await getReceipt(lat, lng);
 }
 
@@ -673,7 +882,6 @@ if (inKioskMode) {
         if (firstYearStep === 0) {
           break;
         }
-        console.log(firstYearStep);
         setTimeout(() => {
           changeLayer(firstYearStep, activeLayer, activeLayer);
         }, 1000);
@@ -684,7 +892,6 @@ if (inKioskMode) {
         if (lastYearStep === 0) {
           break;
         }
-        console.log(lastYearStep);
         // set timeout
         setTimeout(() => {
           changeLayer(lastYearStep, activeLayer, activeLayer);
