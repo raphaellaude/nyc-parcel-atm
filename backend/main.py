@@ -111,7 +111,7 @@ def single_year_pluto(
     Single year pluto view.
 
     Parameters:
-        year (str): Two digit year (e.g., "21", "05"). Supported years are 02-23
+        year (str): Two digit year (e.g., "21", "05"). Supported years are 02-25
         lat (str): Latitude in decimal degrees (e.g., "40.7128")
         lon (str): Longitude in decimal degrees (e.g., "-73.9352")
         kiosk (bool): Returns a limited set of attributes. This feature is for the ATM
@@ -338,7 +338,7 @@ def receipt(
         logger.error("No cursor description")
         raise HTTPException(detail="No cursor description", status_code=404)
 
-    df_html = cursor.fetchdf().head(22).to_html(index=False)
+    df_html = cursor.fetchdf().head(MAX_YEAR - MIN_YEAR + 1).to_html(index=False)
     df_html = df_html.replace('border="1"', 'border="0"')
     df_html = df_html.replace("text-align: right", "text-align: left")
 
