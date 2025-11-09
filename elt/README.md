@@ -11,7 +11,7 @@
 1. Install python dependencies:
 
 ```bash
-uv install
+uv sync
 ```
 
 2. Create a `.env` file in the root directory with:

@@ -41,6 +41,8 @@ function easing(t) {
   return t * (2 - t);
 }
 
+const inKioskMode = import.meta.env.VITE_KIOSK === "true";
+
 // PLUTO choropleth vars
 
 let choroplethLayers = Object.keys(choropleth);
@@ -71,14 +73,9 @@ var map = new maplibregl.Map({
 
 let marker = new maplibregl.Marker({ color: "#000000" });
 
-if (import.meta.env.VITE_KIOSK === "true") {
+if (inKioskMode) {
   marker.setLngLat([0, 0]).addTo(map);
 }
-
-// function getZoom(map) {
-//   let zoom = map.getZoom();
-//   document.getElementById("zoom").innerHTML = zoom.toFixed(1);
-// }
 
 function setYear(year) {
   year = `20${year}`;
@@ -180,7 +177,7 @@ function getLegend(choroplethLayer) {
 
 getLegend(activeLayer);
 
-if (import.meta.env.VITE_KIOSK === "true") {
+if (inKioskMode) {
   console.log("Running in kiosk mode");
   document.body.classList.add("kiosk");
   addAttributeToId("controls", "visibility", "visible");
@@ -248,7 +245,7 @@ async function queryFeatures(year, lat, lng) {
   // before making the API call;
 
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/single_year_point_lookup/${year}/${lat}/${lng}?kiosk=${import.meta.env.VITE_KIOSK || 'false'}`,
+    `${import.meta.env.VITE_API_URL}/single_year_point_lookup/${year}/${lat}/${lng}?kiosk=${import.meta.env.VITE_KIOSK || "false"}`,
   )
     .then((response) => {
       spinner.stop();
@@ -358,19 +355,22 @@ function fetchReceiptWithHTMX(lat, lng) {
     return;
   }
 
-  const url = `${import.meta.env.VITE_API_URL}/receipt/${lat}/${lng}?kiosk=${import.meta.env.VITE_KIOSK || 'false'}`;
+  const url = `${import.meta.env.VITE_API_URL}/receipt/${lat}/${lng}?kiosk=${import.meta.env.VITE_KIOSK || "false"}`;
 
   // Use htmx.ajax for programmatic HTMX requests
-  htmx.ajax('GET', url, {
-    target: '#receipt',
-    swap: 'innerHTML'
-  }).then(() => {
-    spinner.stop();
-  }).catch((error) => {
-    spinner.stop();
-    console.error("Error fetching receipt:", error);
-    receiptElement.innerHTML = "Error fetching receipt - please try again";
-  });
+  htmx
+    .ajax("GET", url, {
+      target: "#receipt",
+      swap: "innerHTML",
+    })
+    .then(() => {
+      spinner.stop();
+    })
+    .catch((error) => {
+      spinner.stop();
+      console.error("Error fetching receipt:", error);
+      receiptElement.innerHTML = "Error fetching receipt - please try again";
+    });
 }
 
 function togglePrintMode() {
@@ -402,7 +402,7 @@ map.on("load", function () {
   wakeServer();
   map.getCanvas().focus();
 
-  if (import.meta.env.VITE_KIOSK === "true") {
+  if (inKioskMode) {
     marker.setLngLat(map.getCenter());
   }
 
@@ -465,12 +465,6 @@ map.on("load", function () {
     });
   });
 
-  // getZoom(map);
-
-  // map.on("zoom", function () {
-  //   getZoom(map);
-  // });
-
   map.on("click", (e) => {
     if (printMode) {
       fetchReceiptWithHTMX(e.lngLat.lat, e.lngLat.lng);
@@ -479,7 +473,7 @@ map.on("load", function () {
     }
   });
 
-  if (import.meta.env.VITE_KIOSK === "true") {
+  if (inKioskMode) {
     map.on("move", function (e) {
       marker.setLngLat(map.getCenter());
     });
@@ -554,7 +548,11 @@ function changeLayer(step, prevLayer, nextLayer) {
         try {
           map.setLayoutProperty(prevChoroId, "visibility", "none");
           if (step != 0) {
-            map.setLayoutProperty(`${prevLayerData.id}-line`, "visibility", "none");
+            map.setLayoutProperty(
+              `${prevLayerData.id}-line`,
+              "visibility",
+              "none",
+            );
           }
         } catch (error) {
           console.error("Error hiding previous layer:", error);
@@ -656,100 +654,102 @@ async function getReceiptFromKeyPress() {
   await getReceipt(lat, lng);
 }
 
-document.onkeydown = function (e) {
-  switch (e.key) {
-    case "p":
-      getReceiptFromKeyPress().then(() => {
-        window.print();
-      });
-      break;
-    case "F13":
-      getReceiptFromKeyPress().then(() => {
-        window.print();
-      });
-      break;
-    case "b":
-      // go to first year
-      let firstYearStep = minYear - year;
-      if (firstYearStep === 0) {
+if (inKioskMode) {
+  document.onkeydown = function (e) {
+    switch (e.key) {
+      case "p":
+        getReceiptFromKeyPress().then(() => {
+          window.print();
+        });
         break;
-      }
-      console.log(firstYearStep);
-      setTimeout(() => {
-        changeLayer(firstYearStep, activeLayer, activeLayer);
-      }, 1000);
-      break;
-    case "n":
-      // go to last year
-      let lastYearStep = maxYear - year;
-      if (lastYearStep === 0) {
+      case "F13":
+        getReceiptFromKeyPress().then(() => {
+          window.print();
+        });
         break;
-      }
-      console.log(lastYearStep);
-      // set timeout
-      setTimeout(() => {
-        changeLayer(lastYearStep, activeLayer, activeLayer);
-      }, 1000);
-      break;
-    case ",":
-      changeLayer(-step, activeLayer, activeLayer);
-      break;
-    case ".":
-      changeLayer(step, activeLayer, activeLayer);
-      break;
-    case "PageDown":
-      changeLayer(-step, activeLayer, activeLayer);
-      break;
-    case "PageUp":
-      changeLayer(step, activeLayer, activeLayer);
-      break;
-    case "q":
-      if (map !== undefined) {
-        const center = map.getCenter();
-        if (center) {
-          const { lng, lat } = center;
-          queryFeatures(year, lat, lng);
+      case "b":
+        // go to first year
+        let firstYearStep = minYear - year;
+        if (firstYearStep === 0) {
+          break;
         }
-      }
-      break;
-    case "u":
-      changeLayerFromID("landuse");
-      break;
-    case "r":
-      changeLayerFromID("unitsres");
-      break;
-    case "f":
-      changeLayerFromID("builtfar");
-      break;
-    case "h":
-      changeLayerFromID("numfloors");
-      break;
-    case "a":
-      changeLayerFromID("yearalter1");
-      break;
-    case "l":
-      changeLayerFromID("assessland");
-      break;
-    case "v":
-      changeLayerFromID("assesstot");
-      break;
-    case "i":
-      map.zoomIn();
-      break;
-    case "o":
-      map.zoomOut();
-      break;
-    case "Home":
-      map.flyTo({
-        center: center,
-        zoom: defaultZoom,
-      });
-      break;
-    case "0":
-      location.reload();
-      break;
-  }
-};
+        console.log(firstYearStep);
+        setTimeout(() => {
+          changeLayer(firstYearStep, activeLayer, activeLayer);
+        }, 1000);
+        break;
+      case "n":
+        // go to last year
+        let lastYearStep = maxYear - year;
+        if (lastYearStep === 0) {
+          break;
+        }
+        console.log(lastYearStep);
+        // set timeout
+        setTimeout(() => {
+          changeLayer(lastYearStep, activeLayer, activeLayer);
+        }, 1000);
+        break;
+      case ",":
+        changeLayer(-step, activeLayer, activeLayer);
+        break;
+      case ".":
+        changeLayer(step, activeLayer, activeLayer);
+        break;
+      case "PageDown":
+        changeLayer(-step, activeLayer, activeLayer);
+        break;
+      case "PageUp":
+        changeLayer(step, activeLayer, activeLayer);
+        break;
+      case "q":
+        if (map !== undefined) {
+          const center = map.getCenter();
+          if (center) {
+            const { lng, lat } = center;
+            queryFeatures(year, lat, lng);
+          }
+        }
+        break;
+      case "u":
+        changeLayerFromID("landuse");
+        break;
+      case "r":
+        changeLayerFromID("unitsres");
+        break;
+      case "f":
+        changeLayerFromID("builtfar");
+        break;
+      case "h":
+        changeLayerFromID("numfloors");
+        break;
+      case "a":
+        changeLayerFromID("yearalter1");
+        break;
+      case "l":
+        changeLayerFromID("assessland");
+        break;
+      case "v":
+        changeLayerFromID("assesstot");
+        break;
+      case "i":
+        map.zoomIn();
+        break;
+      case "o":
+        map.zoomOut();
+        break;
+      case "Home":
+        map.flyTo({
+          center: center,
+          zoom: defaultZoom,
+        });
+        break;
+      case "0":
+        location.reload();
+        break;
+    }
+  };
+}
 
 // Print mode checkbox handler
 const printModeToggle = document.getElementById("print-mode-toggle");

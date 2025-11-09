@@ -6,7 +6,7 @@ from elt.main import (
     harmonize_pluto_columns as _harmonize_pluto_columns,
     rename_columns as _rename_columns,
     export_fgbs as _export_fgbs,
-    export_geojsons_for_tippecannoe as _export_geojsons_for_tippecannoe,
+    export_for_tiling as _export_for_tiling,
     create_tilesets as _create_tilesets,
     get_tileset_json as _get_tileset_json,
 )
@@ -79,18 +79,21 @@ def rename_columns():
 
 
 @cli.command("export-fgbs", help="Export FGBs for each PLUTO year.")
-def export_fgbs():
-    _export_fgbs()  # pyright: ignore
+@click.option("-y", "--years", help="Years to export.", multiple=True, type=int)
+def export_fgbs(years: list[int] | None = None):
+    _export_fgbs(years=years)  # pyright: ignore
 
 
-@cli.command("export-geojsons-for-tippecannoe", help="Export GeoJSON for tippecannoe.")
-def export_geojsons_for_tippecannoe():
-    _export_geojsons_for_tippecannoe()  # pyright: ignore
+@cli.command("export-for-tiling", help="Export PLUTO layers for tippecannoe tiling.")
+@click.option("-y", "--years", help="Years to export.", multiple=True, type=int)
+def export_for_tiling(years: list[int] | None = None):
+    _export_for_tiling(years=years)  # pyright: ignore
 
 
 @cli.command("create-tilesets", help="Create tilesets for each PLUTO year.")
-def create_tilesets():
-    _create_tilesets()
+@click.option("-y", "--years", help="Years to export.", multiple=True, type=int)
+def create_tilesets(years: list[int] | None = None):
+    _create_tilesets(years=years)
 
 
 @cli.command("get-tileset-json", help="Get tileset json for each PLUTO year.")

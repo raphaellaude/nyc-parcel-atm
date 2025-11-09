@@ -17,9 +17,9 @@ COPY (
         builtfar,
         geom as geometry
     FROM {{table}} WHERE geom IS NOT NULL
-) TO '{{out_path}}/{{table}}.geojson'
+) TO '{{out_path}}/{{table}}.fgb'
 WITH (
     FORMAT GDAL,
-    DRIVER 'GeoJSON',
+    DRIVER 'FlatGeobuf',
     SRS 'EPSG:2263'
 );

@@ -81,7 +81,9 @@ def download_zipfiles():
         "https://www.nyc.gov/assets/planning/download/zip/data-maps/open-data/nyc_mappluto_20v8_arc_shp.zip",
         "https://www.nyc.gov/assets/planning/download/zip/data-maps/open-data/nyc_mappluto_21v3_arc_shp.zip",
         "https://www.nyc.gov/assets/planning/download/zip/data-maps/open-data/nyc_mappluto_22v2_arc_shp.zip",
-        "https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/nyc_mappluto_23v2_arc_shp.zip",
+        "https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/mappluto/nyc_mappluto_23v3_1_arc_shp.zip",
+        "https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/mappluto/nyc_mappluto_24v4_1_arc_shp.zip",
+        "https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/mappluto/nyc_mappluto_25v2_1_arc_shp.zip",
     ]
 
     outs = {}
@@ -91,6 +93,12 @@ def download_zipfiles():
         print(f"Downloading {key}...")
 
         out_path = os.path.join(ASSETS_DIR, f"{key}.zip")
+
+        if os.path.exists(out_path):
+            print(f"Skipping {key}...")
+            outs[key] = out_path
+            continue
+
         r = requests.get(url, timeout=60)
 
         with open(out_path, "wb") as f:

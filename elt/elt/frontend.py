@@ -1,8 +1,11 @@
 import os
 import re
 import subprocess
+from pathlib import Path
 
-TILES_DIR = "/Users/raphaellaude/Documents/Projects/dxd/v2/assets/tilesets"
+from elt.constants import BASE_DIR
+
+TILES_DIR = Path(BASE_DIR or ".") / "assets" / "tilesets"
 
 
 def get_layer_id(tiles):
@@ -13,9 +16,11 @@ def get_layer_id(tiles):
         print("Error executing command:", result.stderr)
         raise Exception("Error executing command:", result.stderr)
 
-    layer_id = re.search("(?<=\s)(.*?)(?=\s\()", result.stdout)
-
     layer_id_match = re.search(r"(?<=\s)(.*?)(?=\s\()", result.stdout)
+
+    if not layer_id_match:
+        raise ValueError(f"Could not find layer ID in output: {result.stdout}")
+
     layer_id = layer_id_match.group(0)
 
     return layer_id
@@ -26,7 +31,10 @@ def create_json():
     for tiles in os.listdir(TILES_DIR):
         if tiles.endswith(".pmtiles"):
             print(tiles)
-            year = re.search("\d{2}", tiles)[0]
+            year = re.search("\d{2}", tiles)
+            if not year:
+                raise ValueError(f"Could not find year in filename: {tiles}")
+            year = year[0]
             layer_id = get_layer_id(tiles)
 
             json[year] = {
