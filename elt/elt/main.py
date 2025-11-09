@@ -182,6 +182,7 @@ def create_tilesets(years: list[int] | None = None):
             out_file,
             "--coalesce-smallest-as-needed",
             "--extend-zooms-if-still-dropping",
+            "--calculate-feature-index",
             *to_include_params,
             *cast_to_int_params,
             "--force",

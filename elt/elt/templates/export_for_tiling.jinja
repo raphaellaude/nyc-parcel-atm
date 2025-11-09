@@ -1,7 +1,8 @@
 {# elt/templates/export_fgb_tippecannoe.jinja #}
 COPY (
     SELECT
-        CAST(landuse AS INTEGER) AS landuse,
+    -- REPLACE(CONCAT(borocode, block, lot), '.', '')::INT64 AS bbl,
+    CAST(landuse AS INTEGER) AS landuse,
         case
             when zonedist1 like 'PARK%' then 'PARK'
             when zonedist1 is null then 'NZS'

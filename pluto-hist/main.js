@@ -422,7 +422,6 @@ map.on("load", function () {
     map.addSource(`pluto-${y}`, {
       type: "vector",
       url: `pmtiles://${import.meta.env.VITE_TILE_DIR}${layerData.url}`,
-      promoteId: "bbl",
     });
 
     choroplethLayers.forEach((k) => {
@@ -543,6 +542,7 @@ map.on("load", function () {
       if (features.length > 0) {
         const feature = features[0];
         selectedParcelId = feature.id;
+        console.log(feature);
         map.setFeatureState(
           {
             source: `pluto-${years[currentYearIndex]}`,
@@ -575,6 +575,7 @@ map.on("load", function () {
         map.getCanvas().style.cursor = "pointer";
 
         const feature = features[0];
+        console.log(feature);
         const featureId = feature.id;
 
         if (hoveredParcelId !== null && hoveredParcelId !== featureId) {
