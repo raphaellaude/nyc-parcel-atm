@@ -1,149 +1,141 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
-        <script src="/htmx.min.js"></script>
-        <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
-        <script
-            src="https://js.sentry-cdn.com/e405c9bd0305a5b3d13e603b05e2c619.min.js"
-            crossorigin="anonymous"
-        ></script>
-        <link
-            href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css"
-            rel="stylesheet"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap"
-            rel="stylesheet"
-        />
-        <script
-            defer
-            src="https://good-blocks-umami.fly.dev/script.js"
-            data-website-id="de8f8f09-eca6-4f08-a741-88b2992650c3"
-        ></script>
-        <script>
-            window.va =
-                window.va ||
-                function () {
-                    (window.vaq = window.vaq || []).push(arguments);
-                };
-        </script>
-        <title>Parcel ATM</title>
-    </head>
-    <body>
-        <div class="sidebar mapquest">
-            <h1 class="title no-print">NYC Parcel ATM</h1>
-            <h2 class="subtitle no-print">Exploring PLUTO's 22 year history</h2>
-            <button
-                id="about"
-                hx-get="src/about.html"
-                hx-target="#about-modal"
-                class="uk-button uk-button-primary"
-                _="on htmx:afterOnLoad wait 10ms then add .uk-open to #modal"
-                style="width: 100%"
-            >
-                About this project
-            </button>
-            <div id="about-modal" class="no-print"></div>
-            <div class="checkbox-container no-print">
-                <input type="checkbox" id="print-mode-toggle" />
-                <label for="print-mode-toggle">Historical report</label>
-            </div>
-            <div id="switcher" class="no-print">
-                <div>
-                    <button id="first-year">&laquo;</button>
-                    <button id="prev-year">&larr;</button>
-                </div>
-                <p
-                    id="year-label"
-                    class="legend-text no-print"
-                    style="margin: 0"
-                >
-                    Year
-                </p>
-                <h3 class="title mapquest no-print" id="year">2002</h3>
-                <div>
-                    <button id="next-year">&rarr;</button>
-                    <button id="last-year">&raquo;</button>
-                </div>
-            </div>
-            <div id="switcher" class="no-print">
-                <button id="prev-layer">&larr;</button>
-                <p
-                    id="layer-label"
-                    class="legend-text no-print"
-                    style="margin: 0"
-                >
-                    Layer
-                </p>
-                <h3 class="title mapquest no-print" id="layer">Land Use</h3>
-                <button id="next-layer">&rarr;</button>
-            </div>
-            <div id="legend" class="no-print"></div>
-            <div id="data" class="no-print"></div>
-            <div id="receipt"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+    <script src="/htmx.min.js"></script>
+    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+    <script
+      src="https://js.sentry-cdn.com/e405c9bd0305a5b3d13e603b05e2c619.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      defer
+      src="https://good-blocks-umami.fly.dev/script.js"
+      data-website-id="de8f8f09-eca6-4f08-a741-88b2992650c3"
+    ></script>
+    <script>
+      window.va =
+        window.va ||
+        function () {
+          (window.vaq = window.vaq || []).push(arguments);
+        };
+    </script>
+    <title>Parcel ATM</title>
+  </head>
+  <body>
+    <div class="sidebar mapquest">
+      <h1 class="title no-print">NYC Parcel ATM</h1>
+      <h2 class="subtitle no-print">Exploring PLUTO's 24 year history</h2>
+      <button
+        id="about"
+        hx-get="src/about.html"
+        hx-target="#about-modal"
+        class="uk-button uk-button-primary"
+        _="on htmx:afterOnLoad wait 10ms then add .uk-open to #modal"
+        style="width: 100%"
+      >
+        About this project
+      </button>
+      <div id="about-modal" class="no-print"></div>
+      <div class="checkbox-container no-print">
+        <input type="checkbox" id="print-mode-toggle" />
+        <label for="print-mode-toggle">Historical report</label>
+      </div>
+      <div id="switcher" class="no-print">
+        <div>
+          <button id="first-year">&laquo;</button>
+          <button id="prev-year">&larr;</button>
         </div>
-        <div id="controls" class="mapquest no-print">
-            <div class="legend-item">
-                <div class="control-key legend-text">(P)</div>
-                <p class="control-text">Print receipt</p>
-            </div>
-            <div class="legend-item">
-                <div class="control-key legend-text">(Q)</div>
-                <p class="control-text">Query location</p>
-            </div>
-            <div class="legend-item">
-                <div class="control-key legend-text">(U)</div>
-                <p class="control-text">Land use</p>
-            </div>
-            <div class="legend-item">
-                <div class="control-key legend-text">(R)</div>
-                <p class="control-text">Residential units</p>
-            </div>
-            <div class="legend-item">
-                <div class="control-key legend-text">(F)</div>
-                <p class="control-text">Built FAR</p>
-            </div>
-            <div class="legend-item">
-                <div class="control-key legend-text">(H)</div>
-                <p class="control-text">Number of floors</p>
-            </div>
-            <div class="legend-item">
-                <div class="control-key legend-text">(A)</div>
-                <p class="control-text">Year of first alteration</p>
-            </div>
-            <div class="legend-item">
-                <div class="control-key legend-text">(L)</div>
-                <p class="control-text">Assessed land value</p>
-            </div>
-            <div class="legend-item">
-                <div class="control-key legend-text">(V)</div>
-                <p class="control-text">Total assessed value</p>
-            </div>
-            <div class="legend-item">
-                <div class="control-key legend-text">(,)</div>
-                <p class="control-text">Go back 1 year</p>
-            </div>
-            <div class="legend-item">
-                <div class="control-key legend-text">(.)</div>
-                <p class="control-text">Go forward 1 year</p>
-            </div>
-            <div class="legend-item">
-                <div class="control-key legend-text">(&gt;)</div>
-                <p class="control-text">Go to 2023</p>
-            </div>
-            <div class="legend-item">
-                <div class="control-key legend-text">(&lt;)</div>
-                <p class="control-text">Go to 2022</p>
-            </div>
+        <p id="year-label" class="legend-text no-print" style="margin: 0">
+          Year
+        </p>
+        <h3 class="title mapquest no-print" id="year">2002</h3>
+        <div>
+          <button id="next-year">&rarr;</button>
+          <button id="last-year">&raquo;</button>
         </div>
-        <div id="map" class="no-print" tabindex="0"></div>
-        <div id="spinner" class="no-print">&#10003;</div>
-        <script type="module" src="main.js"></script>
-    </body>
+      </div>
+      <div id="switcher" class="no-print">
+        <button id="prev-layer">&larr;</button>
+        <p id="layer-label" class="legend-text no-print" style="margin: 0">
+          Layer
+        </p>
+        <h3 class="title mapquest no-print" id="layer">Land Use</h3>
+        <button id="next-layer">&rarr;</button>
+      </div>
+      <div id="legend" class="no-print"></div>
+      <div id="data" class="no-print"></div>
+      <div id="receipt"></div>
+    </div>
+    <div id="controls" class="mapquest no-print">
+      <div class="legend-item">
+        <div class="control-key legend-text">(P)</div>
+        <p class="control-text">Print receipt</p>
+      </div>
+      <div class="legend-item">
+        <div class="control-key legend-text">(Q)</div>
+        <p class="control-text">Query location</p>
+      </div>
+      <div class="legend-item">
+        <div class="control-key legend-text">(U)</div>
+        <p class="control-text">Land use</p>
+      </div>
+      <div class="legend-item">
+        <div class="control-key legend-text">(R)</div>
+        <p class="control-text">Residential units</p>
+      </div>
+      <div class="legend-item">
+        <div class="control-key legend-text">(F)</div>
+        <p class="control-text">Built FAR</p>
+      </div>
+      <div class="legend-item">
+        <div class="control-key legend-text">(H)</div>
+        <p class="control-text">Number of floors</p>
+      </div>
+      <div class="legend-item">
+        <div class="control-key legend-text">(A)</div>
+        <p class="control-text">Year of first alteration</p>
+      </div>
+      <div class="legend-item">
+        <div class="control-key legend-text">(L)</div>
+        <p class="control-text">Assessed land value</p>
+      </div>
+      <div class="legend-item">
+        <div class="control-key legend-text">(V)</div>
+        <p class="control-text">Total assessed value</p>
+      </div>
+      <div class="legend-item">
+        <div class="control-key legend-text">(,)</div>
+        <p class="control-text">Go back 1 year</p>
+      </div>
+      <div class="legend-item">
+        <div class="control-key legend-text">(.)</div>
+        <p class="control-text">Go forward 1 year</p>
+      </div>
+      <div class="legend-item">
+        <div class="control-key legend-text">(&gt;)</div>
+        <p class="control-text">Go to 2023</p>
+      </div>
+      <div class="legend-item">
+        <div class="control-key legend-text">(&lt;)</div>
+        <p class="control-text">Go to 2022</p>
+      </div>
+    </div>
+    <div id="map" class="no-print" tabindex="0"></div>
+    <div id="spinner" class="no-print">&#10003;</div>
+    <script type="module" src="main.js"></script>
+  </body>
 </html>
