@@ -109,11 +109,11 @@ def export_fgbs(conn, years: list[int] | None = None):
 
 
 @with_conn
-def export_geojsons_for_tippecannoe(conn, years: list[int] | None = None):
+def export_for_tiling(conn, years: list[int] | None = None):
     """
-    Export geojsons for tippecannoe for each year's PLUTO data.
+    Export layer for tippecannoe tiling for each year's PLUTO data.
     """
-    out_path = os.path.join(ASSETS_DIR, "geojsons")
+    out_path = os.path.join(ASSETS_DIR, "tiling-inputs")
     if not os.path.exists(out_path):
         print(f"Creating {out_path}. Does not exist.")
         os.makedirs(out_path, exist_ok=True)
@@ -121,15 +121,15 @@ def export_geojsons_for_tippecannoe(conn, years: list[int] | None = None):
     _years = years or YEARS
 
     for year in _years:
-        print(f"Exporting geojson for tippecanoe for year {year}")
+        print(f"Exporting layer for tippecanoe tiling for year {year}")
         alias = get_pluto_key(year, "shp")
         fgb_sql = render_template(
-            "export_geojson_tippecannoe.jinja", table=alias, out_path=out_path
+            "export_for_tiling.jinja", table=alias, out_path=out_path
         )
         conn.execute(fgb_sql)
 
-        out_file = os.path.join(out_path, alias + ".geojson")
-        dest_file = os.path.join(out_path, alias + "_wgs.geojson")
+        out_file = os.path.join(out_path, alias + ".fgb")
+        dest_file = os.path.join(out_path, alias + "_wgs.fgb")
 
         subprocess.run(["ogr2ogr", "-t_srs", "EPSG:4326", dest_file, out_file])
 
@@ -137,7 +137,7 @@ def export_geojsons_for_tippecannoe(conn, years: list[int] | None = None):
 
 
 def create_tilesets(years: list[int] | None = None):
-    fbg_tippecanoe_path = os.path.join(ASSETS_DIR, "geojsons")
+    fbg_tippecanoe_path = os.path.join(ASSETS_DIR, "tiling-inputs")
     out_path = os.path.join(ASSETS_DIR, "tilesets")
     if not os.path.exists(out_path):
         os.makedirs(out_path, exist_ok=True)
@@ -162,7 +162,7 @@ def create_tilesets(years: list[int] | None = None):
     for year in _years:
         print(f"Creating tileset for {year}")
         alias = get_pluto_key(year, "shp_wgs")
-        in_file = os.path.join(fbg_tippecanoe_path, f"{alias}.geojson")
+        in_file = os.path.join(fbg_tippecanoe_path, f"{alias}.fgb")
         out_file = os.path.join(out_path, f"{alias}.pmtiles")
         subprocess.run(
             [
