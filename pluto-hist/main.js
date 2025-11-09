@@ -479,7 +479,7 @@ map.on("load", function () {
           visibility: isVisible,
         },
         paint: {
-          "fill-color": "#d3d3d3",
+          "fill-color": "#333333",
           "fill-opacity": [
             "case",
             ["boolean", ["feature-state", "hover"], false],
