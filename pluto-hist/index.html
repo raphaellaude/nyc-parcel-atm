@@ -44,7 +44,9 @@
         hx-get="src/about.html"
         hx-target="#about-modal"
         class="uk-button uk-button-primary"
-        _="on htmx:afterOnLoad wait 10ms then add .uk-open to #modal"
+        _="on htmx:afterOnLoad
+           wait 10ms
+           then add .uk-open to #modal"
         style="width: 100%"
       >
         About this project
