@@ -1,4 +1,6 @@
+import "maplibre-gl/dist/maplibre-gl.css";
 import "./style.css";
+import maplibregl from "maplibre-gl";
 import * as pmtiles from "pmtiles";
 import data from "./data.json";
 import choropleth from "./choropleth.json";
