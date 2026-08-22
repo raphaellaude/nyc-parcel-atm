@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@sentry/browser": "^10.23",
+    "maplibre-gl": "^5.24.0",
     "pmtiles": "4.3.0"
   }
 }
