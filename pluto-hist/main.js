@@ -1,6 +1,12 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./style.css";
-import maplibregl from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
+// maplibre-gl v6 is ESM-only and can't resolve its worker through a bundler's
+// module graph, so the worker URL has to be handed to it explicitly. The
+// `?worker&url` query (not a plain `?url`) is what makes Vite emit the worker
+// as a self-contained chunk; without it the worker's import of its sibling
+// maplibre-gl-shared.mjs 404s in a production build and no tiles load.
+import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import * as pmtiles from "pmtiles";
 import data from "./data.json";
 import choropleth from "./choropleth.json";
@@ -21,6 +27,8 @@ Sentry.init({
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
 });
+
+maplibregl.setWorkerUrl(maplibreWorkerUrl);
 
 let protocol = new pmtiles.Protocol();
 maplibregl.addProtocol("pmtiles", protocol.tile);
