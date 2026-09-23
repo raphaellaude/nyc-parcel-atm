@@ -12,6 +12,7 @@ from .database import create_table, column_availibility, column_similarity, with
 from .constants import ASSETS_DIR, YEARS
 from .jinja import render_template
 from .frontend import create_json
+from .schema import CORE_COLUMNS, SOURCE_CRS, EXPORT_CRS
 
 
 logger = logging.getLogger(__name__)
@@ -135,6 +136,74 @@ def export_for_tiling(conn, years: list[int] | None = None):
         subprocess.run(["ogr2ogr", "-t_srs", "EPSG:4326", dest_file, out_file])
 
         os.remove(out_file)
+
+
+INTEGER_TYPES = {"SMALLINT", "INTEGER", "BIGINT"}
+# Columns derived by export_parquet that must not be passed through from source.
+DERIVED_COLUMNS = {"year", "bbl", "lon", "lat", "geom", "geom_wgs"}
+
+
+def _core_column_sql(name: str, type_: str, available: set[str]) -> str:
+    if name not in available:
+        return f"NULL::{type_} AS {name}"
+    if type_ in INTEGER_TYPES:
+        # Some years store integer codes as doubles or zero-padded strings ("01")
+        return f"TRY_CAST(TRY_CAST({name} AS DOUBLE) AS {type_}) AS {name}"
+    if type_ == "VARCHAR":
+        return f"NULLIF(TRIM(CAST({name} AS VARCHAR)), '') AS {name}"
+    return f"TRY_CAST({name} AS {type_}) AS {name}"
+
+
+@with_conn
+def export_parquet(conn, years: list[int] | None = None):
+    """
+    Export normalized GeoParquet files for each year's PLUTO data.
+
+    Writes two hive-partitioned datasets under ASSETS_DIR/parquet:
+    - core/year=YYYY/data.parquet: columns present in every year, cast to the
+      canonical types in elt.schema so all years can be queried together.
+    - full/year=YYYY/data.parquet: every harmonized column for that year, with
+      source types. Column sets and types vary by year.
+
+    Geometries are reprojected to WGS84 and lon/lat centroid columns are added.
+    """
+    out_path = os.path.join(ASSETS_DIR, "parquet")
+    _years = years or YEARS
+
+    for year in _years:
+        alias = get_pluto_key(year, "shp")
+        full_year = 2000 + year
+        source_columns = [
+            row[0] for row in conn.execute(f"DESCRIBE {alias}").fetchall()
+        ]
+        available = set(source_columns)
+
+        datasets = {
+            "core": [
+                _core_column_sql(name, type_, available)
+                for name, type_ in CORE_COLUMNS.items()
+            ],
+            "full": [
+                f'"{col}"' for col in source_columns if col not in DERIVED_COLUMNS
+            ],
+        }
+
+        for dataset, columns in datasets.items():
+            out_dir = os.path.join(out_path, dataset, f"year={full_year}")
+            os.makedirs(out_dir, exist_ok=True)
+            out_file = os.path.join(out_dir, "data.parquet")
+            print(f"Exporting {dataset} parquet for {full_year} to {out_file}")
+
+            sql = render_template(
+                "export_parquet.jinja",
+                table=alias,
+                year=full_year,
+                columns=columns,
+                source_crs=SOURCE_CRS,
+                export_crs=EXPORT_CRS,
+                out_file=out_file,
+            )
+            conn.execute(sql)
 
 
 def create_tilesets(years: list[int] | None = None):

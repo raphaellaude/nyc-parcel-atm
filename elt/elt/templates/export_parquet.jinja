@@ -1,0 +1,29 @@
+{# elt/templates/export_parquet.jinja #}
+COPY (
+    SELECT
+        {{year}}::SMALLINT AS year,
+        TRY_CAST(
+            TRY_CAST(TRY_CAST(borocode AS DOUBLE) AS BIGINT) * 1000000000
+            + TRY_CAST(TRY_CAST(block AS DOUBLE) AS BIGINT) * 10000
+            + TRY_CAST(TRY_CAST(lot AS DOUBLE) AS BIGINT)
+        AS BIGINT) AS bbl,
+    {% for column in columns %}
+        {{column}},
+    {% endfor %}
+        ST_X(ST_Centroid(geom_wgs)) AS lon,
+        ST_Y(ST_Centroid(geom_wgs)) AS lat,
+        geom_wgs AS geom
+    FROM (
+        SELECT
+            *,
+            ST_Transform(geom, '{{source_crs}}', '{{export_crs}}', always_xy := true) AS geom_wgs
+        FROM {{table}}
+        WHERE geom IS NOT NULL
+    )
+    ORDER BY bbl
+) TO '{{out_file}}'
+WITH (
+    FORMAT PARQUET,
+    COMPRESSION ZSTD,
+    ROW_GROUP_SIZE 100000
+);

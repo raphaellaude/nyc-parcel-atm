@@ -1,0 +1,903 @@
+{
+  "version": 1,
+  "generated_at": "2026-09-23T13:02:09.409803+00:00",
+  "bucket": "nyc-parcels",
+  "prefix": "",
+  "public_base_url": null,
+  "crs": {
+    "parquet": "EPSG:4326",
+    "fgb": "EPSG:2263"
+  },
+  "core_columns": {
+    "borocode": "SMALLINT",
+    "borough": "VARCHAR",
+    "block": "INTEGER",
+    "lot": "INTEGER",
+    "address": "VARCHAR",
+    "zipcode": "INTEGER",
+    "ownername": "VARCHAR",
+    "ownertype": "VARCHAR",
+    "landuse": "SMALLINT",
+    "bldgclass": "VARCHAR",
+    "zonedist1": "VARCHAR",
+    "zonedist2": "VARCHAR",
+    "overlay1": "VARCHAR",
+    "overlay2": "VARCHAR",
+    "spdist1": "VARCHAR",
+    "spdist2": "VARCHAR",
+    "splitzone": "VARCHAR",
+    "histdist": "VARCHAR",
+    "landmark": "VARCHAR",
+    "lotarea": "DOUBLE",
+    "lotfront": "DOUBLE",
+    "lotdepth": "DOUBLE",
+    "irrlotcode": "VARCHAR",
+    "bldgfront": "DOUBLE",
+    "bldgdepth": "DOUBLE",
+    "numbldgs": "INTEGER",
+    "numfloors": "DOUBLE",
+    "unitsres": "INTEGER",
+    "unitstotal": "INTEGER",
+    "comarea": "DOUBLE",
+    "resarea": "DOUBLE",
+    "builtfar": "DOUBLE",
+    "yearbuilt": "SMALLINT",
+    "yearalter1": "SMALLINT",
+    "yearalter2": "SMALLINT",
+    "assessland": "DOUBLE",
+    "assesstot": "DOUBLE",
+    "exempttot": "DOUBLE",
+    "areasource": "VARCHAR",
+    "schooldist": "SMALLINT",
+    "policeprct": "SMALLINT",
+    "firecomp": "VARCHAR",
+    "xcoord": "DOUBLE",
+    "ycoord": "DOUBLE"
+  },
+  "datasets": {
+    "core": {
+      "files": [
+        {
+          "key": "parquet/core/year=2002/data.parquet",
+          "size_bytes": 16683,
+          "year": 2002,
+          "row_count": 20,
+          "columns": [
+            {
+              "name": "year",
+              "type": "BIGINT"
+            },
+            {
+              "name": "bbl",
+              "type": "BIGINT"
+            },
+            {
+              "name": "borocode",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "borough",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "block",
+              "type": "INTEGER"
+            },
+            {
+              "name": "lot",
+              "type": "INTEGER"
+            },
+            {
+              "name": "address",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "zipcode",
+              "type": "INTEGER"
+            },
+            {
+              "name": "ownername",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "ownertype",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "landuse",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "bldgclass",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "zonedist1",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "zonedist2",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "overlay1",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "overlay2",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "spdist1",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "spdist2",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "splitzone",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "histdist",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "landmark",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "lotarea",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lotfront",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lotdepth",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "irrlotcode",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "bldgfront",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "bldgdepth",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "numbldgs",
+              "type": "INTEGER"
+            },
+            {
+              "name": "numfloors",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "unitsres",
+              "type": "INTEGER"
+            },
+            {
+              "name": "unitstotal",
+              "type": "INTEGER"
+            },
+            {
+              "name": "comarea",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "resarea",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "builtfar",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "yearbuilt",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "yearalter1",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "yearalter2",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "assessland",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "assesstot",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "exempttot",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "areasource",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "schooldist",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "policeprct",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "firecomp",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "xcoord",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "ycoord",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lon",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lat",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "geom",
+              "type": "GEOMETRY"
+            }
+          ]
+        },
+        {
+          "key": "parquet/core/year=2024/data.parquet",
+          "size_bytes": 16794,
+          "year": 2024,
+          "row_count": 20,
+          "columns": [
+            {
+              "name": "year",
+              "type": "BIGINT"
+            },
+            {
+              "name": "bbl",
+              "type": "BIGINT"
+            },
+            {
+              "name": "borocode",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "borough",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "block",
+              "type": "INTEGER"
+            },
+            {
+              "name": "lot",
+              "type": "INTEGER"
+            },
+            {
+              "name": "address",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "zipcode",
+              "type": "INTEGER"
+            },
+            {
+              "name": "ownername",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "ownertype",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "landuse",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "bldgclass",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "zonedist1",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "zonedist2",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "overlay1",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "overlay2",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "spdist1",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "spdist2",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "splitzone",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "histdist",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "landmark",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "lotarea",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lotfront",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lotdepth",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "irrlotcode",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "bldgfront",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "bldgdepth",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "numbldgs",
+              "type": "INTEGER"
+            },
+            {
+              "name": "numfloors",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "unitsres",
+              "type": "INTEGER"
+            },
+            {
+              "name": "unitstotal",
+              "type": "INTEGER"
+            },
+            {
+              "name": "comarea",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "resarea",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "builtfar",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "yearbuilt",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "yearalter1",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "yearalter2",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "assessland",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "assesstot",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "exempttot",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "areasource",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "schooldist",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "policeprct",
+              "type": "SMALLINT"
+            },
+            {
+              "name": "firecomp",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "xcoord",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "ycoord",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lon",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lat",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "geom",
+              "type": "GEOMETRY"
+            }
+          ]
+        }
+      ],
+      "years": [
+        2002,
+        2024
+      ],
+      "row_count": 40
+    },
+    "full": {
+      "files": [
+        {
+          "key": "parquet/full/year=2002/data.parquet",
+          "size_bytes": 17231,
+          "year": 2002,
+          "row_count": 20,
+          "columns": [
+            {
+              "name": "year",
+              "type": "BIGINT"
+            },
+            {
+              "name": "bbl",
+              "type": "BIGINT"
+            },
+            {
+              "name": "borocode",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "borough",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "block",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lot",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "address",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "zipcode",
+              "type": "BIGINT"
+            },
+            {
+              "name": "ownername",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "ownertype",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "landuse",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "bldgclass",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "zonedist1",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "overlay1",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "overlay2",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "spdist1",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "spdist2",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "splitzone",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "histdist",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "landmark",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "lotarea",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lotfront",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lotdepth",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "irrlotcode",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "bldgfront",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "bldgdepth",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "numbldgs",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "numfloors",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "unitsres",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "unitstotal",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "comarea",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "resarea",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "builtfar",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "yearbuilt",
+              "type": "BIGINT"
+            },
+            {
+              "name": "yearalter1",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "yearalter2",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "assessland",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "assesstot",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "exempttot",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "areasource",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "schooldist",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "policeprct",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "firecomp",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "xcoord",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "ycoord",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "oldcol",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "lon",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lat",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "geom",
+              "type": "GEOMETRY"
+            }
+          ]
+        },
+        {
+          "key": "parquet/full/year=2024/data.parquet",
+          "size_bytes": 17253,
+          "year": 2024,
+          "row_count": 20,
+          "columns": [
+            {
+              "name": "year",
+              "type": "BIGINT"
+            },
+            {
+              "name": "bbl",
+              "type": "BIGINT"
+            },
+            {
+              "name": "borocode",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "borough",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "block",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lot",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "address",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "zipcode",
+              "type": "BIGINT"
+            },
+            {
+              "name": "ownername",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "ownertype",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "landuse",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "bldgclass",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "zonedist1",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "zonedist2",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "overlay1",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "overlay2",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "spdist1",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "spdist2",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "splitzone",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "histdist",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "landmark",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "lotarea",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lotfront",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lotdepth",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "irrlotcode",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "bldgfront",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "bldgdepth",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "numbldgs",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "numfloors",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "unitsres",
+              "type": "BIGINT"
+            },
+            {
+              "name": "unitstotal",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "comarea",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "resarea",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "builtfar",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "yearbuilt",
+              "type": "BIGINT"
+            },
+            {
+              "name": "yearalter1",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "yearalter2",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "assessland",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "assesstot",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "exempttot",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "areasource",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "schooldist",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "policeprct",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "firecomp",
+              "type": "VARCHAR"
+            },
+            {
+              "name": "xcoord",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "ycoord",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lon",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "lat",
+              "type": "DOUBLE"
+            },
+            {
+              "name": "geom",
+              "type": "GEOMETRY"
+            }
+          ]
+        }
+      ],
+      "years": [
+        2002,
+        2024
+      ],
+      "row_count": 40
+    }
+  },
+  "files": [
+    {
+      "key": "fgb/pluto24.fgb",
+      "size_bytes": 24520
+    },
+    {
+      "key": "pmtiles/pluto02_shp_wgs.pmtiles",
+      "size_bytes": 1000
+    }
+  ]
+}

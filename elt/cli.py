@@ -6,11 +6,13 @@ from elt.main import (
     harmonize_pluto_columns as _harmonize_pluto_columns,
     rename_columns as _rename_columns,
     export_fgbs as _export_fgbs,
+    export_parquet as _export_parquet,
     export_for_tiling as _export_for_tiling,
     create_tilesets as _create_tilesets,
     get_tileset_json as _get_tileset_json,
 )
 from elt.constants import DB_PATH
+from elt.r2 import sync_to_r2 as _sync_to_r2
 
 
 @click.group("elt")
@@ -84,6 +86,14 @@ def export_fgbs(years: list[int] | None = None):
     _export_fgbs(years=years)  # pyright: ignore
 
 
+@cli.command(
+    "export-parquet", help="Export normalized GeoParquet files for each PLUTO year."
+)
+@click.option("-y", "--years", help="Years to export.", multiple=True, type=int)
+def export_parquet(years: list[int] | None = None):
+    _export_parquet(years=years)  # pyright: ignore
+
+
 @cli.command("export-for-tiling", help="Export PLUTO layers for tippecannoe tiling.")
 @click.option("-y", "--years", help="Years to export.", multiple=True, type=int)
 def export_for_tiling(years: list[int] | None = None):
@@ -102,6 +112,25 @@ def create_tilesets(years: list[int] | None = None):
 )
 def get_tileset_json(out_path):
     _get_tileset_json(out_path)
+
+
+@cli.command(
+    "sync-to-r2",
+    help="Upload parquet, FGB and PMTiles assets plus a manifest.json to Cloudflare R2.",
+)
+@click.option("--dry-run", is_flag=True, help="List what would be uploaded.")
+@click.option("--force", is_flag=True, help="Upload even if the remote copy matches.")
+@click.option(
+    "--create-bucket", is_flag=True, help="Create the bucket if it does not exist."
+)
+@click.option(
+    "--only",
+    multiple=True,
+    type=click.Choice(["parquet", "fgb", "pmtiles"]),
+    help="Only upload these asset types.",
+)
+def sync_to_r2(dry_run: bool, force: bool, create_bucket: bool, only: tuple[str, ...]):
+    _sync_to_r2(dry_run=dry_run, force=force, create_bucket=create_bucket, only=only)
 
 
 if __name__ == "__main__":

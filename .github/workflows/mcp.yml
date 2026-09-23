@@ -1,0 +1,22 @@
+name: MCP server
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "mcp/**"
+      - "elt/elt/schema.py"
+  pull_request:
+    paths:
+      - "mcp/**"
+      - "elt/elt/schema.py"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: mcp/go.mod
+          cache-dependency-path: mcp/go.sum
+      - run: cd mcp && go vet ./... && go test ./...

@@ -1,0 +1,20 @@
+# Local S3-compatible stand-in for Cloudflare R2, for developing `sync-to-r2`
+# without R2 credentials.
+#
+#   docker compose -f docker-compose.localstack.yml up -d
+#
+# then point the sync at it (any key/secret works):
+#
+#   R2_ENDPOINT_URL=http://localhost:4566 R2_ACCESS_KEY_ID=test \
+#   R2_SECRET_ACCESS_KEY=test R2_BUCKET=nyc-parcels \
+#   uv run python cli.py sync-to-r2 --create-bucket
+#
+# Objects are readable anonymously at http://localhost:4566/<bucket>/<key>,
+# which mimics a public R2 bucket URL.
+services:
+  localstack:
+    image: localstack/localstack:4
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3

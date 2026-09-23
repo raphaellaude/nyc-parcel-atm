@@ -128,6 +128,8 @@ Under the hood, the ATM's interface is just a website. To get started:
 
 You're done!
 
+To publish the normalized historical parcel data for analysis, export GeoParquet and sync it to Cloudflare R2 with the [ELT pipeline](./elt/README.md#publishing-to-cloudflare-r2). The [parcel data MCP server](./mcp/README.md) tells agents where that data lives, what the columns mean and how to query it with DuckDB.
+
 This project includes also includes some undocumented EDA.
 
 ### General set-up
