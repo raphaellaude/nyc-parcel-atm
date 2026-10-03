@@ -358,3 +358,15 @@ h1 {
     display: none;
   }
 }
+
+.map-unavailable {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-unavailable-message {
+  max-width: 28em;
+  padding: var(--box-padding);
+  color: var(--text-color);
+}
