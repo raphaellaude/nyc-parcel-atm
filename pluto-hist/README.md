@@ -4,9 +4,9 @@ The frontend is a VanillaJS app using Vite. Follow Vite's [installation guide](h
 
 ## Local set-up
 
-Make sure you have node.js and npm installed.
+Make sure you have node.js and pnpm installed (`mise install` from root).
 
-1. `cd pluto-hist` from root and `npm install`
+1. `cd pluto-hist` from root and `pnpm install`
 
 2. Create a `.env` file with the following:
 
@@ -17,7 +17,7 @@ VITE_KIOSK=false
 
 If you wish the run the frontend in kiosk mode, set `VITE_KIOSK=true`.
 
-3. `npm run dev` and navigate to the localhost URL shown in the terminal!
+3. `pnpm dev` and navigate to the localhost URL shown in the terminal!
 
 ## Deployment
 
