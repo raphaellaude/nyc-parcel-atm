@@ -109,6 +109,27 @@ def download_zipfiles():
     return outs
 
 
+def download_lion(version: str) -> str:
+    """
+    Download a LION release zip, returning its local path.
+    """
+    out_path = os.path.join(ASSETS_DIR, f"nyclion_{version}.zip")
+
+    if os.path.exists(out_path):
+        print(f"Skipping LION {version}...")
+        return out_path
+
+    print(f"Downloading LION {version}...")
+    url = f"https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/lion/nyclion_{version}.zip"
+    with requests.get(url, timeout=300, stream=True) as r:
+        r.raise_for_status()
+        with open(out_path + ".part", "wb") as f:
+            shutil.copyfileobj(r.raw, f)
+    os.replace(out_path + ".part", out_path)
+
+    return out_path
+
+
 def unzip_zipfiles(assets_dir: Union[str, Path]):
     """
     Unzip the PLUTO data.
