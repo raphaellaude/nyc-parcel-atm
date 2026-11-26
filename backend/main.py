@@ -298,10 +298,10 @@ def receipt(
 
     try:
         logger.info("Getting address")
-        table = pluto_years.get(str(MAX_YEAR))
-        cursor = conn.query(
-            f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB(ST_POINT($1, $2))) LIMIT 1",
-            params=(x, y),
+        table = pluto_years[max(svgs)]
+        cursor = conn.execute(
+            f"SELECT address FROM ST_Read('{table}') WHERE ST_Intersects(geom, ST_Point($1, $2)) LIMIT 1",
+            parameters=(x, y),
         )
         address = cursor.fetchone()[0]
         logger.info(f"Address: {address}")
@@ -323,7 +323,7 @@ def receipt(
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    sql = render_template("receipt.sql.jinja", tables=pluto_years)
+    sql = render_template("receipt.sql.jinja", tables={y: pluto_years[y] for y in svgs})
 
     try:
         cursor = conn.execute(sql, parameters=(x, y))
