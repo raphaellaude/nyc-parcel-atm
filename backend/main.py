@@ -145,7 +145,7 @@ def single_year_pluto(
 
     logger.info("Rendering SQL template")
 
-    columns = ["*"]
+    columns = ["* EXCLUDE (OGC_FID)"]
 
     if kiosk == "true":
         columns = SHORT_SUMMARY_COLS
