@@ -10,11 +10,8 @@ SELECT
     {% if year in ('02') %}null as yearalter1{% else %}yearalter1{% endif %},
     CAST(assesstot AS INT64) AS assesstot
 FROM
-    ST_Read(
-        '{{table}}',
-        spatial_filter=ST_AsWKB(
-            ST_Point($1, $2)
-        )
-    )
+    ST_Read('{{table}}')
+WHERE
+    ST_Intersects(geom, ST_Point($1, $2))
 {% if not loop.last %}UNION ALL{% endif %}
 {% endfor %};
