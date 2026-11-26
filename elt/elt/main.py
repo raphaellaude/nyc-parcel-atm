@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Union
 from itertools import chain
 
-from .assets import download_zipfiles, unzip_zipfiles, get_pluto_key
+from .assets import download_zipfiles, unzip_zipfiles, get_pluto_key, download_lion
 from .database import create_table, column_availibility, column_similarity, with_conn
 from .constants import ASSETS_DIR, YEARS
 from .jinja import render_template
@@ -192,6 +192,55 @@ def create_tilesets(years: list[int] | None = None):
         ]
         print(f"Running with command:\n{command}")
         subprocess.run(command, check=True)
+
+
+@with_conn
+def create_lion_tileset(conn, version: str):
+    """
+    Export LION streets for labeling and tile them with tippecanoe.
+    """
+    zip_path = download_lion(version)
+    gdb_path = f"/vsizip/{zip_path}/lion/lion.gdb"
+
+    tiling_inputs = os.path.join(ASSETS_DIR, "tiling-inputs")
+    tilesets = os.path.join(ASSETS_DIR, "tilesets")
+    os.makedirs(tiling_inputs, exist_ok=True)
+    os.makedirs(tilesets, exist_ok=True)
+
+    fgb_path = os.path.join(tiling_inputs, f"lion_{version}.fgb")
+    if os.path.exists(fgb_path):
+        os.remove(fgb_path)
+
+    print(f"Exporting LION {version} streets to {fgb_path}")
+    conn.execute(
+        render_template(
+            "export_lion_for_tiling.jinja", gdb_path=gdb_path, out_path=fgb_path
+        )
+    )
+
+    out_file = os.path.join(tilesets, "lion_streets.pmtiles")
+    command = [
+        "tippecanoe",
+        "-Z",
+        "11",
+        "-z",
+        "14",
+        "-o",
+        out_file,
+        "-l",
+        "roads",
+        "--include=name",
+        "--include=kind",
+        "--include=min_zoom",
+        "-T",
+        "min_zoom:int",
+        "--no-feature-limit",
+        "--no-tile-size-limit",
+        "--force",
+        fgb_path,
+    ]
+    print(f"Running with command:\n{command}")
+    subprocess.run(command, check=True)
 
 
 def get_tileset_json(out_path: Union[str, Path]):

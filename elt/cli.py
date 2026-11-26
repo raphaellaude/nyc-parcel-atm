@@ -9,6 +9,7 @@ from elt.main import (
     export_for_tiling as _export_for_tiling,
     create_tilesets as _create_tilesets,
     get_tileset_json as _get_tileset_json,
+    create_lion_tileset as _create_lion_tileset,
 )
 from elt.constants import DB_PATH
 
@@ -94,6 +95,12 @@ def export_for_tiling(years: list[int] | None = None):
 @click.option("-y", "--years", help="Years to export.", multiple=True, type=int)
 def create_tilesets(years: list[int] | None = None):
     _create_tilesets(years=years)
+
+
+@cli.command("create-lion-tileset", help="Create a street label tileset from NYC LION.")
+@click.option("-v", "--version", help="LION release, e.g. 26d.", default="26d")
+def create_lion_tileset(version: str):
+    _create_lion_tileset(version=version)  # pyright: ignore
 
 
 @cli.command("get-tileset-json", help="Get tileset json for each PLUTO year.")

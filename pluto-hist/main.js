@@ -2,6 +2,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import "./style.css";
 import maplibregl from "maplibre-gl";
 import * as pmtiles from "pmtiles";
+import { layers, namedFlavor } from "@protomaps/basemaps";
 import data from "./data.json";
 import choropleth from "./choropleth.json";
 import * as Sentry from "@sentry/browser";
@@ -62,7 +63,13 @@ var map = new maplibregl.Map({
   container: "map",
   style: {
     version: 8,
-    sources: {},
+    glyphs: `${import.meta.env.VITE_TILE_DIR}fonts/{fontstack}/{range}.pbf`,
+    sources: {
+      streets: {
+        type: "vector",
+        url: `pmtiles://${import.meta.env.VITE_TILE_DIR}lion_streets.pmtiles`,
+      },
+    },
     layers: [],
   },
   center: center,
@@ -516,6 +523,10 @@ map.on("load", function () {
       maxzoom: 16,
     });
   });
+
+  layers("streets", namedFlavor("light"), { labelsOnly: true, lang: "en" })
+    .filter((l) => l.id.startsWith("roads_labels"))
+    .forEach((l) => map.addLayer(l));
 
   map.on("click", (e) => {
     const currentYearData = data[years[currentYearIndex]];

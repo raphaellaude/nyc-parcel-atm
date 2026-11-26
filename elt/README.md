@@ -32,6 +32,7 @@ uv run python cli.py rename-columns
 uv run python cli.py export-fgbs
 uv run python cli.py export-geojsons-for-tippecannoe
 uv run python cli.py create-tilesets
+uv run python cli.py create-lion-tileset
 # optionally, if you changed the layers in the tilesets
 uv run python cli.py get-tileset-json -o ../pluto-hist/chropleth.json
 ```
