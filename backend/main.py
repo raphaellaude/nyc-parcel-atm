@@ -111,7 +111,7 @@ def single_year_pluto(
     Single year pluto view.
 
     Parameters:
-        year (str): Two digit year (e.g., "21", "05"). Supported years are 02-25
+        year (str): Two digit year (e.g., "21", "05"). Supported years are 02-26
         lat (str): Latitude in decimal degrees (e.g., "40.7128")
         lon (str): Longitude in decimal degrees (e.g., "-73.9352")
         kiosk (bool): Returns a limited set of attributes. This feature is for the ATM
@@ -298,7 +298,7 @@ def receipt(
 
     try:
         logger.info("Getting address")
-        table = pluto_years.get("25")
+        table = pluto_years.get(str(MAX_YEAR))
         cursor = conn.query(
             f"SELECT address FROM ST_Read('{table}', spatial_filter=ST_AsWKB(ST_POINT($1, $2))) LIMIT 1",
             params=(x, y),

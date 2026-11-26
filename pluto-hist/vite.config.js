@@ -1,7 +1,15 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
+import data from "./data.json";
 
 export default defineConfig({
+  plugins: [
+    {
+      name: "pluto-year-count",
+      transformIndexHtml: (html) =>
+        html.replaceAll("%PLUTO_YEAR_COUNT%", Object.keys(data).length),
+    },
+  ],
   build: {
     rollupOptions: {
       input: {

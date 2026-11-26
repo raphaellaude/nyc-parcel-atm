@@ -19,5 +19,5 @@ else:
     raise Exception("BASE_DIR environment variable not set.")
 
 
-MIN_YEAR, MAX_YEAR = 2, 25
+MIN_YEAR, MAX_YEAR = 2, 26
 YEARS = list(range(MIN_YEAR, MAX_YEAR + 1))
