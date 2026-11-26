@@ -84,6 +84,7 @@ def download_zipfiles():
         "https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/mappluto/nyc_mappluto_23v3_1_arc_shp.zip",
         "https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/mappluto/nyc_mappluto_24v4_1_arc_shp.zip",
         "https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/mappluto/nyc_mappluto_25v2_1_arc_shp.zip",
+        "https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/mappluto/nyc_mappluto_26v3_arc_shp.zip",
     ]
 
     outs = {}
