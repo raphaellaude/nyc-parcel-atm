@@ -2,12 +2,12 @@
 Pipeline for the NYC Pluto history / Parcel ATM tool.
 """
 
-import os
 import glob
+import os
 import shutil
 from pathlib import Path
-from typing import Union
 from zipfile import ZipFile
+
 import requests
 
 from .constants import ASSETS_DIR
@@ -20,7 +20,7 @@ def get_pluto_key(year: int, alias: str) -> str:
     return f"pluto{str(year).zfill(2)}_{alias}"
 
 
-def recursive_unzip(local_file_path: Union[str, Path]) -> None:
+def recursive_unzip(local_file_path: str | Path) -> None:
     """
     Unzips a file and recursively unzips any zips found within the unzipped directory.
     Args:
@@ -41,9 +41,10 @@ def recursive_unzip(local_file_path: Union[str, Path]) -> None:
             if not filename:
                 continue
 
-            source = zip_file.open(member)
-            target = open(os.path.join(unzipped_dir, filename), "wb")
-            with source, target:
+            with (
+                zip_file.open(member) as source,
+                open(os.path.join(unzipped_dir, filename), "wb") as target,
+            ):
                 shutil.copyfileobj(source, target)
 
     pattern = f"{unzipped_dir}/**/*.zip"
@@ -131,7 +132,7 @@ def download_lion(version: str) -> str:
     return out_path
 
 
-def unzip_zipfiles(assets_dir: Union[str, Path]):
+def unzip_zipfiles(assets_dir: str | Path):
     """
     Unzip the PLUTO data.
     """

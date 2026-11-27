@@ -1,17 +1,40 @@
 import click
 import duckdb
+
+from elt.constants import DB_PATH
 from elt.main import (
-    download_and_unzip as _download_and_unzip,
-    populate_duckdb_database as _populate_duckdb_database,
-    harmonize_pluto_columns as _harmonize_pluto_columns,
-    rename_columns as _rename_columns,
-    export_fgbs as _export_fgbs,
-    export_for_tiling as _export_for_tiling,
-    create_tilesets as _create_tilesets,
-    get_tileset_json as _get_tileset_json,
     create_lion_tileset as _create_lion_tileset,
 )
-from elt.constants import DB_PATH
+from elt.main import (
+    create_tilesets as _create_tilesets,
+)
+from elt.main import (
+    download_and_unzip as _download_and_unzip,
+)
+from elt.main import (
+    export_fgbs as _export_fgbs,
+)
+from elt.main import (
+    export_for_tiling as _export_for_tiling,
+)
+from elt.main import (
+    export_parquet as _export_parquet,
+)
+from elt.main import (
+    get_tileset_json as _get_tileset_json,
+)
+from elt.main import (
+    harmonize_pluto_columns as _harmonize_pluto_columns,
+)
+from elt.main import (
+    populate_duckdb_database as _populate_duckdb_database,
+)
+from elt.main import (
+    rename_columns as _rename_columns,
+)
+from elt.main import (
+    upload as _upload,
+)
 
 
 @click.group("elt")
@@ -43,7 +66,7 @@ def harmonize_pluto_columns() -> None:
 
     print("Please manually match most similar columns")
 
-    matches = []
+    matches: list[int | None] = []
 
     for col1, col2, similarity in match_df[["col1", "col2", "similarity"]].values:
         print(f"{col1} and {col2} have a similarity of {similarity}%")
@@ -81,8 +104,22 @@ def rename_columns():
 
 @cli.command("export-fgbs", help="Export FGBs for each PLUTO year.")
 @click.option("-y", "--years", help="Years to export.", multiple=True, type=int)
-def export_fgbs(years: list[int] | None = None):
-    _export_fgbs(years=years)  # pyright: ignore
+@click.option("--wgs84", is_flag=True, help="Export in EPSG:4326 for publishing.")
+def export_fgbs(years: list[int] | None = None, wgs84: bool = False):
+    _export_fgbs(years=years, wgs84=wgs84)  # pyright: ignore
+
+
+@cli.command(
+    "export-parquet",
+    help="Export all years as GeoParquet partitioned by borough and community district.",
+)
+def export_parquet():
+    _export_parquet()  # pyright: ignore
+
+
+@cli.command("upload", help="Upload FGBs and GeoParquet to object storage.")
+def upload():
+    _upload()
 
 
 @cli.command("export-for-tiling", help="Export PLUTO layers for tippecannoe tiling.")

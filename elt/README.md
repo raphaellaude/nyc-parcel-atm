@@ -30,6 +30,10 @@ uv run python cli.py populate-db
 uv run python cli.py harmonize-columns
 uv run python cli.py rename-columns
 uv run python cli.py export-fgbs
+uv run python cli.py export-fgbs --wgs84
+uv run python cli.py export-parquet
+# requires the aws cli; set STORAGE_PROFILE, STORAGE_URI and DATA_URL to change the destination
+uv run python cli.py upload
 uv run python cli.py export-geojsons-for-tippecannoe
 uv run python cli.py create-tilesets
 uv run python cli.py create-lion-tileset
