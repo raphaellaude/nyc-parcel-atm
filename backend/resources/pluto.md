@@ -54,6 +54,7 @@ https://data.parcels.nyc/pluto/
   1. `borough` and `cd`. These are hive partitions, so other files are skipped entirely.
   2. `bbox.xmin/xmax/ymin/ymax`. Row-group statistics skip non-overlapping row groups, which works well because rows are Hilbert ordered.
   3. Any other columns, such as `bbl` or `year`.
+- For a named neighborhood (such as "Greenpoint"), use the `neighborhoods` dataset to get its `borough`, `cd` and polygon.
 - If you don't know a location's `cd`, either do one FGB point lookup first (it returns `borough` and `cd`), or filter the Parquet by `bbox` alone. That costs one footer read per file, 91 in total.
 
 ## Partitions

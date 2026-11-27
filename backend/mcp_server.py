@@ -20,8 +20,10 @@ CATALOG = [
 mcp = FastMCP(
     "Parcel ATM",
     instructions=(
-        "Historical NYC MapPLUTO tax lot data (2002-2026). Call read_catalog to list "
-        "datasets, then read_resource for layout, schema and DuckDB SQL examples."
+        "Historical NYC MapPLUTO tax lot data (2002-2026), plus a lookup mapping "
+        "neighborhood names to boroughs and community districts. Call read_catalog to "
+        "list datasets, then read_resource for layout, schema and DuckDB SQL examples. "
+        "For questions about a named neighborhood, read 'neighborhoods' as well as 'pluto'."
     ),
 )
 

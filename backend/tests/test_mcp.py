@@ -15,9 +15,15 @@ def call(tool, **arguments):
 
 def test_catalog_lists_datasets():
     catalog = call("read_catalog").structured_content["result"]
-    assert [entry["id"] for entry in catalog] == ["pluto"]
+    assert [entry["id"] for entry in catalog] == ["neighborhoods", "pluto"]
     for entry in catalog:
         assert entry["resource"].startswith("https://data.parcels.nyc/")
+
+
+def test_read_neighborhoods_resource():
+    text = call("read_resource", id="neighborhoods").data
+    assert "https://data.parcels.nyc/neighborhoods/neighborhoods.parquet" in text
+    assert "parcels.neighborhoods" in text
 
 
 def test_read_resource_returns_markdown():
@@ -27,4 +33,6 @@ def test_read_resource_returns_markdown():
 
 
 def test_unknown_resource_lists_ids():
-    assert "Available ids: pluto" in call("read_resource", id="nope").data
+    assert (
+        "Available ids: neighborhoods, pluto" in call("read_resource", id="nope").data
+    )

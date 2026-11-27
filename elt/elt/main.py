@@ -9,8 +9,21 @@ from pathlib import Path
 import duckdb
 from pandas import DataFrame
 
-from .assets import download_lion, download_zipfiles, get_pluto_key, unzip_zipfiles
-from .constants import ASSETS_DIR, DATA_URL, STORAGE_PROFILE, STORAGE_URI, YEARS
+from .assets import (
+    download_lion,
+    download_open_data_geojson,
+    download_zipfiles,
+    get_pluto_key,
+    unzip_zipfiles,
+)
+from .constants import (
+    ASSETS_DIR,
+    DATA_URL,
+    MAX_YEAR,
+    STORAGE_PROFILE,
+    STORAGE_URI,
+    YEARS,
+)
 from .database import column_availibility, column_similarity, create_table, with_conn
 from .frontend import create_json
 from .jinja import render_template
@@ -149,14 +162,43 @@ def export_parquet(conn):
     conn.execute("DROP TABLE pluto_export")
 
 
+@with_conn
+def export_neighborhoods(conn):
+    """
+    Export a denormalized NTA x community district GeoParquet from NYC Open Data
+    boundaries, with each NTA's share of area and latest-year PLUTO lots per CD.
+    """
+    cd_path = download_open_data_geojson("5crt-au7u", "community_districts")
+    nta_path = download_open_data_geojson("9nt8-h7nd", "ntas_2020")
+
+    out_dir = os.path.join(ASSETS_DIR, "neighborhoods")
+    os.makedirs(out_dir, exist_ok=True)
+    out_path = os.path.join(out_dir, "neighborhoods.parquet")
+
+    print(f"Writing {out_path}")
+    conn.execute(
+        render_template(
+            "export_neighborhoods.jinja",
+            cd_path=cd_path,
+            nta_path=nta_path,
+            pluto_table=get_pluto_key(MAX_YEAR, "shp"),
+            out_path=out_path,
+        )
+    )
+
+
 def upload():
     """
-    Upload FGBs and GeoParquet to object storage, then publish a DuckDB file
-    with a `pluto` view over the uploaded parquet files.
+    Upload FGBs, GeoParquet and neighborhoods to object storage, then publish a
+    DuckDB file with `pluto` and `neighborhoods` views over the uploaded parquet.
     """
     aws = ["aws", "--profile", STORAGE_PROFILE, "s3"]
     parquet_dir = os.path.join(ASSETS_DIR, "parquet")
-    for local, remote in [("fgbs_wgs84", "pluto/fgb"), ("parquet", "pluto/parquet")]:
+    for local, remote in [
+        ("fgbs_wgs84", "pluto/fgb"),
+        ("parquet", "pluto/parquet"),
+        ("neighborhoods", "neighborhoods"),
+    ]:
         print(f"Uploading {local} to {STORAGE_URI}/{remote}")
         subprocess.run(
             [
@@ -186,6 +228,9 @@ def upload():
         view_conn.execute("INSTALL httpfs; LOAD httpfs; INSTALL spatial; LOAD spatial;")
         view_conn.execute(
             f"CREATE VIEW pluto AS SELECT * FROM read_parquet({urls}, hive_partitioning = true)"
+        )
+        view_conn.execute(
+            f"CREATE VIEW neighborhoods AS SELECT * FROM read_parquet('{DATA_URL}/neighborhoods/neighborhoods.parquet')"
         )
 
     subprocess.run(

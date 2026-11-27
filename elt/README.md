@@ -6,6 +6,8 @@
 - GDAL and GEOS
 - Tippecanoe
 
+Set up Dockerfile for ELT for less jank dependency management.
+
 ## Set-up
 
 1. Install python dependencies:
@@ -32,6 +34,7 @@ uv run python cli.py rename-columns
 uv run python cli.py export-fgbs
 uv run python cli.py export-fgbs --wgs84
 uv run python cli.py export-parquet
+uv run python cli.py export-neighborhoods
 # requires the aws cli; set STORAGE_PROFILE, STORAGE_URI and DATA_URL to change the destination
 uv run python cli.py upload
 uv run python cli.py export-geojsons-for-tippecannoe
