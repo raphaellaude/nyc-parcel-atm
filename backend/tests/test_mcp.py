@@ -13,10 +13,11 @@ def call(tool, **arguments):
     return asyncio.run(run())
 
 
-def test_catalog_lists_parcel_data():
+def test_catalog_lists_datasets():
     catalog = call("read_catalog").structured_content["result"]
     assert [entry["id"] for entry in catalog] == ["pluto"]
-    assert catalog[0]["resource"].startswith("https://data.parcels.nyc/")
+    for entry in catalog:
+        assert entry["resource"].startswith("https://data.parcels.nyc/")
 
 
 def test_read_resource_returns_markdown():

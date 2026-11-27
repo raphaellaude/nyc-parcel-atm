@@ -5,11 +5,16 @@ on:
       - master
     paths:
       - "backend/**"
+concurrency:
+  group: fly-deploy
+  cancel-in-progress: false
 jobs:
+  test:
+    uses: ./.github/workflows/test.yml
   deploy:
     name: Deploy app
+    needs: test
     runs-on: ubuntu-latest
-    concurrency: deploy-group
     steps:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
