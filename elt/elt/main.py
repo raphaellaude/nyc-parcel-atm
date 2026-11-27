@@ -1,18 +1,19 @@
-import os
 import json
 import logging
+import os
+import shutil
 import subprocess
-from pandas import DataFrame
-from pathlib import Path
-from typing import Union
 from itertools import chain
+from pathlib import Path
 
-from .assets import download_zipfiles, unzip_zipfiles, get_pluto_key, download_lion
-from .database import create_table, column_availibility, column_similarity, with_conn
-from .constants import ASSETS_DIR, YEARS
-from .jinja import render_template
+import duckdb
+from pandas import DataFrame
+
+from .assets import download_lion, download_zipfiles, get_pluto_key, unzip_zipfiles
+from .constants import ASSETS_DIR, DATA_URL, STORAGE_PROFILE, STORAGE_URI, YEARS
+from .database import column_availibility, column_similarity, create_table, with_conn
 from .frontend import create_json
-
+from .jinja import render_template
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -86,11 +87,11 @@ ALTER TABLE pluto03_shp RENAME far TO builtfar;
 
 
 @with_conn
-def export_fgbs(conn, years: list[int] | None = None):
+def export_fgbs(conn, years: list[int] | None = None, wgs84: bool = False):
     """
     Export Feature Geometries Binary (FGB) files for each year's PLUTO data.
     """
-    out_path = os.path.join(ASSETS_DIR, "fgbs")
+    out_path = os.path.join(ASSETS_DIR, "fgbs_wgs84" if wgs84 else "fgbs")
     if not os.path.exists(out_path):
         os.makedirs(out_path, exist_ok=True)
 
@@ -105,8 +106,91 @@ def export_fgbs(conn, years: list[int] | None = None):
             table=alias,
             out_path=out_path,
             out_table_id=out_table_id,
+            wgs84=wgs84,
         )
         conn.execute(fgb_sql)
+
+
+@with_conn
+def export_parquet(conn):
+    """
+    Export all years of PLUTO as GeoParquet, hive partitioned by borough and
+    community district, Hilbert ordered within each file.
+    """
+    out_path = os.path.join(ASSETS_DIR, "parquet")
+    shutil.rmtree(out_path, ignore_errors=True)
+
+    tables = [(2000 + year, get_pluto_key(year, "shp")) for year in YEARS]
+    print("Building export table...")
+    conn.execute("SET preserve_insertion_order = false")
+    conn.execute(render_template("export_parquet.jinja", tables=tables))
+
+    partitions = conn.execute(
+        "SELECT DISTINCT borough, cd FROM pluto_export ORDER BY ALL"
+    ).fetchall()
+
+    for borough, cd in partitions:
+        partition_dir = os.path.join(out_path, f"borough={borough}", f"cd={cd}")
+        os.makedirs(partition_dir, exist_ok=True)
+        print(f"Writing {partition_dir}")
+        conn.execute(
+            f"""
+            COPY (
+                SELECT * EXCLUDE (borough, cd, hilbert)
+                FROM pluto_export
+                WHERE borough = $1 AND cd = $2
+                ORDER BY hilbert, year
+            ) TO '{partition_dir}/data.parquet'
+            (FORMAT parquet, COMPRESSION zstd, ROW_GROUP_SIZE 16384)
+            """,
+            [borough, cd],
+        )
+
+    conn.execute("DROP TABLE pluto_export")
+
+
+def upload():
+    """
+    Upload FGBs and GeoParquet to object storage, then publish a DuckDB file
+    with a `pluto` view over the uploaded parquet files.
+    """
+    aws = ["aws", "--profile", STORAGE_PROFILE, "s3"]
+    parquet_dir = os.path.join(ASSETS_DIR, "parquet")
+    for local, remote in [("fgbs_wgs84", "pluto/fgb"), ("parquet", "pluto/parquet")]:
+        print(f"Uploading {local} to {STORAGE_URI}/{remote}")
+        subprocess.run(
+            [
+                *aws,
+                "sync",
+                "--exclude",
+                ".*",
+                "--exclude",
+                "*/.*",
+                os.path.join(ASSETS_DIR, local),
+                f"{STORAGE_URI}/{remote}",
+            ],
+            check=True,
+        )
+
+    urls = sorted(
+        f"{DATA_URL}/pluto/parquet/{path.relative_to(parquet_dir).as_posix()}"
+        for path in Path(parquet_dir).glob("borough=*/cd=*/data.parquet")
+    )
+
+    db_path = os.path.join(ASSETS_DIR, "pluto.duckdb")
+    if os.path.exists(db_path):
+        os.remove(db_path)
+
+    print(f"Creating {db_path} with a view over {len(urls)} parquet files")
+    with duckdb.connect(db_path) as view_conn:
+        view_conn.execute("INSTALL httpfs; LOAD httpfs; INSTALL spatial; LOAD spatial;")
+        view_conn.execute(
+            f"CREATE VIEW pluto AS SELECT * FROM read_parquet({urls}, hive_partitioning = true)"
+        )
+
+    subprocess.run(
+        [*aws, "cp", db_path, f"{STORAGE_URI}/pluto/pluto.duckdb"], check=True
+    )
 
 
 @with_conn
@@ -132,7 +216,9 @@ def export_for_tiling(conn, years: list[int] | None = None):
         out_file = os.path.join(out_path, alias + ".fgb")
         dest_file = os.path.join(out_path, alias + "_wgs.fgb")
 
-        subprocess.run(["ogr2ogr", "-t_srs", "EPSG:4326", dest_file, out_file])
+        subprocess.run(
+            ["ogr2ogr", "-t_srs", "EPSG:4326", dest_file, out_file], check=True
+        )
 
         os.remove(out_file)
 
@@ -243,7 +329,7 @@ def create_lion_tileset(conn, version: str):
     subprocess.run(command, check=True)
 
 
-def get_tileset_json(out_path: Union[str, Path]):
+def get_tileset_json(out_path: str | Path):
     data = create_json()
 
     with open(out_path, "w") as f:

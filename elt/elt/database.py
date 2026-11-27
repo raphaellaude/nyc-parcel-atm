@@ -1,10 +1,11 @@
-import duckdb
 import functools
-import pandas as pd
-from thefuzz import fuzz
+from collections.abc import Sequence
 from itertools import combinations
 from pathlib import Path
-from typing import Union, Sequence
+
+import duckdb
+import pandas as pd
+from thefuzz import fuzz
 
 from .constants import DB_PATH
 
@@ -23,8 +24,7 @@ def with_conn(func):
 
 
 @with_conn
-def create_table(alias: str, shp_files: Sequence[Union[Path, str]], conn):
-    """ """
+def create_table(alias: str, shp_files: Sequence[Path | str], conn):
     print(f"Creating table {alias} from {shp_files}")
 
     if len(shp_files) == 0:
@@ -80,7 +80,7 @@ def column_similarity(col_availibility: pd.DataFrame) -> pd.DataFrame:
     partial_cols = col_availibility.index[~col_availibility.index.isin(consistent_cols)]
     combos = pd.DataFrame(
         [(a, b, fuzz.ratio(a, b)) for a, b in combinations(partial_cols, 2)],
-        columns=["col1", "col2", "similarity"],
+        columns=["col1", "col2", "similarity"],  # ty: ignore[invalid-argument-type]
     )
     combos["not_overlapping"] = [
         col_availibility.loc[cols].sum().le(1).all()

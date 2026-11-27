@@ -1,10 +1,13 @@
 {# elt/templates/export_fgb.jinja #}
 COPY (
-    SELECT * FROM {{table}} WHERE geom IS NOT NULL
+    SELECT *{% if wgs84 %} REPLACE (
+        ST_Transform(geom, 'EPSG:2263', 'EPSG:4326', always_xy := true) AS geom
+    ){% endif %}
+    FROM {{table}} WHERE geom IS NOT NULL
 ) TO '{{out_path}}/{{out_table_id}}.fgb'
 WITH (
     FORMAT GDAL,
     DRIVER 'FlatGeobuf',
     LAYER_CREATION_OPTIONS 'SPATIAL_INDEX=YES',
-    SRS 'EPSG:2263'
+    SRS '{{ "EPSG:4326" if wgs84 else "EPSG:2263" }}'
 );

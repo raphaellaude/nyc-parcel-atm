@@ -3,6 +3,7 @@ This file contains the constants used in the project.
 """
 
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,6 +19,10 @@ if BASE_DIR is not None:
 else:
     raise Exception("BASE_DIR environment variable not set.")
 
+
+STORAGE_PROFILE = os.environ["STORAGE_PROFILE"]
+STORAGE_URI = os.environ.get("STORAGE_URI", "s3://parcels-nyc")
+DATA_URL = os.environ.get("DATA_URL", "https://data.parcels.nyc")
 
 MIN_YEAR, MAX_YEAR = 2, 26
 YEARS = list(range(MIN_YEAR, MAX_YEAR + 1))

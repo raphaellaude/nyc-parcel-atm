@@ -10,7 +10,9 @@ TILES_DIR = Path(BASE_DIR or ".") / "assets" / "tilesets"
 
 def get_layer_id(tiles):
     command = f'ogrinfo {TILES_DIR}/{tiles} | grep "1:"'
-    result = subprocess.run(command, shell=True, text=True, capture_output=True)
+    result = subprocess.run(
+        command, shell=True, text=True, capture_output=True, check=False
+    )
 
     if result.returncode != 0:
         print("Error executing command:", result.stderr)
@@ -31,7 +33,7 @@ def create_json():
     for tiles in os.listdir(TILES_DIR):
         if tiles.endswith(".pmtiles"):
             print(tiles)
-            year = re.search("\d{2}", tiles)
+            year = re.search(r"\d{2}", tiles)
             if not year:
                 raise ValueError(f"Could not find year in filename: {tiles}")
             year = year[0]

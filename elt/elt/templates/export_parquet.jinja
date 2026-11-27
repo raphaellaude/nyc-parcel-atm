@@ -1,0 +1,34 @@
+{# elt/templates/export_parquet.jinja #}
+CREATE OR REPLACE TABLE pluto_export AS
+WITH unioned AS (
+{% for year, table in tables %}
+    SELECT {{ year }} AS year, *{% if year == 2002 %} RENAME (cd2 AS cd){% endif %}
+    FROM {{ table }}
+    WHERE geom IS NOT NULL
+{% if not loop.last %}    UNION ALL BY NAME
+{% endif %}
+{% endfor %}
+), projected AS (
+    SELECT
+        * REPLACE (
+            coalesce(cd, 0) AS cd,
+            try_cast(borocode AS BIGINT) * 1000000000
+                + try_cast(block AS BIGINT) * 10000
+                + try_cast(lot AS BIGINT) AS bbl,
+            ST_Transform(geom, 'EPSG:2263', 'EPSG:4326', always_xy := true) AS geom
+        )
+    FROM unioned
+)
+SELECT
+    *,
+    {
+        'xmin': ST_XMin(geom),
+        'ymin': ST_YMin(geom),
+        'xmax': ST_XMax(geom),
+        'ymax': ST_YMax(geom)
+    } AS bbox,
+    ST_Hilbert(
+        geom,
+        {'min_x': -74.3, 'min_y': 40.45, 'max_x': -73.65, 'max_y': 40.95}::BOX_2D
+    ) AS hilbert
+FROM projected;
