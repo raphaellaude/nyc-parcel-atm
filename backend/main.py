@@ -2,32 +2,35 @@
 Parcel ATM API
 """
 
+import logging
 import os
 import re
-import duckdb
-import logging
 from datetime import datetime
-from numpy.random import randint
-from pyogrio import read_dataframe
-from dotenv import load_dotenv
-from constants import (
-    LAT_REGEX,
-    LON_REGEX,
-    YEARS_REGEX,
-    BASE_DIR,
-    MIN_YEAR,
-    MAX_YEAR,
-    BOOL_REGEX,
-    SHORT_SUMMARY_COLS,
-)
-from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import HTMLResponse
-from fastapi.middleware.cors import CORSMiddleware
-from jinja import render_template
-from pyproj import Transformer
+
+import duckdb
+import sentry_sdk
 from barcode import EAN13
 from barcode.errors import NumberOfDigitsError
-import sentry_sdk
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from numpy.random import randint
+from pyogrio import read_dataframe
+from pyproj import Transformer
+
+from constants import (
+    BASE_DIR,
+    BOOL_REGEX,
+    LAT_REGEX,
+    LON_REGEX,
+    MAX_YEAR,
+    MIN_YEAR,
+    SHORT_SUMMARY_COLS,
+    YEARS_REGEX,
+)
+from jinja import render_template
+from mcp_server import mcp
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -66,7 +69,8 @@ else:
     )
 
 logger.info("Starting Parcel ATM API")
-app = FastAPI()
+mcp_app = mcp.http_app(path="/mcp", stateless_http=True)
+app = FastAPI(lifespan=mcp_app.lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -284,7 +288,7 @@ def receipt(
     svgs = {}
 
     logger.info("Getting SVGs")
-    for year in pluto_years.keys():
+    for year in pluto_years:
         body = get_year_geom_svg(year, x, y)
         if body is not None:
             svgs[year] = body
@@ -303,7 +307,10 @@ def receipt(
             f"SELECT address FROM ST_Read('{table}') WHERE ST_Intersects(geom, ST_Point($1, $2)) LIMIT 1",
             parameters=(x, y),
         )
-        address = cursor.fetchone()[0]
+        row = cursor.fetchone()
+        if row is None:
+            return HTMLResponse("Could not find an address!", status_code=404)
+        address = row[0]
         logger.info(f"Address: {address}")
     except Exception as e:
         logger.info(f"Could not find an address: {e}")
@@ -356,3 +363,6 @@ def receipt(
         kiosk=_kiosk,
     )
     return HTMLResponse(content=data, status_code=200)
+
+
+app.mount("/", mcp_app)

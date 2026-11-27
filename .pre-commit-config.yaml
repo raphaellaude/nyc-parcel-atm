@@ -1,9 +1,23 @@
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.4
+    rev: v0.17.6
     hooks:
       - id: ruff-check
         types_or: [python, pyi]
         args: [--fix]
       - id: ruff-format
         types_or: [python, pyi]
+  - repo: local
+    hooks:
+      - id: ty-backend
+        name: ty (backend)
+        entry: uv run --directory backend ty check
+        language: system
+        files: ^backend/.*\.pyi?$
+        pass_filenames: false
+      - id: ty-elt
+        name: ty (elt)
+        entry: uv run --directory elt ty check
+        language: system
+        files: ^elt/.*\.pyi?$
+        pass_filenames: false

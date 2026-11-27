@@ -4,7 +4,7 @@ env = Environment(
     loader=FileSystemLoader("./templates"), autoescape=select_autoescape()
 )
 
-env.globals.update(zip=zip, int=int)
+env.globals.update(zip=zip, int=int)  # ty: ignore[invalid-argument-type]
 
 
 def render_template(template_name, **kwargs):

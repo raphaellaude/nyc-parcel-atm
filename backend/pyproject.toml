@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "duckdb>=2.0.1",
     "fastapi>=0.121.0",
+    "fastmcp>=3.4.0",
     "geopandas>=1.1.1",
     "jinja2>=3.1.6",
     "numpy>=2.3.4",
@@ -15,6 +16,24 @@ dependencies = [
     "pyproj>=3.7.2",
     "python-barcode>=0.16.1",
     "python-dotenv>=1.2.1",
+    "pyyaml>=6.0.4",
     "sentry-sdk>=2.43.0",
     "uvicorn>=0.38.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "ruff>=0.17.6",
+    "ty>=0.0.112",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff.lint]
+ignore = ["BLE001"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Query"]
