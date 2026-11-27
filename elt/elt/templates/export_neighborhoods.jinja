@@ -1,0 +1,79 @@
+{# elt/templates/export_neighborhoods.jinja #}
+COPY (
+    WITH cds AS (
+        SELECT
+            boro_cd::INTEGER AS cd,
+            ST_Transform(geom, 'EPSG:4326', 'EPSG:2263', always_xy := true) AS geom
+        FROM ST_Read('{{cd_path}}')
+    ), ntas AS (
+        SELECT
+            * EXCLUDE (geom, shape_leng, shape_area),
+            geom AS geom_wgs84,
+            ST_Transform(geom, 'EPSG:4326', 'EPSG:2263', always_xy := true) AS geom
+        FROM ST_Read('{{nta_path}}')
+    ), area_overlaps AS (
+        SELECT
+            ntas.nta2020,
+            cds.cd,
+            ST_Area(ST_Intersection(ntas.geom, cds.geom)) / ST_Area(ntas.geom) AS nta_area_pct
+        FROM ntas JOIN cds ON ST_Intersects(ntas.geom, cds.geom)
+    ), lot_counts AS (
+        SELECT ntas.nta2020, lots.cd, count(*) AS lots
+        FROM {{pluto_table}} AS lots
+        JOIN ntas ON ST_Within(ST_PointOnSurface(lots.geom), ntas.geom)
+        WHERE lots.geom IS NOT NULL
+        GROUP BY ALL
+    ), pairs AS (
+        SELECT
+            nta2020,
+            cd,
+            coalesce(nta_area_pct, 0) AS nta_area_pct,
+            coalesce(lots, 0) AS lots
+        FROM area_overlaps FULL JOIN lot_counts USING (nta2020, cd)
+    ), cd_names AS (
+        SELECT DISTINCT
+            (CASE left(cdta2020, 2)
+                WHEN 'MN' THEN 100 WHEN 'BX' THEN 200 WHEN 'BK' THEN 300
+                WHEN 'QN' THEN 400 WHEN 'SI' THEN 500
+            END) + right(cdta2020, 2)::INTEGER AS cd,
+            regexp_extract(cdtaname, '^\S+ (.*) \((CD|JIA) \d+ \w+\)$', 1) AS cd_name,
+            CASE WHEN cdtaname LIKE '%(JIA %' THEN 'joint interest area' ELSE 'community district' END AS cd_type
+        FROM ntas
+    )
+    SELECT
+        left(ntas.nta2020, 2) AS borough,
+        ntas.boroname,
+        ntas.borocode::INTEGER AS borocode,
+        pairs.cd,
+        cd_names.cd_name,
+        cd_names.cd_type,
+        ntas.nta2020,
+        ntas.ntaname,
+        ntas.ntaabbrev,
+        CASE ntas.ntatype
+            WHEN '0' THEN 'residential'
+            WHEN '5' THEN 'rikers island'
+            WHEN '6' THEN 'special use'
+            WHEN '7' THEN 'cemetery'
+            WHEN '8' THEN 'airport'
+            WHEN '9' THEN 'park'
+        END AS ntatype,
+        ntas.cdta2020,
+        ntas.cdtaname,
+        round(pairs.nta_area_pct, 4) AS nta_area_pct,
+        pairs.lots,
+        round(pairs.lots / nullif(sum(pairs.lots) OVER (PARTITION BY pairs.nta2020), 0), 4) AS nta_lots_pct,
+        ntas.geom_wgs84 AS geom,
+        {
+            'xmin': ST_XMin(ntas.geom_wgs84),
+            'ymin': ST_YMin(ntas.geom_wgs84),
+            'xmax': ST_XMax(ntas.geom_wgs84),
+            'ymax': ST_YMax(ntas.geom_wgs84)
+        } AS bbox
+    FROM pairs
+    JOIN ntas USING (nta2020)
+    LEFT JOIN cd_names USING (cd)
+    WHERE pairs.nta_area_pct >= 0.01
+        OR (pairs.lots > 0 AND pairs.cd // 100 = ntas.borocode::INTEGER)
+    ORDER BY borough, ntas.nta2020, pairs.cd
+) TO '{{out_path}}' (FORMAT parquet, COMPRESSION zstd);

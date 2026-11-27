@@ -132,6 +132,26 @@ def download_lion(version: str) -> str:
     return out_path
 
 
+def download_open_data_geojson(dataset_id: str, name: str) -> str:
+    """
+    Download an NYC Open Data geospatial dataset as GeoJSON, returning its local path.
+    """
+    out_path = os.path.join(ASSETS_DIR, f"{name}.geojson")
+
+    if os.path.exists(out_path):
+        print(f"Skipping {name}...")
+        return out_path
+
+    print(f"Downloading {name}...")
+    url = f"https://data.cityofnewyork.us/api/geospatial/{dataset_id}?method=export&format=GeoJSON"
+    r = requests.get(url, timeout=300)
+    r.raise_for_status()
+    with open(out_path, "wb") as f:
+        f.write(r.content)
+
+    return out_path
+
+
 def unzip_zipfiles(assets_dir: str | Path):
     """
     Unzip the PLUTO data.

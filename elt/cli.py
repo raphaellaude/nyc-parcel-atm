@@ -18,6 +18,9 @@ from elt.main import (
     export_for_tiling as _export_for_tiling,
 )
 from elt.main import (
+    export_neighborhoods as _export_neighborhoods,
+)
+from elt.main import (
     export_parquet as _export_parquet,
 )
 from elt.main import (
@@ -117,7 +120,17 @@ def export_parquet():
     _export_parquet()  # pyright: ignore
 
 
-@cli.command("upload", help="Upload FGBs and GeoParquet to object storage.")
+@cli.command(
+    "export-neighborhoods",
+    help="Export NTA x community district relationships from NYC Open Data.",
+)
+def export_neighborhoods():
+    _export_neighborhoods()  # pyright: ignore
+
+
+@cli.command(
+    "upload", help="Upload FGBs, GeoParquet and neighborhoods to object storage."
+)
 def upload():
     _upload()
 
