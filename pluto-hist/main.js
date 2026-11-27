@@ -13,11 +13,11 @@ Sentry.init({
     Sentry.browserTracingIntegration(),
     Sentry.replayIntegration(),
   ],
-  // https://pluto-hist-backend-v2.fly.dev/
+  // https://api.parcels.nyc/
   tracesSampleRate: 1.0,
   tracePropagationTargets: [
     "localhost",
-    /^https:\/\/pluto-hist-backend-v2\.fly\.dev/,
+    /^https:\/\/api\.parcels\.nyc/,
   ],
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
