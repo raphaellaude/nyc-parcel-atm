@@ -4,12 +4,7 @@ on:
     paths:
       - "backend/**"
       - ".github/workflows/test.yml"
-  push:
-    branches:
-      - master
-    paths:
-      - "backend/**"
-      - ".github/workflows/test.yml"
+  workflow_call:
 jobs:
   test:
     runs-on: ubuntu-latest

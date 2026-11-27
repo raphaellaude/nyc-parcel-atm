@@ -6,8 +6,11 @@ on:
     paths:
       - "backend/**"
 jobs:
+  test:
+    uses: ./.github/workflows/test.yml
   deploy:
     name: Deploy app
+    needs: test
     runs-on: ubuntu-latest
     concurrency: deploy-group
     steps:
