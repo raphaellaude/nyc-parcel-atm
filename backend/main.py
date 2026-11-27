@@ -90,6 +90,7 @@ pluto_years = {
     str(x).zfill(2): os.path.join(str(BASE_DIR), f"fgbs/pluto{str(x).zfill(2)}.fgb")
     for x in range(MIN_YEAR, MAX_YEAR + 1)
 }
+pluto_years = {year: path for year, path in pluto_years.items() if os.path.exists(path)}
 
 logger.info(f"PLUTO years: {pluto_years}")
 
@@ -109,7 +110,7 @@ def single_year_pluto(
     year: str,
     lat: str,
     lon: str,
-    kiosk=Query(default=False, description="Returns a limited set of attributes"),
+    kiosk=Query(default="false", description="Returns a limited set of attributes"),
 ):
     """
     Single year pluto view.

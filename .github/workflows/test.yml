@@ -1,0 +1,23 @@
+name: Test API
+on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - ".github/workflows/test.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "backend/**"
+      - ".github/workflows/test.yml"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --frozen
+      - run: uv run pytest
